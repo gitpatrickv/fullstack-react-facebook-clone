@@ -1,12 +1,13 @@
 import { Box, Grid, GridItem, useBreakpointValue } from "@chakra-ui/react";
-import { Outlet, ScrollRestoration } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import Header from "../../components/user/Navbar/Header";
 import Footer from "../../components/user/Footer/Footer";
 
 const Layout = () => {
+  const location = useLocation();
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
-    md: "0.3fr 1fr 0.3fr",
+    md: "0.2fr 1fr 0.2fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({
@@ -15,7 +16,7 @@ const Layout = () => {
   });
   return (
     <>
-      <Header />
+      {location.pathname === "/" ? "" : <Header />}
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
