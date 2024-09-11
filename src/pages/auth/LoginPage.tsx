@@ -417,6 +417,11 @@ const LoginPage = () => {
                           ))}
                         </Select>
                       </Box>
+                      {registerErrors.dateOfBirth && (
+                        <Text color="red">
+                          {registerErrors.dateOfBirth.message}
+                        </Text>
+                      )}
                     </FormControl>
                     {/* <FormControl>
                       <Text fontSize="xs" mb="2px">
@@ -459,6 +464,9 @@ const LoginPage = () => {
                           </RadioGroup>
                         )}
                       />
+                      {registerErrors.gender && (
+                        <Text color="red">{registerErrors.gender.message}</Text>
+                      )}
                     </FormControl>
 
                     <FormControl>
