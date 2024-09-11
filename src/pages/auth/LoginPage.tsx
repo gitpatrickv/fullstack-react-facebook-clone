@@ -125,7 +125,7 @@ const LoginPage = () => {
         alignItems="center"
         as="section"
         mt={{ base: "50px", lg: "120px", xl: "85px" }}
-        mb={{ base: "50px" }}
+        mb={{ base: "50px", lg: "85px" }}
       >
         <Box
           display="flex"
