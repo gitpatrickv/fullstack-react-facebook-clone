@@ -1,59 +1,65 @@
+import { useDisclosure } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
+import { User, schema } from "../../entities/User";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-
-interface FormData {
-  email: string;
-  password: string;
-}
+import { useNavigate } from "react-router-dom";
 
 const apiClient = axiosInstance;
-
-const useLogin = () => {
+const useRegister = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<FormData>();
+    control,
+  } = useForm<User>({ resolver: zodResolver(schema) });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { setJwtToken, setRole, setAuthUser } = useAuthQueryStore();
 
   const mutation = useMutation({
-    mutationFn: (data: FormData) =>
-      apiClient.post("/user/login", data).then((res) => res.data),
+    mutationFn: (data: User) =>
+      apiClient.post("/user/register", data).then((res) => res.data),
 
     onSuccess: (response) => {
+      onClose();
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);
-      const currentUser = response.currentUser;
-      setAuthUser(currentUser);
       const role = response.role;
       setRole(role);
-      setLoading(false);
+      const currentUser = response.authUser;
+      setAuthUser(currentUser);
+
       if (role === "USER") {
         navigate("/home");
       }
     },
     onError: (error: any) => {
-      console.error("Login failed", error);
       setLoading(false);
+      console.error("Registration failed", error);
 
-      if (error.response?.data.errorMessage) {
+      if (error.response?.data.email) {
         setError("email", {
           type: "server",
-          message: error.response.data.errorMessage,
+          message: error.response.data.email,
+        });
+      }
+
+      if (error.response?.data.errorMessage) {
+        setError("userModel", {
+          type: "server",
+          message: error.response.data.userModel,
         });
       }
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<User> = (data) => {
     setLoading(true);
     mutation.mutate(data);
   };
@@ -64,7 +70,11 @@ const useLogin = () => {
     loading,
     onSubmit,
     errors,
+    isOpen,
+    onOpen,
+    onClose,
+    control,
   };
 };
 
-export default useLogin;
+export default useRegister;
