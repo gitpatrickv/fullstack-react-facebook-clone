@@ -29,7 +29,7 @@ const Layout = () => {
           </Box>
         </GridItem>
       </Grid>
-      <Footer />
+      {location.pathname === "/" ? <Footer /> : ""}
     </>
   );
 };
