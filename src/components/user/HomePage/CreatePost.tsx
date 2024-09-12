@@ -20,7 +20,7 @@ import {
 import { useRef, useState } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
 
-const Post = () => {
+const CreatePost = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
@@ -126,7 +126,7 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default CreatePost;
 {
   /* <Box
             width="100%"
