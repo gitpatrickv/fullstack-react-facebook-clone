@@ -22,7 +22,6 @@ import { IoMdImages, IoMdPhotos } from "react-icons/io";
 
 const Post = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const { colorMode } = useColorMode();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
   const [post, setPost] = useState<string>("");

@@ -8,6 +8,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -23,12 +24,12 @@ import { BsSearch } from "react-icons/bs";
 import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import {
+  IoClose,
+  IoLogOutSharp,
   IoNotificationsCircle,
   IoStorefrontSharp,
-  IoLogOutSharp,
 } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
-
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthQueryStore } from "../../../store/auth-store";
@@ -149,7 +150,7 @@ const Navbar = () => {
                 variant="filled"
                 textAlign={{ base: "center", md: "left" }}
                 fontSize={["sm", "md", "lg"]}
-                w={{ base: "50%" }}
+                w={{ base: "50%", md: "100%", lg: "100%", xl: "50%" }}
               />
               <InputLeftElement>
                 <IconButton
@@ -163,23 +164,46 @@ const Navbar = () => {
             </InputGroup>
           )}
           {isSmallScreen && showInput && (
-            <Box
+            <Card
               position="absolute"
-              top="60px"
+              // top="60px"
+              top="0"
               left="0"
               right="0"
               p="4"
               zIndex="dropdown"
+              borderRadius="none"
             >
-              <Input
-                ref={ref}
-                borderRadius={20}
-                placeholder="Search Facebook"
-                variant="filled"
-                fontSize={["sm", "md"]}
-                w="100%"
-              />
-            </Box>
+              <Box display="flex">
+                <Box
+                  position="absolute"
+                  right="0"
+                  top="5px"
+                  onClick={() => setShowInput(!showInput)}
+                >
+                  <IoClose size="20px" />
+                </Box>
+                <InputGroup>
+                  <Input
+                    ref={ref}
+                    borderRadius={20}
+                    placeholder="Search Facebook"
+                    variant="filled"
+                    fontSize={["sm", "md"]}
+                    w="100%"
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label="Search"
+                      icon={<BsSearch />}
+                      type="submit"
+                      bg="transparent"
+                      _hover={{ bg: "transparent" }}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+              </Box>
+            </Card>
           )}
         </GridItem>
         <GridItem

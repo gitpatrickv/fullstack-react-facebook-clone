@@ -1,5 +1,6 @@
 import { Grid, GridItem, Show, useBreakpointValue } from "@chakra-ui/react";
-import Post from "../../components/user/Home/Post";
+import Post from "../../components/user/HomePage/Post";
+import Sidebar from "../../components/user/HomePage/Sidebar";
 
 const HomePage = () => {
   const gridTemplateColumns = useBreakpointValue({
@@ -24,7 +25,9 @@ const HomePage = () => {
           <Post />
         </GridItem>
         <Show above="xl">
-          <GridItem area="left" bg="red"></GridItem>
+          <GridItem area="left">
+            <Sidebar />
+          </GridItem>
         </Show>
         <Show above="lg">
           <GridItem area="right" bg="blue"></GridItem>
