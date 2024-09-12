@@ -17,7 +17,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiLogoMessenger } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
@@ -30,10 +30,11 @@ import {
 import { MdOndemandVideo } from "react-icons/md";
 
 import { RiNewsFill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthQueryStore } from "../../../store/auth-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
 const Navbar = () => {
+  const location = useLocation();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -44,6 +45,14 @@ const Navbar = () => {
     queryClient.setQueryData(["user"], null);
   };
   const [showInput, setShowInput] = useState(false);
+  const [selectedPage, setSelectedPage] = useState<string | null>(
+    location.pathname
+  );
+
+  useEffect(() => {
+    setSelectedPage(location.pathname);
+  }, [location.pathname]);
+
   return (
     <Card
       borderRadius="none"
@@ -70,19 +79,35 @@ const Navbar = () => {
             alignItems="center"
           >
             <Link to="/home">
-              <FaHome size="35px" />
+              <Box color={selectedPage === "/home" ? "blue.500" : "white.500"}>
+                <FaHome size="35px" />
+              </Box>
             </Link>
             <Link to="/friends">
-              <FaUserFriends size="35px" />
+              <Box
+                color={selectedPage === "/friends" ? "blue.500" : "white.500"}
+              >
+                <FaUserFriends size="35px" />
+              </Box>
             </Link>
             <Link to="/watch">
-              <MdOndemandVideo size="35px" />
+              <Box color={selectedPage === "/watch" ? "blue.500" : "white.500"}>
+                <MdOndemandVideo size="35px" />
+              </Box>
             </Link>
             <Link to="/marketplace">
-              <IoStorefrontSharp size="35px" />
+              <Box
+                color={
+                  selectedPage === "/marketplace" ? "blue.500" : "white.500"
+                }
+              >
+                <IoStorefrontSharp size="35px" />
+              </Box>
             </Link>
             <Link to="/games">
-              <IoLogoGameControllerA size="35px" />
+              <Box color={selectedPage === "/games" ? "blue.500" : "white.500"}>
+                <IoLogoGameControllerA size="35px" />
+              </Box>
             </Link>
           </GridItem>
         </Show>
