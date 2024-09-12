@@ -8,6 +8,7 @@ import {
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
+import { useAuthQueryStore } from "../../store/auth-store";
 
 const Layout = () => {
   const location = useLocation();
@@ -15,6 +16,8 @@ const Layout = () => {
     base: "1fr",
     xl: "0.2fr 1fr 0.2fr",
   });
+  const { authStore } = useAuthQueryStore();
+  const jwtToken = authStore.jwtToken;
 
   const gridTemplateAreas = useBreakpointValue({
     base: `"content1"`,
@@ -22,7 +25,7 @@ const Layout = () => {
   });
   return (
     <>
-      {location.pathname === "/" ? "" : <Navbar />}
+      {jwtToken && <Navbar />}
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}

@@ -7,6 +7,7 @@ import FriendsPage from "../pages/user/FriendsPage";
 import MarketPage from "../pages/user/MarketPage";
 import WatchPage from "../pages/user/WatchPage";
 import GamesPage from "../pages/user/GamesPage";
+import UserRoute from "../components/ProtectedRoute/UserRoute";
 
 const router = createBrowserRouter([
   {
@@ -14,12 +15,50 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <LoginPage /> },
-      { path: "/home", element: <HomePage /> },
-      { path: "/friends", element: <FriendsPage /> },
-      { path: "/watch", element: <WatchPage /> },
-      { path: "/marketplace", element: <MarketPage /> },
-      { path: "/games", element: <GamesPage /> },
+      {
+        index: true,
+        element: <LoginPage />,
+      },
+      {
+        path: "/home",
+        element: (
+          <UserRoute>
+            <HomePage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/friends",
+        element: (
+          <UserRoute>
+            <FriendsPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/watch",
+        element: (
+          <UserRoute>
+            <WatchPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/marketplace",
+        element: (
+          <UserRoute>
+            <MarketPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/games",
+        element: (
+          <UserRoute>
+            <GamesPage />
+          </UserRoute>
+        ),
+      },
     ],
   },
 ]);
