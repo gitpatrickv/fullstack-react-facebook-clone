@@ -34,7 +34,7 @@ const Post = () => {
 
   return (
     <>
-      <Card padding={2}>
+      <Card padding={2} maxWidth={{ base: "100%", lg: "95%" }}>
         <Box display="flex" alignItems="center">
           <Avatar
             src={
@@ -56,7 +56,7 @@ const Post = () => {
             cursor="pointer"
           />
         </Box>
-        <Divider mt="10px" mb="10px" />
+        <Divider mt="10px" mb="10px" color="gray.500" />
         <Box
           display="flex"
           alignItems="center"

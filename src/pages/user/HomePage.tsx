@@ -1,12 +1,13 @@
 import { Grid, GridItem, Show, useBreakpointValue } from "@chakra-ui/react";
 import Post from "../../components/user/HomePage/Post";
 import Sidebar from "../../components/user/HomePage/Sidebar";
+import Chat from "../../components/user/HomePage/Chat";
 
 const HomePage = () => {
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
     lg: "0.6fr 0.4fr",
-    xl: "0.2fr 0.5fr 0.2fr",
+    xl: "0.2fr 0.6fr 0.2fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({
@@ -30,7 +31,9 @@ const HomePage = () => {
           </GridItem>
         </Show>
         <Show above="lg">
-          <GridItem area="right" bg="blue"></GridItem>
+          <GridItem area="right">
+            <Chat />
+          </GridItem>
         </Show>
       </Grid>
     </>

@@ -11,13 +11,15 @@ const Sidebar = () => {
   const boxStyles = {
     display: "flex",
     alignItems: "center",
+    padding: "10px",
+    borderRadius: "5px",
     _hover: {
-      color: "blue.500",
+      bg: "gray.500",
     },
   };
 
   return (
-    <Box mt="5px">
+    <Box>
       {/* <Link to="/profile"> */}
       <Box {...boxStyles} cursor="pointer">
         <Avatar
@@ -31,36 +33,36 @@ const Sidebar = () => {
       </Box>
       {/* </Link> */}
       <Link to="/friends">
-        <Box {...boxStyles} mt="15px">
+        <Box {...boxStyles}>
           <FaUserFriends size="30px" />
           <Text ml="10px">Friends</Text>
         </Box>
       </Link>
       <Link to="/watch">
-        <Box {...boxStyles} mt="15px">
+        <Box {...boxStyles}>
           <MdOndemandVideo size="30px" />
           <Text ml="10px">Video</Text>
         </Box>
       </Link>
       <Link to="/marketplace">
-        <Box {...boxStyles} mt="15px">
+        <Box {...boxStyles}>
           <IoStorefrontSharp size="30px" />
           <Text ml="10px">Marketplace</Text>
         </Box>
       </Link>
       <Link to="/games">
-        <Box {...boxStyles} mt="15px">
+        <Box {...boxStyles}>
           <IoLogoGameControllerA size="30px" />
           <Text ml="10px">Games</Text>
         </Box>
       </Link>
       <Link to="/home">
-        <Box {...boxStyles} mt="15px">
+        <Box {...boxStyles}>
           <RiNewsFill size="30px" />
           <Text ml="10px">News Feed</Text>
         </Box>
       </Link>
-      <Box {...boxStyles} cursor="pointer" mt="15px">
+      <Box {...boxStyles} cursor="pointer">
         <BiLogoMessenger size="30px" />
         <Text ml="10px">Messenger</Text>
       </Box>
