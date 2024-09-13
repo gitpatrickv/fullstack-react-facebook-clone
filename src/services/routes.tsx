@@ -8,6 +8,7 @@ import MarketPage from "../pages/user/MarketPage";
 import WatchPage from "../pages/user/WatchPage";
 import GamesPage from "../pages/user/GamesPage";
 import UserRoute from "../components/ProtectedRoute/UserRoute";
+import ProfilePage from "../pages/user/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <GamesPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <UserRoute>
+            <ProfilePage />
           </UserRoute>
         ),
       },

@@ -234,7 +234,20 @@ const Navbar = () => {
               }
               variant="none"
             />
+
             <MenuList>
+              <Link to="/profile">
+                <MenuItem paddingBottom={3} paddingTop={3}>
+                  <Avatar
+                    src={
+                      "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+                    }
+                    size="xs"
+                    ml="3px"
+                  />
+                  <Text ml="12px">Patrick V.</Text>
+                </MenuItem>
+              </Link>
               <Link to="/home">
                 <MenuItem>
                   <RiNewsFill size="30px" />
