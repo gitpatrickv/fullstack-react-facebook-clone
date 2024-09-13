@@ -22,13 +22,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { IoIosEye } from "react-icons/io";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { User } from "../../entities/User";
 import useLogin from "../../hooks/user/useLogin";
 import useRegister from "../../hooks/user/useRegister";
+import { useAuthQueryStore } from "../../store/auth-store";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   // const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -115,6 +117,16 @@ const LoginPage = () => {
     }
     onSubmitRegister(data);
   };
+
+  const { authStore } = useAuthQueryStore();
+  const jwtToken = authStore.jwtToken;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (jwtToken) {
+      navigate("/home");
+    }
+  }, [jwtToken, navigate]);
 
   return (
     <>
