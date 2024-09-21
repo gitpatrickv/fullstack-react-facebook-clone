@@ -19,8 +19,10 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
+import useCreatePost from "../../../hooks/user/useCreatePost";
 
 const CreatePost = () => {
+  const { onSubmit, register, handleSubmit, loading } = useCreatePost();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
@@ -76,50 +78,55 @@ const CreatePost = () => {
         size="xl"
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader textAlign="center">Create Post</ModalHeader>
-          <ModalCloseButton />
-          <Divider mb="10px" />
-          <ModalBody pb={6}>
-            <FormControl>
-              <Textarea
-                ref={initialRef}
-                placeholder="What's on your mind, Trek?"
-                fontSize={["sm", "md", "lg"]}
-                width="100%"
-                onClick={onOpen}
-                value={post}
-                cursor="pointer"
-                border="none"
-                _active={{ border: "none" }}
-                onChange={handlePostInputChange}
-              />
-            </FormControl>
-            <Text whiteSpace="nowrap" fontSize="sm">
-              Add Photo/Video
-            </Text>
-            <Box display="flex">
-              <Box color="green.500" mr="10px">
-                <IoMdImages size="30px" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            <ModalHeader textAlign="center">Create Post</ModalHeader>
+            <ModalCloseButton />
+            <Divider mb="10px" />
+            <ModalBody pb={6}>
+              <FormControl>
+                <Textarea
+                  {...register("content")}
+                  // ref={initialRef}
+                  placeholder="What's on your mind, Trek?"
+                  fontSize={["sm", "md", "lg"]}
+                  width="100%"
+                  onClick={onOpen}
+                  cursor="pointer"
+                  border="none"
+                  _active={{ border: "none" }}
+                  onChange={handlePostInputChange}
+                />
+              </FormControl>
+              <Text whiteSpace="nowrap" fontSize="sm">
+                Add Photo/Video
+              </Text>
+              <Box display="flex">
+                <Box color="green.500" mr="10px">
+                  <IoMdImages size="30px" />
+                </Box>
+                <input
+                  type="file"
+                  accept=".jpeg, .png"
+                  multiple
+                  {...register("file")}
+                />
               </Box>
-              <input
-                type="file"
-                accept=".jpeg, .png"
-                multiple
-                // {...register("file", {
-                //   required: true,
-                // })}
-              />
-            </Box>
-          </ModalBody>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} type="submit" bg="blue.500">
-              Post
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
+            <ModalFooter>
+              <Button
+                type="submit"
+                bg="blue.500"
+                width="100%"
+                _hover={{ bg: "blue.400" }}
+                _active={{ bg: "blue.600" }}
+              >
+                Post
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
       </Modal>
     </>
   );
