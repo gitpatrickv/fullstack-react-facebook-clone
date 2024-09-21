@@ -1,4 +1,4 @@
-import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Avatar, Box, Text, useColorMode } from "@chakra-ui/react";
 import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
@@ -8,30 +8,31 @@ import { RiNewsFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
+  const { colorMode } = useColorMode();
   const boxStyles = {
     display: "flex",
     alignItems: "center",
     padding: "10px",
     borderRadius: "5px",
     _hover: {
-      bg: "gray.500",
+      bg: colorMode === "dark" ? "gray.700" : "gray.200",
     },
   };
 
   return (
     <Box>
-      {/* <Link to="/profile"> */}
-      <Box {...boxStyles} cursor="pointer">
-        <Avatar
-          src={
-            "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-          }
-          size="xs"
-          ml="3px"
-        />
-        <Text ml="13px">Patrick V.</Text>
-      </Box>
-      {/* </Link> */}
+      <Link to="/profile">
+        <Box {...boxStyles} cursor="pointer">
+          <Avatar
+            src={
+              "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+            }
+            size="xs"
+            ml="3px"
+          />
+          <Text ml="13px">Patrick V.</Text>
+        </Box>
+      </Link>
       <Link to="/friends">
         <Box {...boxStyles}>
           <FaUserFriends size="30px" />
