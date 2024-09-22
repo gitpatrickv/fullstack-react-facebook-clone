@@ -3,6 +3,7 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useDisclosure } from "@chakra-ui/react";
 
 interface CreatePostProps {
   content?: string;
@@ -17,6 +18,8 @@ const useCreatePost = () => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm<CreatePostProps>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [post, setPost] = useState<string>("");
 
   const mutation = useMutation(
     (formData: FormData) =>
@@ -29,9 +32,11 @@ const useCreatePost = () => {
 
     {
       onSuccess: () => {
-        //   queryClient.invalidateQueries(['storeProduct']);
+        //   queryClient.invalidateQueries(['']);
         setLoading(false);
         reset();
+        setPost("");
+        onClose();
       },
       onError: (error: any) => {
         console.error("Error posting:", error);
@@ -63,6 +68,11 @@ const useCreatePost = () => {
     register,
     handleSubmit,
     loading,
+    isOpen,
+    onOpen,
+    onClose,
+    post,
+    setPost,
   };
 };
 

@@ -15,18 +15,25 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
 import useCreatePost from "../../../hooks/user/useCreatePost";
 
 const CreatePost = () => {
-  const { onSubmit, register, handleSubmit, loading } = useCreatePost();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    onSubmit,
+    register,
+    handleSubmit,
+    loading,
+    isOpen,
+    onOpen,
+    onClose,
+    post,
+    setPost,
+  } = useCreatePost();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
-  const [post, setPost] = useState<string>("");
 
   const handlePostInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
