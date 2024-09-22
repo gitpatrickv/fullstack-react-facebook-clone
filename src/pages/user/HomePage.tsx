@@ -25,7 +25,7 @@ const HomePage = () => {
       >
         <GridItem area="section" as="section">
           <CreatePost />
-          <Posts />
+          {/* <Posts /> */}
         </GridItem>
         <Show above="xl">
           <GridItem area="asideLeft" as="aside">

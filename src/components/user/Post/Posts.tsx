@@ -21,8 +21,13 @@ import { BiLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import Comments from "./Comments";
+import { FetchAllUserPostsProps } from "../../../hooks/user/useFetchAllUserPosts";
 
-const Posts = () => {
+interface PostProps {
+  posts: FetchAllUserPostsProps;
+}
+
+const Posts = ({ posts }: PostProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,12 +66,18 @@ const Posts = () => {
           </Box>
         </Box>
         <Text mt="5px" mb="5px">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde error
-          pariatur est et consequuntur adipisci repellendus ipsa. Hic et iusto
-          fugiat, ducimus odio optio assumenda, doloribus, magni esse nesciunt
-          corporis!
+          {posts.content}
         </Text>
-        <Image src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg" />
+        {posts.postImages && posts.postImages.length > 0
+          ? posts.postImages.map((images) => (
+              <Image
+                key={images.postImageId}
+                src={images.postImageUrl}
+                alt="Post image"
+                fallbackSrc="path/to/fallback/image.jpg"
+              />
+            ))
+          : ""}
         <Box display="flex" mt="5px">
           <Text>Likes</Text>
           <Spacer />

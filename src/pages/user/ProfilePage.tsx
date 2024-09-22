@@ -11,9 +11,11 @@ import {
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import Photos from "../../components/ProfilePage/Photos";
+import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const { data: fetchAllUserPosts } = useFetchAllUserPosts();
 
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
@@ -21,11 +23,6 @@ const ProfilePage = () => {
     lg: "0.4fr 0.6fr",
     xl: "0.2fr 0.4fr 0.6fr 0.2fr",
   });
-
-  // const gridTemplateRows = useBreakpointValue({
-  //   base: "1fr",
-  //   xl: "0.6fr 0.2fr 0.2fr",
-  // });
 
   const gridTemplateAreas = useBreakpointValue({
     base: `
@@ -49,7 +46,6 @@ const ProfilePage = () => {
     <>
       <Grid
         templateColumns={gridTemplateColumns}
-        // templateRows={gridTemplateRows}
         templateAreas={gridTemplateAreas}
         mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
       >
@@ -95,7 +91,9 @@ const ProfilePage = () => {
         </GridItem>
         <GridItem area="section2">
           <CreatePost />
-          <Posts />
+          {fetchAllUserPosts?.map((posts) => (
+            <Posts key={posts.postId} posts={posts} />
+          ))}
         </GridItem>
       </Grid>
     </>
