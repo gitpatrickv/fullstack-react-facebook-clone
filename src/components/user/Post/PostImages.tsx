@@ -1,4 +1,4 @@
-import { Box, Image } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import PostImage from "../../../entities/PostImage";
 
 interface Props {
@@ -21,14 +21,20 @@ const PostImages = ({ postImages }: Props) => {
     return "calc(33.33% - 5px)";
   };
 
+  const gap = postImages.length - 6;
+
   return (
     <>
       <Box display="flex" flexWrap="wrap" gap={1}>
-        {postImages.map((image, index) => (
+        {postImages.slice(0, 6).map((image, index) => (
           <Box
             key={image.postImageId}
             flexBasis={getFlexBasis(index, postImages.length)}
             flexGrow={1}
+            position="relative"
+            width="100%"
+            height="auto"
+            cursor="pointer"
           >
             <Image
               src={image.postImageUrl}
@@ -36,7 +42,25 @@ const PostImages = ({ postImages }: Props) => {
               width="100%"
               minHeight="100%"
               height="auto"
+              filter={
+                postImages.length > 6 && index === 5
+                  ? "brightness(0.4)"
+                  : "none"
+              }
             />
+            {postImages.length > 6 && index === 5 && (
+              <Text
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                color="white"
+                fontSize="xxx-large"
+                fontWeight="semibold"
+              >
+                +{gap}
+              </Text>
+            )}
           </Box>
         ))}
       </Box>
