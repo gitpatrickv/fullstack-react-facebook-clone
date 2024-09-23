@@ -21,7 +21,7 @@ import { BiLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import Comments from "./Comments";
-import { FetchAllUserPostsProps } from "../../../hooks/user/useFetchAllUserPosts";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
 
 interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -53,13 +53,20 @@ const Posts = ({ posts }: PostProps) => {
         <Box display="flex" alignItems="center">
           <Avatar
             src={
+              posts.profilePicture ||
               "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
             }
             size="sm"
             mr="10px"
           />
           <Box flexDirection="column">
-            <Text fontSize="xs">Patrick V.</Text>
+            <Text
+              fontSize="sm"
+              textTransform="capitalize"
+              fontWeight="semibold"
+            >
+              {posts.firstName} {posts.lastName}
+            </Text>
             <Text fontSize="xs" color="gray.500">
               2 days ago
             </Text>
@@ -73,8 +80,9 @@ const Posts = ({ posts }: PostProps) => {
               <Image
                 key={images.postImageId}
                 src={images.postImageUrl}
-                alt="Post image"
-                fallbackSrc="path/to/fallback/image.jpg"
+                objectFit="cover"
+                width="100%"
+                height="auto"
               />
             ))
           : ""}
@@ -114,7 +122,19 @@ const Posts = ({ posts }: PostProps) => {
       >
         <ModalOverlay />
         <ModalContent maxWidth={{ base: "90%", lg: "70%", xl: "40%" }}>
-          <ModalHeader>USERNAME HERE POST</ModalHeader>
+          <ModalHeader
+            position="sticky"
+            top="0"
+            zIndex={10}
+            textTransform="capitalize"
+            textAlign="center"
+            bg={colorMode === "dark" ? "gray.700" : "white"}
+            borderBottom="1px solid"
+            borderColor={colorMode === "dark" ? "gray.500" : "gray.200"}
+          >
+            {posts.firstName} {posts.lastName}'s Post
+          </ModalHeader>
+
           <ModalCloseButton />
           <ModalBody>
             <Box display="flex" alignItems="center">
@@ -126,17 +146,20 @@ const Posts = ({ posts }: PostProps) => {
                 mr="10px"
               />
               <Box flexDirection="column">
-                <Text fontSize="xs">Patrick V.</Text>
+                <Text
+                  fontSize="sm"
+                  textTransform="capitalize"
+                  fontWeight="semibold"
+                >
+                  {posts.firstName} {posts.lastName}
+                </Text>
                 <Text fontSize="xs" color="gray.500">
                   2 days ago
                 </Text>
               </Box>
             </Box>
             <Text mt="5px" mb="5px">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde
-              error pariatur est et consequuntur adipisci repellendus ipsa. Hic
-              et iusto fugiat, ducimus odio optio assumenda, doloribus, magni
-              esse nesciunt corporis!
+              {posts.content}
             </Text>
             <Image src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg" />
             <Box display="flex" mt="5px">

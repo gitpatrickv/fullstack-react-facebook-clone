@@ -32,7 +32,7 @@ const useCreatePost = () => {
 
     {
       onSuccess: () => {
-        //   queryClient.invalidateQueries(['']);
+        queryClient.invalidateQueries(["userPostList"]);
         setLoading(false);
         reset();
         setPost("");
@@ -47,8 +47,6 @@ const useCreatePost = () => {
 
   const onSubmit: SubmitHandler<CreatePostProps> = async (data) => {
     setLoading(true);
-    console.log(data);
-    console.log(data.content);
     const formData = new FormData();
 
     if (data.content) {

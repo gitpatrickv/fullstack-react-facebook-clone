@@ -8,14 +8,22 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { useState } from "react";
+import Photos from "../../components/ProfilePage/Photos";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
-import Photos from "../../components/ProfilePage/Photos";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const { data: fetchAllUserPosts } = useFetchAllUserPosts();
+
+  const [page, _setPage] = useState<number>(1);
+  const pageSize = 25;
+
+  const { data: fetchAllUserPosts } = useFetchAllUserPosts({
+    pageNo: page,
+    pageSize,
+  });
 
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
@@ -50,14 +58,10 @@ const ProfilePage = () => {
         mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
       >
         <Show above="xl">
-          <GridItem area="asideLeft" bg="pink">
-            asideLeft
-          </GridItem>
+          <GridItem area="asideLeft" />
         </Show>
         <Show above="xl">
-          <GridItem area="asideRight" bg="pink">
-            asideRight
-          </GridItem>
+          <GridItem area="asideRight" />
         </Show>
         <GridItem
           area="section1"
@@ -91,7 +95,7 @@ const ProfilePage = () => {
         </GridItem>
         <GridItem area="section2">
           <CreatePost />
-          {fetchAllUserPosts?.map((posts) => (
+          {fetchAllUserPosts?.postList.map((posts) => (
             <Posts key={posts.postId} posts={posts} />
           ))}
         </GridItem>
