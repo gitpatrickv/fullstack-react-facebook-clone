@@ -24,7 +24,6 @@ const useFetchAllUserPosts = ({ pageNo, pageSize }: PaginateProps) => {
       });
       return data;
     },
-    keepPreviousData: true,
     enabled: !!jwtToken,
   });
 };

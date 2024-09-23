@@ -20,8 +20,9 @@ import { useRef } from "react";
 import { BiLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
-import Comments from "./Comments";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
+import Comments from "./Comments";
+import PostImages from "./PostImages";
 
 interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -75,17 +76,7 @@ const Posts = ({ posts }: PostProps) => {
         <Text mt="5px" mb="5px">
           {posts.content}
         </Text>
-        {posts.postImages && posts.postImages.length > 0
-          ? posts.postImages.map((images) => (
-              <Image
-                key={images.postImageId}
-                src={images.postImageUrl}
-                objectFit="cover"
-                width="100%"
-                height="auto"
-              />
-            ))
-          : ""}
+        <PostImages postImages={posts.postImages} />
         <Box display="flex" mt="5px">
           <Text>Likes</Text>
           <Spacer />

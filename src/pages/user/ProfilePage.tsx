@@ -82,7 +82,7 @@ const ProfilePage = () => {
               {array.map((index) => (
                 <Box
                   key={index}
-                  mr={index === 3 || index === 6 || index === 9 ? "0px" : "5px"}
+                  mr={index % 3 === 0 ? "0px" : "5px"}
                   flexBasis="calc(33.33% - 5px)"
                   flexGrow={1}
                   mb="5px"
