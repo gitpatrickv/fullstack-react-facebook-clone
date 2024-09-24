@@ -19,6 +19,7 @@ import {
 import { useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
 import useCreatePost from "../../../hooks/user/useCreatePost";
+import { useUserStore } from "../../../store/user-store";
 
 const CreatePost = () => {
   const {
@@ -35,6 +36,7 @@ const CreatePost = () => {
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
+  const { firstName } = useUserStore();
   const handlePostInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -54,7 +56,7 @@ const CreatePost = () => {
           />
           <Input
             borderRadius={20}
-            placeholder="What's on your mind, Patrick?"
+            placeholder={`What's on your mind, ${firstName}?`}
             variant="filled"
             textAlign="left"
             fontSize={["sm", "md", "lg"]}
@@ -95,7 +97,7 @@ const CreatePost = () => {
                 <Textarea
                   {...register("content")}
                   // ref={initialRef}
-                  placeholder="What's on your mind, Trek?"
+                  placeholder={`What's on your mind, ${firstName}?`}
                   fontSize={["sm", "md", "lg"]}
                   width="100%"
                   onClick={onOpen}

@@ -3,14 +3,20 @@ import MyLinks from "./MyLinks";
 
 const Footer = () => {
   return (
-    <Card borderRadius="none" mt={{ base: "50px", md: "80px" }} as="footer">
+    <Card
+      borderRadius="none"
+      position="fixed"
+      bottom="0"
+      width="100%"
+      as="footer"
+    >
       <CardBody>
         <Box display="flex" flexDirection="column" alignItems="center">
           <MyLinks />
           <Text mr="5px" mt="10px">
             Built using:
           </Text>
-          <Text>
+          <Text textAlign="center">
             Frontend: React, Typescript, Chakra UI, React Query, Zustand
           </Text>
           <Text>Backend: Spring Boot, Java 22, MySQL</Text>

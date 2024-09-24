@@ -6,6 +6,7 @@ import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { useUserStore } from "../../../store/user-store";
 
 const Sidebar = () => {
   const { colorMode } = useColorMode();
@@ -18,6 +19,7 @@ const Sidebar = () => {
       bg: colorMode === "dark" ? "gray.700" : "gray.200",
     },
   };
+  const { firstName, lastName } = useUserStore();
 
   return (
     <Box>
@@ -30,7 +32,9 @@ const Sidebar = () => {
             size="xs"
             ml="3px"
           />
-          <Text ml="13px">Patrick V.</Text>
+          <Text ml="13px" textTransform="capitalize">
+            {firstName} {lastName}
+          </Text>
         </Box>
       </Link>
       <Link to="/friends">

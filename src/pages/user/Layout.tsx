@@ -15,8 +15,8 @@ const Layout = () => {
       <Grid
         templateColumns="1fr"
         templateAreas={`"main"`}
-        padding={{ base: 5, md: 10, lg: 15, xl: 2 }}
-        mt={{ xl: "70px" }}
+        padding={{ base: 1, md: 10, lg: 15, xl: 2 }}
+        mt={{ base: "10px", xl: "70px" }}
       >
         <GridItem area="main" as="main">
           <Box>

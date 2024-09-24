@@ -7,7 +7,8 @@ export interface User {
   dateOfBirth: string;
   password: string;
   confirmPassword: string;
-  profilePicture: string;
+  profilePicture?: string;
+  coverPhoto?: string;
   gender: string;
   role: string;
   userModel: string;

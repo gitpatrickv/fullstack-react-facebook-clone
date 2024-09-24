@@ -33,8 +33,10 @@ import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthQueryStore } from "../../../store/auth-store";
+import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
 const Navbar = () => {
+  const { firstName, lastName, profilePicture } = useUserStore();
   const location = useLocation();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const queryClient = useQueryClient();
@@ -240,12 +242,15 @@ const Navbar = () => {
                 <MenuItem paddingBottom={3} paddingTop={3}>
                   <Avatar
                     src={
+                      profilePicture ||
                       "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
                     }
                     size="xs"
                     ml="3px"
                   />
-                  <Text ml="12px">Patrick V.</Text>
+                  <Text ml="12px" textTransform="capitalize">
+                    {firstName} {lastName}
+                  </Text>
                 </MenuItem>
               </Link>
               <Link to="/home">
