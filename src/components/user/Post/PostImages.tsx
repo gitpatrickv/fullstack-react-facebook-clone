@@ -1,5 +1,7 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import PostImage from "../../../entities/PostImage";
+import PostImagesModal from "./PostImagesModal";
 
 interface Props {
   postImages: PostImage[];
@@ -9,6 +11,41 @@ const PostImages = ({ postImages }: Props) => {
   if (!postImages || postImages.length === 0) {
     return null;
   }
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [images, setImages] = useState<PostImage[]>(postImages);
+  const [activeImage, setActiveImage] = useState<PostImage | null>(null);
+
+  useEffect(() => {
+    if (postImages && postImages.length > 0) {
+      setImages(postImages);
+      setActiveImage(postImages[0]);
+    }
+  }, [postImages]);
+
+  const handleImageClick = (images: PostImage) => {
+    setActiveImage(images);
+    onOpen();
+  };
+
+  const handleSelectNextImageRightClick = () => {
+    if (activeImage && images.length > 0) {
+      const currentIndex = images.findIndex(
+        (img) => img.postImageId === activeImage.postImageId
+      );
+      const nextIndex = (currentIndex + 1) % images.length;
+      setActiveImage(images[nextIndex]);
+    }
+  };
+
+  const handleSelectNextImageLeftClick = () => {
+    if (activeImage && images.length > 0) {
+      const currentIndex = images.findIndex(
+        (img) => img.postImageId === activeImage.postImageId
+      );
+      const nextIndex = (currentIndex - 1 + images.length) % images.length;
+      setActiveImage(images[nextIndex]);
+    }
+  };
 
   const getFlexBasis = (index: number, imageCount: number) => {
     if (imageCount === 1) return "100%";
@@ -26,13 +63,14 @@ const PostImages = ({ postImages }: Props) => {
   return (
     <>
       <Box display="flex" flexWrap="wrap" gap={1}>
-        {postImages.slice(0, 6).map((image, index) => (
+        {images.slice(0, 6).map((image, index) => (
           <Box
             key={image.postImageId}
             flexBasis={getFlexBasis(index, postImages.length)}
             flexGrow={1}
             position="relative"
             cursor="pointer"
+            onClick={() => handleImageClick(image)}
           >
             <Image
               src={image.postImageUrl}
@@ -61,6 +99,14 @@ const PostImages = ({ postImages }: Props) => {
             )}
           </Box>
         ))}
+        <PostImagesModal
+          isOpen={isOpen}
+          onClose={onClose}
+          nextRightImage={handleSelectNextImageRightClick}
+          nextLeftImage={handleSelectNextImageLeftClick}
+          activeImage={activeImage}
+          postImages={images}
+        />
       </Box>
     </>
   );
