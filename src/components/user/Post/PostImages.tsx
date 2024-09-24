@@ -21,7 +21,7 @@ const PostImages = ({ postImages }: Props) => {
     return "calc(33.33% - 5px)";
   };
 
-  const gap = postImages.length - 6;
+  const gap = postImages.length + 1 - 6;
 
   return (
     <>
@@ -32,8 +32,6 @@ const PostImages = ({ postImages }: Props) => {
             flexBasis={getFlexBasis(index, postImages.length)}
             flexGrow={1}
             position="relative"
-            width="100%"
-            height="auto"
             cursor="pointer"
           >
             <Image
@@ -44,7 +42,7 @@ const PostImages = ({ postImages }: Props) => {
               height="auto"
               filter={
                 postImages.length > 6 && index === 5
-                  ? "brightness(0.4)"
+                  ? "brightness(0.3)"
                   : "none"
               }
             />
@@ -55,7 +53,7 @@ const PostImages = ({ postImages }: Props) => {
                 left="50%"
                 transform="translate(-50%, -50%)"
                 color="white"
-                fontSize="xxx-large"
+                fontSize={{ base: "x-large", md: "xx-large", lg: "xxx-large" }}
                 fontWeight="semibold"
               >
                 +{gap}

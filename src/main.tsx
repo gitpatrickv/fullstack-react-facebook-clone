@@ -6,6 +6,10 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import router from "./services/routes.tsx";
 import theme from "./theme";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+
+TimeAgo.addDefaultLocale(en);
 
 const queryClient = new QueryClient({
   defaultOptions: {

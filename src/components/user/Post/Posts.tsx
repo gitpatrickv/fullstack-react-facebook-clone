@@ -23,6 +23,7 @@ import { PiShareFatLight } from "react-icons/pi";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import Comments from "./Comments";
 import PostImages from "./PostImages";
+import ReactTimeAgo from "react-time-ago";
 
 interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -34,7 +35,7 @@ const Posts = ({ posts }: PostProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
-
+  const time = new Date(posts.timestamp);
   const boxStyles = {
     display: "flex",
     justifyContent: "center",
@@ -68,8 +69,8 @@ const Posts = ({ posts }: PostProps) => {
             >
               {posts.firstName} {posts.lastName}
             </Text>
-            <Text fontSize="xs" color="gray.500">
-              2 days ago
+            <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+              <ReactTimeAgo date={time} locale="en-US" />
             </Text>
           </Box>
         </Box>
@@ -144,15 +145,18 @@ const Posts = ({ posts }: PostProps) => {
                 >
                   {posts.firstName} {posts.lastName}
                 </Text>
-                <Text fontSize="xs" color="gray.500">
-                  2 days ago
+                <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+                  <ReactTimeAgo date={time} locale="en-US" />
                 </Text>
               </Box>
             </Box>
             <Text mt="5px" mb="5px">
               {posts.content}
             </Text>
-            <Image src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg" />
+            <Image
+              src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg"
+              minWidth="100%"
+            />
             <Box display="flex" mt="5px">
               <Text>Likes</Text>
               <Spacer />
