@@ -132,9 +132,8 @@ const Posts = ({ posts }: PostProps) => {
             borderColor={colorMode === "dark" ? "gray.500" : "gray.200"}
           >
             {posts.firstName} {posts.lastName}'s Post
+            <ModalCloseButton />
           </ModalHeader>
-
-          <ModalCloseButton />
           <ModalBody>
             <Box display="flex" alignItems="center">
               <Avatar

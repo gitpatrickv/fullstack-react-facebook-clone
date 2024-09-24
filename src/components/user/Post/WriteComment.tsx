@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, Textarea, useColorMode } from "@chakra-ui/react";
+import { Avatar, Box, Textarea, useColorMode } from "@chakra-ui/react";
 import { CiCamera } from "react-icons/ci";
 import { IoMdSend } from "react-icons/io";
 const WriteComment = () => {
