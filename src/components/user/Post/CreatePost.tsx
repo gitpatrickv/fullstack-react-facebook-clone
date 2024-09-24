@@ -92,18 +92,17 @@ const CreatePost = () => {
             <ModalHeader textAlign="center">Create Post</ModalHeader>
             <ModalCloseButton />
             <Divider mb="10px" />
-            <ModalBody pb={6}>
+            <ModalBody>
               <FormControl>
                 <Textarea
                   {...register("content")}
                   // ref={initialRef}
                   placeholder={`What's on your mind, ${firstName}?`}
-                  fontSize={["sm", "md", "lg"]}
-                  width="100%"
                   onClick={onOpen}
-                  cursor="pointer"
                   border="none"
-                  _active={{ border: "none" }}
+                  _focus={{ border: "none", boxShadow: "none" }}
+                  _hover={{ border: "none" }}
+                  resize="none"
                   onChange={handlePostInputChange}
                 />
               </FormControl>

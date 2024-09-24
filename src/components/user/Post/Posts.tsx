@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   Divider,
-  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,10 +19,11 @@ import { useRef } from "react";
 import { BiLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
+import ReactTimeAgo from "react-time-ago";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import Comments from "./Comments";
 import PostImages from "./PostImages";
-import ReactTimeAgo from "react-time-ago";
+import WriteComment from "./WriteComment";
 
 interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -81,7 +81,14 @@ const Posts = ({ posts }: PostProps) => {
         <Box display="flex" mt="5px">
           <Text>Likes</Text>
           <Spacer />
-          <Box display="flex" mr="15px" alignItems="center">
+          <Box
+            display="flex"
+            mr="15px"
+            alignItems="center"
+            onClick={onOpen}
+            cursor="pointer"
+            userSelect="none"
+          >
             <Text mr="3px">99</Text>
             {isSmallScreen ? <FaRegComment /> : <Text>comments</Text>}
           </Box>
@@ -132,6 +139,7 @@ const Posts = ({ posts }: PostProps) => {
             <Box display="flex" alignItems="center">
               <Avatar
                 src={
+                  posts.profilePicture ||
                   "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
                 }
                 size="sm"
@@ -153,10 +161,7 @@ const Posts = ({ posts }: PostProps) => {
             <Text mt="5px" mb="5px">
               {posts.content}
             </Text>
-            <Image
-              src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg"
-              minWidth="100%"
-            />
+            <PostImages postImages={posts.postImages} />
             <Box display="flex" mt="5px">
               <Text>Likes</Text>
               <Spacer />
@@ -188,7 +193,10 @@ const Posts = ({ posts }: PostProps) => {
             </Box>
             <Divider mt="5px" mb="5px" color="gray.500" />
             <Comments />
+            <Comments />
           </ModalBody>
+          <Divider />
+          <WriteComment />
         </ModalContent>
       </Modal>
     </>
