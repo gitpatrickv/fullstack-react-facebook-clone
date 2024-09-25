@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Grid,
   GridItem,
   IconButton,
@@ -8,10 +9,13 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Show,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import PostImage from "../../../entities/PostImage";
+import NavbarRight from "../Navbar/NavbarRight";
 import Comments from "./Comments";
 
 interface ImageModalProps {
@@ -33,72 +37,131 @@ const PostImagesModal = ({
 }: ImageModalProps) => {
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
-    lg: "0.7fr 0.3fr",
-    xl: "0.8fr 0.2fr",
+    lg: "60px 0.7fr 60px 0.3fr",
+    xl: "60px 0.8fr 60px 0.2fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({
     base: `"section1"
            "section2"
            `,
-    lg: `"section1 section2"`,
-    xl: `"section1 section2"`,
+    lg: `"leftButton section1 rightButton section2"`,
+    xl: `"leftButton section1 rightButton section2"`,
   });
+  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+
+  const nextButton = (direction: "left" | "right") => (
+    <IconButton
+      isRound={true}
+      aria-label={direction === "left" ? "Left" : "Right"}
+      size={isSmallScreen ? "md" : "lg"}
+      colorScheme="gray.500"
+      bg="gray.500"
+      icon={
+        direction === "left" ? (
+          <FaChevronLeft size="25px" />
+        ) : (
+          <FaChevronRight size="25px" />
+        )
+      }
+      onClick={direction === "left" ? nextLeftImage : nextRightImage}
+    />
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
       <ModalContent>
-        <ModalCloseButton />
+        <ModalCloseButton
+          position="absolute"
+          left="5px"
+          size="lg"
+          borderRadius="full"
+          bg="gray.800"
+          color="white"
+          _hover={{ bg: "gray.700" }}
+        />
+        <Link to="/home">
+          <Box position="absolute" top="2" left="50px" color="blue.500">
+            <FaFacebook size="40px" />
+          </Box>
+        </Link>
+        {!isLargeScreen && (
+          <Box padding={2}>
+            <NavbarRight />
+          </Box>
+        )}
+
         <Grid
           templateColumns={gridTemplateColumns}
           templateAreas={gridTemplateAreas}
         >
-          <GridItem area="section1" bg="black">
+          <GridItem
+            area="section1"
+            bg="black"
+            height={isLargeScreen ? "100vh" : "auto"}
+            display={isLargeScreen ? "flex" : "block"}
+            justifyContent={isLargeScreen ? "center" : undefined}
+            alignItems={isLargeScreen ? "center" : undefined}
+          >
+            {isSmallScreen && <Box padding={5} />}
             <Box display="flex" alignItems="center" justifyContent="center">
-              {postImages && postImages.length > 1 && (
-                <Box position="absolute" left="10px">
-                  <IconButton
-                    isRound={true}
-                    aria-label="Left"
-                    size="lg"
-                    bg="gray.500"
-                    icon={<FaChevronLeft size="25px" />}
-                    onClick={nextLeftImage}
-                  />
+              {postImages.length > 1 && isSmallScreen && (
+                <Box
+                  position={isSmallScreen ? "absolute" : "static"}
+                  left={isSmallScreen ? "0px" : undefined}
+                  ml={isSmallScreen ? "5px" : "0px"}
+                >
+                  {nextButton("left")}
                 </Box>
               )}
 
-              <Box>
+              <Box ml="5px" mr="5px">
                 <Image
                   src={activeImage?.postImageUrl}
                   overflow="hidden"
                   width="auto"
-                  height={{ base: "auto", xl: "100vh" }}
+                  height={{ base: "200px", md: "400px", xl: "100vh" }}
                   objectFit="cover"
                 />
               </Box>
-              {postImages && postImages.length > 1 && (
+
+              {postImages.length > 1 && isSmallScreen && (
                 <Box
-                  position="absolute"
-                  right={{ base: "10px", lg: "320px", xl: "395px" }}
-                  alignItems="center"
+                  position={isSmallScreen ? "absolute" : "static"}
+                  right={isSmallScreen ? "0px" : undefined}
+                  mr={isSmallScreen ? "5px" : "0px"}
                 >
-                  <IconButton
-                    isRound={true}
-                    aria-label="Right"
-                    size="lg"
-                    bg="gray.500"
-                    icon={<FaChevronRight size="25px" />}
-                    onClick={nextRightImage}
-                  />
+                  {nextButton("right")}
                 </Box>
               )}
             </Box>
+            {isSmallScreen && <Box padding={5} />}
           </GridItem>
-          <GridItem area="section2" bg="red">
-            <Comments />
+          <GridItem area="section2">
+            <Show above="lg">
+              <Box padding={2}>
+                <NavbarRight />
+              </Box>
+            </Show>
+            <Divider />
+            <Box padding={4}>
+              <Comments />
+            </Box>
           </GridItem>
+          <Show above="lg">
+            <GridItem area="leftButton" bg="black">
+              <Box position="absolute" top="50%" bottom="50%" ml="10px">
+                {postImages.length > 1 && nextButton("left")}
+              </Box>
+            </GridItem>
+            <GridItem area="rightButton" bg="black">
+              <Box position="absolute" top="50%" bottom="50%">
+                {postImages.length > 1 && nextButton("right")}
+              </Box>
+            </GridItem>
+          </Show>
         </Grid>
       </ModalContent>
     </Modal>
