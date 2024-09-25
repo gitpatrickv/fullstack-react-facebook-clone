@@ -13,10 +13,12 @@ import Photos from "../../components/ProfilePage/Photos";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
+import ProfilePageHeader from "../../components/ProfilePage/ProfilePageHeader";
+import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
+  const { data: _getUserInfo } = useGetCurrentUserInfo();
   const [page, _setPage] = useState<number>(1);
   const pageSize = 25;
 
@@ -44,7 +46,6 @@ const ProfilePage = () => {
     lg: `
           " section1 section2 "
            `,
-
     xl: `
          "asideLeft section1 section2 asideRight"
          `,
@@ -52,10 +53,12 @@ const ProfilePage = () => {
 
   return (
     <>
+      <ProfilePageHeader />
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
-        mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
+        // mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
+        padding={{ base: 2, md: 7, lg: 2 }}
       >
         <Show above="xl">
           <GridItem area="asideLeft" />
