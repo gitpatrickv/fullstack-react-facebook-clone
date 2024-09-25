@@ -51,7 +51,7 @@ const Posts = ({ posts }: PostProps) => {
     <>
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
-        <PostImages postImages={posts.postImages} posts={posts} />
+        <PostImages posts={posts} />
         <Box display="flex" mt="5px">
           <Text>Likes</Text>
           <Spacer />
@@ -110,7 +110,7 @@ const Posts = ({ posts }: PostProps) => {
           </ModalHeader>
           <ModalBody>
             <PostContent posts={posts} />
-            <PostImages postImages={posts.postImages} posts={posts} />
+            <PostImages posts={posts} />
             <Box display="flex" mt="5px">
               <Text>Likes</Text>
               <Spacer />

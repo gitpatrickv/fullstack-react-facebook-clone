@@ -2,27 +2,22 @@ import { Box, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import PostImage from "../../../entities/PostImage";
 import PostImagesModal from "./PostImagesModal";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
+import { PostProps } from "./Posts";
 
-interface Props {
-  postImages: PostImage[];
-  posts: FetchAllUserPostsProps;
-}
-
-const PostImages = ({ postImages, posts }: Props) => {
-  if (!postImages || postImages.length === 0) {
+const PostImages = ({ posts }: PostProps) => {
+  if (!posts.postImages || posts.postImages.length === 0) {
     return null;
   }
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [images, setImages] = useState<PostImage[]>(postImages);
+  const [images, setImages] = useState<PostImage[]>(posts.postImages);
   const [activeImage, setActiveImage] = useState<PostImage | null>(null);
 
   useEffect(() => {
-    if (postImages && postImages.length > 0) {
-      setImages(postImages);
-      setActiveImage(postImages[0]);
+    if (posts.postImages && posts.postImages.length > 0) {
+      setImages(posts.postImages);
+      setActiveImage(posts.postImages[0]);
     }
-  }, [postImages]);
+  }, [posts.postImages]);
 
   const handleImageClick = (images: PostImage) => {
     setActiveImage(images);
@@ -60,7 +55,7 @@ const PostImages = ({ postImages, posts }: Props) => {
     return "calc(33.33% - 5px)";
   };
 
-  const gap = postImages.length + 1 - 6;
+  const gap = posts.postImages.length + 1 - 6;
 
   return (
     <>
@@ -68,7 +63,7 @@ const PostImages = ({ postImages, posts }: Props) => {
         {images.slice(0, 6).map((image, index) => (
           <Box
             key={image.postImageId}
-            flexBasis={getFlexBasis(index, postImages.length)}
+            flexBasis={getFlexBasis(index, posts.postImages.length)}
             flexGrow={1}
             position="relative"
             cursor="pointer"
@@ -81,12 +76,12 @@ const PostImages = ({ postImages, posts }: Props) => {
               minHeight="100%"
               height="auto"
               filter={
-                postImages.length > 6 && index === 5
+                posts.postImages.length > 6 && index === 5
                   ? "brightness(0.3)"
                   : "none"
               }
             />
-            {postImages.length > 6 && index === 5 && (
+            {posts.postImages.length > 6 && index === 5 && (
               <Text
                 position="absolute"
                 top="50%"
