@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import PostImage from "../../../entities/PostImage";
 import NavbarRight from "../Navbar/NavbarRight";
 import Comments from "./Comments";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
+import PostContent from "./PostContent";
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -25,6 +27,7 @@ interface ImageModalProps {
   nextLeftImage: () => void;
   activeImage: PostImage | null;
   postImages: PostImage[];
+  posts: FetchAllUserPostsProps;
 }
 
 const PostImagesModal = ({
@@ -34,6 +37,7 @@ const PostImagesModal = ({
   nextLeftImage,
   activeImage,
   postImages,
+  posts,
 }: ImageModalProps) => {
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
@@ -87,7 +91,7 @@ const PostImagesModal = ({
             <FaFacebook size="40px" />
           </Box>
         </Link>
-        {!isLargeScreen && (
+        {isSmallScreen && (
           <Box padding={2}>
             <NavbarRight />
           </Box>
@@ -147,6 +151,8 @@ const PostImagesModal = ({
             </Show>
             <Divider />
             <Box padding={4}>
+              <PostContent posts={posts} />
+              <Divider />
               <Comments />
             </Box>
           </GridItem>

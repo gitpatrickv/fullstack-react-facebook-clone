@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Card,
   Divider,
@@ -19,13 +18,13 @@ import { useRef } from "react";
 import { BiLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
-import ReactTimeAgo from "react-time-ago";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import Comments from "./Comments";
+import PostContent from "./PostContent";
 import PostImages from "./PostImages";
 import WriteComment from "./WriteComment";
 
-interface PostProps {
+export interface PostProps {
   posts: FetchAllUserPostsProps;
 }
 
@@ -35,7 +34,6 @@ const Posts = ({ posts }: PostProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
-  const time = new Date(posts.timestamp);
   const boxStyles = {
     display: "flex",
     justifyContent: "center",
@@ -52,32 +50,8 @@ const Posts = ({ posts }: PostProps) => {
   return (
     <>
       <Card padding={3} mt="10px">
-        <Box display="flex" alignItems="center">
-          <Avatar
-            src={
-              posts.profilePicture ||
-              "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-            }
-            size="sm"
-            mr="10px"
-          />
-          <Box flexDirection="column">
-            <Text
-              fontSize="sm"
-              textTransform="capitalize"
-              fontWeight="semibold"
-            >
-              {posts.firstName} {posts.lastName}
-            </Text>
-            <Text fontSize="xs" color="gray.500" fontWeight="semibold">
-              <ReactTimeAgo date={time} locale="en-US" />
-            </Text>
-          </Box>
-        </Box>
-        <Text mt="5px" mb="5px">
-          {posts.content}
-        </Text>
-        <PostImages postImages={posts.postImages} />
+        <PostContent posts={posts} />
+        <PostImages postImages={posts.postImages} posts={posts} />
         <Box display="flex" mt="5px">
           <Text>Likes</Text>
           <Spacer />
@@ -135,32 +109,8 @@ const Posts = ({ posts }: PostProps) => {
             <ModalCloseButton />
           </ModalHeader>
           <ModalBody>
-            <Box display="flex" alignItems="center">
-              <Avatar
-                src={
-                  posts.profilePicture ||
-                  "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-                }
-                size="sm"
-                mr="10px"
-              />
-              <Box flexDirection="column">
-                <Text
-                  fontSize="sm"
-                  textTransform="capitalize"
-                  fontWeight="semibold"
-                >
-                  {posts.firstName} {posts.lastName}
-                </Text>
-                <Text fontSize="xs" color="gray.500" fontWeight="semibold">
-                  <ReactTimeAgo date={time} locale="en-US" />
-                </Text>
-              </Box>
-            </Box>
-            <Text mt="5px" mb="5px">
-              {posts.content}
-            </Text>
-            <PostImages postImages={posts.postImages} />
+            <PostContent posts={posts} />
+            <PostImages postImages={posts.postImages} posts={posts} />
             <Box display="flex" mt="5px">
               <Text>Likes</Text>
               <Spacer />

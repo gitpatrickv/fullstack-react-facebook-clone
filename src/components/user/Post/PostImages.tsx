@@ -2,12 +2,14 @@ import { Box, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import PostImage from "../../../entities/PostImage";
 import PostImagesModal from "./PostImagesModal";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
 
 interface Props {
   postImages: PostImage[];
+  posts: FetchAllUserPostsProps;
 }
 
-const PostImages = ({ postImages }: Props) => {
+const PostImages = ({ postImages, posts }: Props) => {
   if (!postImages || postImages.length === 0) {
     return null;
   }
@@ -106,6 +108,7 @@ const PostImages = ({ postImages }: Props) => {
           nextLeftImage={handleSelectNextImageLeftClick}
           activeImage={activeImage}
           postImages={images}
+          posts={posts}
         />
       </Box>
     </>
