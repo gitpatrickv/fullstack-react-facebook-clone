@@ -23,6 +23,7 @@ import Comments from "./Comments";
 import PostContent from "./PostContent";
 import PostImages from "./PostImages";
 import WriteComment from "./WriteComment";
+import useLikePost from "../../../hooks/user/useLikePost";
 
 export interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -34,6 +35,10 @@ const Posts = ({ posts }: PostProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
+  const { mutate: likePost } = useLikePost();
+  const handleLikePostClick = () => {
+    likePost(posts.postId);
+  };
   const boxStyles = {
     display: "flex",
     justifyContent: "center",
@@ -73,7 +78,7 @@ const Posts = ({ posts }: PostProps) => {
         </Box>
         <Divider mt="5px" mb="5px" color="gray.500" />
         <Box display="flex" justifyContent="space-around">
-          <Box {...boxStyles}>
+          <Box {...boxStyles} onClick={handleLikePostClick}>
             <BiLike size="20px" />
             <Text ml="5px">Like</Text>
           </Box>

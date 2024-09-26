@@ -67,7 +67,6 @@ const ProfilePageHeader = () => {
             height={{ base: "250px", md: "330px", lg: "400px", xl: "450px" }}
             bg={colorMode === "dark" ? "#181818" : "gray.100"}
             _hover={{ bg: colorMode === "dark" ? "#282828" : "gray.200" }}
-            cursor="pointer"
             borderBottomLeftRadius="10px"
             borderBottomRightRadius="10px"
             display="flex"
@@ -100,7 +99,13 @@ const ProfilePageHeader = () => {
                 onClick={() => handleInputClick("COVER_PHOTO")}
               >
                 <FaCamera size={isSmallScreen ? "20px" : "15px"} />
-                {isSmallScreen ? "" : <Text ml="5px">Add Cover Photo</Text>}
+                {isSmallScreen ? (
+                  ""
+                ) : (
+                  <Text ml="5px">
+                    {coverPhoto ? "Edit Cover Photo" : "Add Cover Photo"}
+                  </Text>
+                )}
               </Button>
               <input
                 type="file"
@@ -132,7 +137,6 @@ const ProfilePageHeader = () => {
                   borderColor={colorMode === "dark" ? "gray.700" : "white"}
                   width="180px"
                   height="180px"
-                  cursor="pointer"
                 />
               </Box>
               <Box
