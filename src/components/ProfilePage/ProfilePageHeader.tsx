@@ -13,12 +13,12 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import { FaCamera, FaChevronDown, FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
-import { useUserStore } from "../../store/user-store";
-import { useAuthQueryStore } from "../../store/auth-store";
 import useUploadUserImage from "../../hooks/user/useUploadUserImage";
-import { useRef, useState } from "react";
+import { useAuthQueryStore } from "../../store/auth-store";
+import { useUserStore } from "../../store/user-store";
 const ProfilePageHeader = () => {
   const { colorMode } = useColorMode();
   const { firstName, lastName, profilePicture, coverPhoto } = useUserStore();

@@ -31,6 +31,8 @@ const CreatePost = () => {
     onClose,
     post,
     setPost,
+    imageFile,
+    setImageFile,
   } = useCreatePost();
   const initialRef = useRef(null);
   const finalRef = useRef(null);
@@ -40,6 +42,11 @@ const CreatePost = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setPost(e.target.value);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    setImageFile(files ? files : null);
   };
 
   return (
@@ -133,6 +140,7 @@ const CreatePost = () => {
                   accept=".jpeg, .png"
                   multiple
                   {...register("file")}
+                  onChange={handleFileChange}
                 />
               </Box>
 
@@ -143,6 +151,7 @@ const CreatePost = () => {
                 _hover={{ bg: "blue.400" }}
                 _active={{ bg: "blue.600" }}
                 mt="20px"
+                isDisabled={post || imageFile ? false : true}
               >
                 Post
               </Button>

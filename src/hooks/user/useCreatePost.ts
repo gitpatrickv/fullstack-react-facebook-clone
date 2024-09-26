@@ -3,7 +3,7 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 interface CreatePostProps {
   content?: string;
@@ -13,6 +13,7 @@ interface CreatePostProps {
 const apiClient = axiosInstance;
 
 const useCreatePost = () => {
+  const toast = useToast();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const queryClient = useQueryClient();
@@ -20,6 +21,7 @@ const useCreatePost = () => {
   const { register, handleSubmit, reset } = useForm<CreatePostProps>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [post, setPost] = useState<string>("");
+  const [imageFile, setImageFile] = useState<FileList | null>(null);
 
   const mutation = useMutation(
     (formData: FormData) =>
@@ -36,11 +38,22 @@ const useCreatePost = () => {
         setLoading(false);
         reset();
         setPost("");
+        setImageFile(null);
         onClose();
       },
       onError: (error: any) => {
         console.error("Error posting:", error);
         setLoading(false);
+
+        if (error.response?.data.errorMessage) {
+          toast({
+            title: "Error uploading image.",
+            description: error.response.data.errorMessage,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       },
     }
   );
@@ -56,6 +69,7 @@ const useCreatePost = () => {
       Array.from(data.file).forEach((file) => {
         formData.append("file", file);
       });
+      setImageFile(data.file);
     }
 
     await mutation.mutate(formData);
@@ -71,6 +85,8 @@ const useCreatePost = () => {
     onClose,
     post,
     setPost,
+    imageFile,
+    setImageFile,
   };
 };
 

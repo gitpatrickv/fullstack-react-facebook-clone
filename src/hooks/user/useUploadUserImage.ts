@@ -1,3 +1,4 @@
+import { useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 
@@ -10,6 +11,8 @@ interface UploadUserImageProps {
 const apiClient = axiosInstance;
 
 const useUploadUserImage = () => {
+  const toast = useToast();
+
   const queryClient = useQueryClient();
   const mutation = useMutation(
     async ({ file, jwtToken, imageType }: UploadUserImageProps) => {
@@ -32,12 +35,23 @@ const useUploadUserImage = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["user"]);
+        queryClient.invalidateQueries(["userPostList"]);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         console.error(
           "Error uploading photo: File size is too big. Only PNG and JPEG formats are accepted.",
           error
         );
+
+        if (error.response?.data.errorMessage) {
+          toast({
+            title: "Error uploading image.",
+            description: error.response.data.errorMessage,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
       },
     }
   );
