@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   Card,
+  Divider,
   Grid,
   GridItem,
+  Image,
   Show,
   Spacer,
   Text,
@@ -13,8 +15,35 @@ import {
 } from "@chakra-ui/react";
 import { FaCamera, FaChevronDown, FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
+import { useUserStore } from "../../store/user-store";
+import { useAuthQueryStore } from "../../store/auth-store";
+import useUploadUserImage from "../../hooks/user/useUploadUserImage";
+import { useRef, useState } from "react";
 const ProfilePageHeader = () => {
   const { colorMode } = useColorMode();
+  const { firstName, lastName, profilePicture, coverPhoto } = useUserStore();
+  const { authStore } = useAuthQueryStore();
+  const jwtToken = authStore.jwtToken;
+  const [imageType, setImageType] = useState<string>("");
+  const uploadPhoto = useUploadUserImage();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleInputClick = (image: string) => {
+    fileInputRef.current?.click();
+    setImageType(image);
+  };
+
+  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadPhoto.mutate({
+        file: file,
+        jwtToken: jwtToken,
+        imageType: imageType,
+      });
+    }
+  };
+
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
     xl: "0.2fr 1fr 0.2fr",
@@ -44,25 +73,42 @@ const ProfilePageHeader = () => {
             display="flex"
             flexDirection="column"
             justifyContent="flex-end"
+            position="relative"
           >
-            {/* <Image
-              src="https://t4.ftcdn.net/jpg/05/49/86/39/360_F_549863991_6yPKI08MG7JiZX83tMHlhDtd6XLFAMce.jpg"
-              width="100%"
-              height="450px"
-              objectFit="cover"
-              borderBottomLeftRadius="10px"
-              borderBottomRightRadius="10px"
-            /> */}
+            {coverPhoto && (
+              <Image
+                src={coverPhoto}
+                width="100%"
+                height="450px"
+                objectFit="cover"
+                borderBottomLeftRadius="10px"
+                borderBottomRightRadius="10px"
+              />
+            )}
             <Box
               display="flex"
               justifyContent="end"
               mb="20px"
               mr={{ base: "10px", md: "30px" }}
+              position="absolute"
+              right="0"
             >
-              <Button color="black" bg="white" _hover={{ bg: "white" }}>
+              <Button
+                color="black"
+                bg="white"
+                _hover={{ bg: "white" }}
+                onClick={() => handleInputClick("COVER_PHOTO")}
+              >
                 <FaCamera size={isSmallScreen ? "20px" : "15px"} />
-                {isSmallScreen ? "" : <Text ml="5px">Add Cover Photo X</Text>}
+                {isSmallScreen ? "" : <Text ml="5px">Add Cover Photo</Text>}
               </Button>
+              <input
+                type="file"
+                accept=".jpeg, .png"
+                ref={fileInputRef}
+                onChange={handleUploadImage}
+                style={{ display: "none" }}
+              />
             </Box>
           </Box>
 
@@ -78,7 +124,10 @@ const ProfilePageHeader = () => {
                 left={{ base: "20px", md: "30px" }}
               >
                 <Avatar
-                  src="https://img.freepik.com/premium-photo/cooltrendy-funky-boy-cartoon-character-with-retro-style-design_960782-109604.jpg"
+                  src={
+                    profilePicture ||
+                    "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
+                  }
                   borderWidth="6px"
                   borderColor={colorMode === "dark" ? "gray.700" : "white"}
                   width="180px"
@@ -89,7 +138,7 @@ const ProfilePageHeader = () => {
               <Box
                 height="36px"
                 width="36px"
-                bg="gray.600"
+                bg={colorMode === "dark" ? "gray.600" : "gray.200"}
                 borderRadius="full"
                 display="flex"
                 justifyContent="center"
@@ -98,9 +147,17 @@ const ProfilePageHeader = () => {
                 top={{ base: "15px", md: "25px", lg: "100px" }}
                 right="14px"
                 cursor="pointer"
+                onClick={() => handleInputClick("PROFILE_PICTURE")}
               >
                 <FaCamera size="20px" />
               </Box>
+              <input
+                type="file"
+                accept=".jpeg, .png"
+                ref={fileInputRef}
+                onChange={handleUploadImage}
+                style={{ display: "none" }}
+              />
             </Box>
 
             <Box
@@ -108,10 +165,14 @@ const ProfilePageHeader = () => {
               mt={{ base: "0px", lg: "20px" }}
               textAlign={{ base: "center", lg: "start" }}
               position={{ base: "relative", lg: "static" }}
-              bottom="90px"
+              bottom={{ base: "80px", lg: "0" }}
             >
-              <Text fontSize="xx-large" fontWeight="bold">
-                X-NAME HERE
+              <Text
+                fontSize="xx-large"
+                fontWeight="bold"
+                textTransform="capitalize"
+              >
+                {firstName} {lastName}
               </Text>
               <Text
                 fontSize="md"
@@ -132,7 +193,7 @@ const ProfilePageHeader = () => {
               mr={{ base: "0px", lg: "30px" }}
               textAlign={{ base: "center", lg: "start" }}
               position={{ base: "relative", lg: "static" }}
-              bottom={{ base: "70px", md: "90px", lg: "none" }}
+              bottom={{ base: "50px", md: "70px", lg: "0" }}
             >
               <Button
                 mr="7px"
@@ -153,6 +214,12 @@ const ProfilePageHeader = () => {
                 <FaChevronDown />
               </Button>
             </Box>
+          </Box>
+          <Divider position="relative" bottom="15px" />
+          <Box position="relative" bottom="7px">
+            <Button bg="none" height="50px">
+              POSTS
+            </Button>
           </Box>
         </GridItem>
         <Show above="xl">

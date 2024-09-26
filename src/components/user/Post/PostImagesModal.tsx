@@ -152,7 +152,9 @@ const PostImagesModal = ({
             <Divider />
             <Box padding={4}>
               <PostContent posts={posts} />
-              <Divider />
+            </Box>
+            <Divider />
+            <Box padding={4}>
               <Comments />
             </Box>
           </GridItem>

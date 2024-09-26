@@ -7,10 +7,8 @@ import {
   FormControl,
   Input,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -18,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
+import { Link } from "react-router-dom";
 import useCreatePost from "../../../hooks/user/useCreatePost";
 import { useUserStore } from "../../../store/user-store";
 
@@ -36,7 +35,7 @@ const CreatePost = () => {
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
-  const { firstName } = useUserStore();
+  const { firstName, lastName, profilePicture } = useUserStore();
   const handlePostInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -49,7 +48,8 @@ const CreatePost = () => {
         <Box display="flex" alignItems="center">
           <Avatar
             src={
-              "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+              profilePicture ||
+              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
             }
             size="sm"
             mr="10px"
@@ -91,8 +91,23 @@ const CreatePost = () => {
           <ModalContent>
             <ModalHeader textAlign="center">Create Post</ModalHeader>
             <ModalCloseButton />
-            <Divider mb="10px" />
-            <ModalBody>
+            <Divider />
+            <Box padding={4}>
+              <Box display="flex" alignItems="center" mb="10px">
+                <Link to="/profile">
+                  <Avatar
+                    src={
+                      profilePicture ||
+                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
+                    }
+                    height="30px"
+                    width="30px"
+                  />
+                </Link>
+                <Text ml="10px" textTransform="capitalize">
+                  {firstName} {lastName}
+                </Text>
+              </Box>
               <FormControl>
                 <Textarea
                   {...register("content")}
@@ -120,19 +135,18 @@ const CreatePost = () => {
                   {...register("file")}
                 />
               </Box>
-            </ModalBody>
 
-            <ModalFooter>
               <Button
                 type="submit"
                 bg="blue.500"
                 width="100%"
                 _hover={{ bg: "blue.400" }}
                 _active={{ bg: "blue.600" }}
+                mt="20px"
               >
                 Post
               </Button>
-            </ModalFooter>
+            </Box>
           </ModalContent>
         </form>
       </Modal>

@@ -23,7 +23,7 @@ const HomePage = () => {
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
-        mt={{ base: "55px", md: "35px", lg: "55px", xl: "0px" }}
+        mt={{ base: "55px", md: "35px", lg: "55px", xl: "5px" }}
         padding={{ base: 2, md: 7, lg: 2 }}
       >
         <GridItem area="section" as="section">

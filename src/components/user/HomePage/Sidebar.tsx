@@ -19,7 +19,7 @@ const Sidebar = () => {
       bg: colorMode === "dark" ? "gray.700" : "gray.200",
     },
   };
-  const { firstName, lastName } = useUserStore();
+  const { firstName, lastName, profilePicture } = useUserStore();
 
   return (
     <Box>
@@ -27,12 +27,13 @@ const Sidebar = () => {
         <Box {...boxStyles} cursor="pointer">
           <Avatar
             src={
-              "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+              profilePicture ||
+              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
             }
-            size="xs"
-            ml="3px"
+            height="30px"
+            width="30px"
           />
-          <Text ml="13px" textTransform="capitalize">
+          <Text ml="10px" textTransform="capitalize">
             {firstName} {lastName}
           </Text>
         </Box>

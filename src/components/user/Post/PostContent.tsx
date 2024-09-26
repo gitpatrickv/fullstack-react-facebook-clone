@@ -10,7 +10,7 @@ const PostContent = ({ posts }: PostProps) => {
         <Avatar
           src={
             posts.profilePicture ||
-            "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+            "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
           }
           size="sm"
           mr="10px"
