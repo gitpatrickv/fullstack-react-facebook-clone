@@ -1,5 +1,6 @@
 import {
   Box,
+  Card,
   Divider,
   Spacer,
   Text,
@@ -14,6 +15,8 @@ import useLikePost from "../../../hooks/user/useLikePost";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import { useUserStore } from "../../../store/user-store";
+import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
+import { useState } from "react";
 
 interface Props {
   posts: FetchAllUserPostsProps;
@@ -23,6 +26,7 @@ interface Props {
 const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
+  const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
   const { firstName, lastName } = useUserStore();
   const { mutate: likePost } = useLikePost();
 
@@ -42,6 +46,7 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
     },
     borderRadius: "5px",
   };
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const currentUser = `${firstName}` + " " + `${lastName}`;
   const postOwner = `${posts.firstName}` + " " + `${posts.lastName}`;
@@ -62,13 +67,39 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
               borderColor="blue.500"
               bg="blue.500"
               mr="5px"
+              cursor="pointer"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               <BiSolidLike size="14px" />
             </Box>
-            <Text>
-              {currentUser === postOwner ? "You" : postLikeCount?.postLikeCount}
-            </Text>
+            <Text>{postLikeCount?.postLikeCount}</Text>
           </>
+        )}
+        {isHovered && (
+          <Card
+            bg="gray.100"
+            width="fit-content"
+            height="auto"
+            padding={2}
+            color="black"
+            zIndex={1}
+            position="absolute"
+            bottom="75px"
+          >
+            <Text fontWeight="semibold" fontSize="md">
+              Like
+            </Text>
+            {postLikeUserList?.map((user) => (
+              <Text
+                key={user.postLikeId}
+                fontSize="sm"
+                textTransform="capitalize"
+              >
+                {user.firstName} {user.lastName}
+              </Text>
+            ))}
+          </Card>
         )}
 
         <Spacer />
