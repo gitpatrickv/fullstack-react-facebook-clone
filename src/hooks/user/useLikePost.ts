@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 
@@ -7,17 +7,25 @@ const apiClient = axiosInstance;
 const useLikePost = () => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
-  return useMutation(async (postId: number) => {
-    await apiClient.put(
-      `/like/${postId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      }
-    );
-  });
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (postId: number) => {
+      await apiClient.put(
+        `/post/${postId}/like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data, variables) => {
+        queryClient.invalidateQueries(["postLike", variables]);
+      },
+    }
+  );
 };
 
 export default useLikePost;
