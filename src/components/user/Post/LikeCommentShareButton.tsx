@@ -11,6 +11,7 @@ import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useLikePost from "../../../hooks/user/useLikePost";
+import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 
 interface Props {
   postId: number;
@@ -18,7 +19,8 @@ interface Props {
 }
 
 const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
-  const { postLike } = useGetPostLike(postId);
+  const { data: postLike } = useGetPostLike(postId);
+  const { data: postLikeCount } = useGetPostLikeCount(postId);
 
   const { mutate: likePost } = useLikePost();
 
@@ -41,8 +43,27 @@ const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
 
   return (
     <>
-      <Box display="flex" mt="5px">
-        <Text>Likes</Text>
+      <Box display="flex" mt="5px" alignItems="center">
+        {postLikeCount && postLikeCount.postLikeCount >= 1 && (
+          <>
+            <Box
+              border="1px solid"
+              borderRadius="full"
+              width="20px"
+              height="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              borderColor="blue.500"
+              bg="blue.500"
+              mr="5px"
+            >
+              <BiSolidLike size="14px" />
+            </Box>
+            <Text>{postLikeCount?.postLikeCount}</Text>
+          </>
+        )}
+
         <Spacer />
         <Box
           display="flex"
@@ -65,7 +86,7 @@ const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
         <Box
           {...boxStyles}
           onClick={handleLikePostClick}
-          color={postLike ? "blue.500" : "white"}
+          color={postLike?.liked ? "blue.500" : "white"}
         >
           {postLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
           <Text ml="5px">Like</Text>

@@ -21,8 +21,9 @@ const useLikePost = () => {
       );
     },
     {
-      onSuccess: (data, variables) => {
+      onSuccess: (_data, variables) => {
         queryClient.invalidateQueries(["postLike", variables]);
+        queryClient.invalidateQueries(["postLikeCount", variables]);
       },
     }
   );
