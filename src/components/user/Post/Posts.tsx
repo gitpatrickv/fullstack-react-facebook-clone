@@ -32,7 +32,7 @@ const Posts = ({ posts }: PostProps) => {
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
         <PostImages posts={posts} />
-        <LikeCommentShareButton postId={posts.postId} onOpen={onOpen} />
+        <LikeCommentShareButton posts={posts} onOpen={onOpen} />
       </Card>
 
       <Modal
@@ -59,7 +59,7 @@ const Posts = ({ posts }: PostProps) => {
           <ModalBody>
             <PostContent posts={posts} />
             <PostImages posts={posts} />
-            <LikeCommentShareButton postId={posts.postId} onOpen={onOpen} />
+            <LikeCommentShareButton posts={posts} onOpen={onOpen} />
             <Divider mt="5px" mb="5px" color="gray.500" />
             <Comments />
             <Comments />

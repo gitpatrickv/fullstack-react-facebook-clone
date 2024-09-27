@@ -12,20 +12,22 @@ import { PiShareFatLight } from "react-icons/pi";
 import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useLikePost from "../../../hooks/user/useLikePost";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
+import { useUserStore } from "../../../store/user-store";
 
 interface Props {
-  postId: number;
+  posts: FetchAllUserPostsProps;
   onOpen: () => void;
 }
 
-const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
-  const { data: postLike } = useGetPostLike(postId);
-  const { data: postLikeCount } = useGetPostLikeCount(postId);
-
+const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
+  const { data: postLike } = useGetPostLike(posts.postId);
+  const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
+  const { firstName, lastName } = useUserStore();
   const { mutate: likePost } = useLikePost();
 
   const handleLikePostClick = () => {
-    likePost(postId);
+    likePost(posts.postId);
   };
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
@@ -40,6 +42,9 @@ const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
     },
     borderRadius: "5px",
   };
+
+  const currentUser = `${firstName}` + " " + `${lastName}`;
+  const postOwner = `${posts.firstName}` + " " + `${posts.lastName}`;
 
   return (
     <>
@@ -60,7 +65,9 @@ const LikeCommentShareButton = ({ postId, onOpen }: Props) => {
             >
               <BiSolidLike size="14px" />
             </Box>
-            <Text>{postLikeCount?.postLikeCount}</Text>
+            <Text>
+              {currentUser === postOwner ? "You" : postLikeCount?.postLikeCount}
+            </Text>
           </>
         )}
 
