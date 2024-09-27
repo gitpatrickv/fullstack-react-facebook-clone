@@ -10,6 +10,7 @@ const useGetCurrentUserInfo = () => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const {
+    setUserId,
     setFirstName,
     setLastName,
     setProfilePicture,
@@ -28,6 +29,7 @@ const useGetCurrentUserInfo = () => {
       return data;
     },
     onSuccess: (data) => {
+      setUserId(data.userId);
       setFirstName(data.firstName);
       setLastName(data.lastName);
       setDateOfBirth(data.dateOfBirth);

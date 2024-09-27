@@ -19,11 +19,11 @@ const Sidebar = () => {
       bg: colorMode === "dark" ? "gray.700" : "gray.200",
     },
   };
-  const { firstName, lastName, profilePicture } = useUserStore();
+  const { firstName, lastName, profilePicture, userId } = useUserStore();
 
   return (
     <Box>
-      <Link to="/profile">
+      <Link to={`/profile/${userId}`}>
         <Box {...boxStyles} cursor="pointer">
           <Avatar
             src={

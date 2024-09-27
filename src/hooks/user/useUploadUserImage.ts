@@ -36,6 +36,7 @@ const useUploadUserImage = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(["user"]);
         queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["userProfile"]);
       },
       onError: (error: any) => {
         console.error(

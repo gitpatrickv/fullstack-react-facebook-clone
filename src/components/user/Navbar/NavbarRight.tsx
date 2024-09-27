@@ -25,7 +25,7 @@ import { useAuthQueryStore } from "../../../store/auth-store";
 import { useQueryClient } from "@tanstack/react-query";
 
 const NavbarRight = () => {
-  const { firstName, lastName, profilePicture } = useUserStore();
+  const { firstName, lastName, profilePicture, userId } = useUserStore();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ const NavbarRight = () => {
         />
 
         <MenuList>
-          <Link to="/profile">
+          <Link to={`/profile/${userId}`}>
             <MenuItem paddingBottom={3} paddingTop={3}>
               <Avatar
                 src={

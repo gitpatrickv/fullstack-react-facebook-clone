@@ -7,16 +7,15 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
-import useGetPostLike from "../../../hooks/user/useGetPostLike";
-import useLikePost from "../../../hooks/user/useLikePost";
-import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
-import { useUserStore } from "../../../store/user-store";
+import useGetPostLike from "../../../hooks/user/useGetPostLike";
+import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
-import { useState } from "react";
+import useLikePost from "../../../hooks/user/useLikePost";
 
 interface Props {
   posts: FetchAllUserPostsProps;
@@ -27,7 +26,6 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
   const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
-  const { firstName, lastName } = useUserStore();
   const { mutate: likePost } = useLikePost();
 
   const handleLikePostClick = () => {
@@ -47,9 +45,6 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
     borderRadius: "5px",
   };
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
-  const currentUser = `${firstName}` + " " + `${lastName}`;
-  const postOwner = `${posts.firstName}` + " " + `${posts.lastName}`;
 
   return (
     <>
@@ -73,7 +68,17 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
             >
               <BiSolidLike size="14px" />
             </Box>
-            <Text>{postLikeCount?.postLikeCount}</Text>
+            <Text>
+              {postLike?.liked
+                ? postLikeCount.postLikeCount > 1
+                  ? `You and ${postLikeCount.postLikeCount - 1} others`
+                  : "You"
+                : postLikeCount.postLikeCount > 0
+                ? `${postLikeCount.postLikeCount} ${
+                    postLikeCount.postLikeCount === 1 ? "like" : "likes"
+                  }`
+                : ""}
+            </Text>
           </>
         )}
         {isHovered && (

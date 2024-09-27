@@ -7,21 +7,24 @@ import { PaginateProps } from "../../entities/PageResponse";
 
 const apiClient = axiosInstance;
 
-const useFetchAllUserPosts = ({ pageNo, pageSize }: PaginateProps) => {
+const useFetchAllUserPosts = ({ userId, pageNo, pageSize }: PaginateProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   return useQuery({
-    queryKey: ["userPostList", pageNo, pageSize],
+    queryKey: ["userPostList", userId, pageNo, pageSize],
     queryFn: async () => {
-      const { data } = await apiClient.get<PostListResponse>(`/post`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        params: {
-          pageNo: pageNo - 1,
-          pageSize: pageSize,
-        },
-      });
+      const { data } = await apiClient.get<PostListResponse>(
+        `/post/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          params: {
+            pageNo: pageNo - 1,
+            pageSize: pageSize,
+          },
+        }
+      );
       return data;
     },
     enabled: !!jwtToken,

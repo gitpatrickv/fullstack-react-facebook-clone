@@ -7,6 +7,7 @@ export default interface PageResponse {
 }
 
 export interface PaginateProps {
+  userId: number;
   pageNo: number;
   pageSize: number;
 }

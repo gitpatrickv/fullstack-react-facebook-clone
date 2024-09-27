@@ -16,17 +16,22 @@ import {
 import { useRef, useState } from "react";
 import { FaCamera, FaChevronDown, FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
+
 import useUploadUserImage from "../../hooks/user/useUploadUserImage";
 import { useAuthQueryStore } from "../../store/auth-store";
-import { useUserStore } from "../../store/user-store";
+import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
+import { useParams } from "react-router-dom";
+
 const ProfilePageHeader = () => {
+  const params = useParams<{ userId: string }>();
+  const userId = Number(params.userId);
   const { colorMode } = useColorMode();
-  const { firstName, lastName, profilePicture, coverPhoto } = useUserStore();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const [imageType, setImageType] = useState<string>("");
   const uploadPhoto = useUploadUserImage();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { data: getUserProfile } = useGetUserProfileInfo(userId);
 
   const handleInputClick = (image: string) => {
     fileInputRef.current?.click();
@@ -74,9 +79,9 @@ const ProfilePageHeader = () => {
             justifyContent="flex-end"
             position="relative"
           >
-            {coverPhoto && (
+            {getUserProfile?.coverPhoto && (
               <Image
-                src={coverPhoto}
+                src={getUserProfile.coverPhoto}
                 width="100%"
                 height="450px"
                 objectFit="cover"
@@ -103,7 +108,9 @@ const ProfilePageHeader = () => {
                   ""
                 ) : (
                   <Text ml="5px">
-                    {coverPhoto ? "Edit Cover Photo" : "Add Cover Photo"}
+                    {getUserProfile?.coverPhoto
+                      ? "Edit Cover Photo"
+                      : "Add Cover Photo"}
                   </Text>
                 )}
               </Button>
@@ -130,7 +137,7 @@ const ProfilePageHeader = () => {
               >
                 <Avatar
                   src={
-                    profilePicture ||
+                    getUserProfile?.profilePicture ||
                     "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
                   }
                   borderWidth="6px"
@@ -176,7 +183,7 @@ const ProfilePageHeader = () => {
                 fontWeight="bold"
                 textTransform="capitalize"
               >
-                {firstName} {lastName}
+                {getUserProfile?.firstName} {getUserProfile?.lastName}
               </Text>
               <Text
                 fontSize="md"
