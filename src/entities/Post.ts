@@ -1,5 +1,6 @@
 import PageResponse from "./PageResponse";
 import PostImage from "./PostImage";
+import { UserData } from "./User";
 
 export default interface Post {
   postId: number;
@@ -7,10 +8,7 @@ export default interface Post {
   timestamp: string;
 }
 
-export interface FetchAllUserPostsProps extends Post {
-  firstName: string;
-  lastName: string;
-  profilePicture?: string;
+export interface FetchAllUserPostsProps extends Post, UserData {
   postImages: PostImage[];
 }
 

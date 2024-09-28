@@ -17,6 +17,7 @@ import LikeCommentShareButton from "./LikeCommentShareButton";
 import PostContent from "./PostContent";
 import PostImages from "./PostImages";
 import WriteComment from "./WriteComment";
+import useFetchAllPostComments from "../../../hooks/user/useFetchAllPostComments";
 
 export interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -28,10 +29,18 @@ const Posts = ({ posts }: PostProps) => {
   const finalRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [page, _setPage] = useState<number>(1);
+  const pageSize = 25;
 
   useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
+
+  const { data: fetchAllPostComments } = useFetchAllPostComments({
+    postId: posts.postId,
+    pageNo: page,
+    pageSize: pageSize,
+  });
 
   return (
     <>
@@ -71,8 +80,9 @@ const Posts = ({ posts }: PostProps) => {
               isOpen={isModalOpen}
             />
             <Divider mt="5px" mb="5px" color="gray.500" />
-            <Comments />
-            <Comments />
+            {fetchAllPostComments?.postCommentList.map((comments) => (
+              <Comments key={comments.postCommentId} comments={comments} />
+            ))}
           </ModalBody>
           <Divider />
           <WriteComment posts={posts} />

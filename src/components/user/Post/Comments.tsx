@@ -1,6 +1,12 @@
 import { Avatar, Box, Card, Text, useColorMode } from "@chakra-ui/react";
+import { PostComment } from "../../../entities/PostComment";
+import ReactTimeAgo from "react-time-ago";
+interface Props {
+  comments: PostComment;
+}
 
-const Comments = () => {
+const Comments = ({ comments }: Props) => {
+  const time = new Date(comments.timestamp);
   const { colorMode } = useColorMode();
   const textStyles = {
     fontSize: "sm",
@@ -13,7 +19,8 @@ const Comments = () => {
       <Box display="flex">
         <Avatar
           src={
-            "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+            comments.profilePicture ||
+            "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
           }
           size="sm"
           mr="5px"
@@ -23,20 +30,15 @@ const Comments = () => {
           borderRadius="20px"
           padding="6px 12px 6px 12px"
         >
-          <Text fontSize="sm" fontWeight="semibold">
-            Unknown Username Here
+          <Text fontSize="sm" fontWeight="semibold" textTransform="capitalize">
+            {comments.firstName} {comments.lastName}
           </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas
-            in totam animi perferendis suscipit aperiam. Sequi illum laborum
-            atque quas aut sapiente tempore sed, temporibus culpa pariatur
-            deserunt impedit enim.
-          </Text>
+          <Text>{comments.comment}</Text>
         </Card>
       </Box>
       <Box display="flex" ml="50px">
         <Text mr="20px" {...textStyles}>
-          1d
+          <ReactTimeAgo date={time} locale="en-US" />
         </Text>
         <Text mr="20px" {...textStyles}>
           Like

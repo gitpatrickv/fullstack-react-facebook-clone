@@ -15,6 +15,7 @@ interface UserStore {
   setCoverPhoto: (photo: string | null) => void;
   setDateOfBirth: (birth: string | null) => void;
   setGender: (g: string | null) => void;
+  resetUser: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -33,4 +34,14 @@ export const useUserStore = create<UserStore>((set) => ({
   setCoverPhoto: (photo: string | null) => set({ coverPhoto: photo }),
   setDateOfBirth: (birth: string | null) => set({ dateOfBirth: birth }),
   setGender: (g: string | null) => set({ gender: g }),
+  resetUser: () =>
+    set({
+      userId: null,
+      firstName: null,
+      lastName: null,
+      profilePicture: null,
+      coverPhoto: null,
+      dateOfBirth: null,
+      gender: null,
+    }),
 }));

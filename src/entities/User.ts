@@ -35,3 +35,9 @@ export const schema = z
     message: "Password & Confirm Password do not match!",
     path: ["confirmPassword"],
   });
+
+export interface UserData {
+  firstName: string;
+  lastName: string;
+  profilePicture?: string;
+}

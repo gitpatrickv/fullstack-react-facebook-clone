@@ -25,13 +25,15 @@ import { useAuthQueryStore } from "../../../store/auth-store";
 import { useQueryClient } from "@tanstack/react-query";
 
 const NavbarRight = () => {
-  const { firstName, lastName, profilePicture, userId } = useUserStore();
+  const { firstName, lastName, profilePicture, userId, resetUser } =
+    useUserStore();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
   const navigate = useNavigate();
   const handleLogout = () => {
     logout(navigate);
     queryClient.setQueryData(["user"], null);
+    resetUser();
   };
   return (
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
