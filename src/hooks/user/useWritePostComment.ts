@@ -31,7 +31,8 @@ const useWritePostComment = (postId: number) => {
 
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries([""]);
+        queryClient.invalidateQueries(["postCommentList", postId]);
+        queryClient.invalidateQueries(["postCommentCount", postId]);
         setLoading(false);
         reset();
       },

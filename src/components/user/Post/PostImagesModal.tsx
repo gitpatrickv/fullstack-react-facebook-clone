@@ -10,14 +10,14 @@ import {
   ModalContent,
   ModalOverlay,
   Show,
+  Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
 import PostImage from "../../../entities/PostImage";
 import NavbarRight from "../Navbar/NavbarRight";
-import Comments from "./Comments";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
 import PostContent from "./PostContent";
 
 interface ImageModalProps {
@@ -155,7 +155,8 @@ const PostImagesModal = ({
             </Box>
             <Divider />
             <Box padding={4}>
-              <Comments />
+              {/* <Comments /> */}
+              <Text>IMAGES COMMENTS HERE</Text>
             </Box>
           </GridItem>
           <Show above="lg">

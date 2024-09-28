@@ -16,6 +16,7 @@ import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useLikePost from "../../../hooks/user/useLikePost";
+import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
 
 interface Props {
   posts: FetchAllUserPostsProps;
@@ -27,6 +28,7 @@ const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
   const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
+  const { data: postCommentCount } = useGetPostCommentCount(posts.postId);
   const { mutate: likePost } = useLikePost();
 
   const handleLikePostClick = () => {
@@ -110,17 +112,26 @@ const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
         )}
 
         <Spacer />
-        <Box
-          display="flex"
-          mr="15px"
-          alignItems="center"
-          onClick={onOpen}
-          cursor="pointer"
-          userSelect="none"
-        >
-          <Text mr="3px">99</Text>
-          {isSmallScreen ? <FaRegComment /> : <Text>comments</Text>}
-        </Box>
+        {postCommentCount && postCommentCount?.postCommentCount >= 1 && (
+          <Box
+            display="flex"
+            mr="15px"
+            alignItems="center"
+            onClick={onOpen}
+            cursor="pointer"
+            userSelect="none"
+          >
+            <Text mr="3px">{postCommentCount?.postCommentCount}</Text>
+            {isSmallScreen ? (
+              <FaRegComment />
+            ) : (
+              <Text>
+                {postCommentCount.postCommentCount > 1 ? "comments" : "comment"}
+              </Text>
+            )}
+          </Box>
+        )}
+
         <Box display="flex" alignItems="center">
           <Text mr="3px">50</Text>
           {isSmallScreen ? <PiShareFatLight /> : <Text>shares</Text>}

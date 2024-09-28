@@ -19,12 +19,14 @@ const useLikePost = () => {
           },
         }
       );
+      return postId;
     },
     {
-      onSuccess: (_data, variables) => {
-        queryClient.invalidateQueries(["postLike", variables]);
-        queryClient.invalidateQueries(["postLikeCount", variables]);
-        queryClient.invalidateQueries(["postLikeUserList", variables]);
+      onSuccess: (data) => {
+        const postId = data;
+        queryClient.invalidateQueries(["postLike", postId]);
+        queryClient.invalidateQueries(["postLikeCount", postId]);
+        queryClient.invalidateQueries(["postLikeUserList", postId]);
       },
     }
   );
