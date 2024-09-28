@@ -75,7 +75,7 @@ const Posts = ({ posts }: PostProps) => {
             <Comments />
           </ModalBody>
           <Divider />
-          <WriteComment />
+          <WriteComment posts={posts} />
         </ModalContent>
       </Modal>
     </>

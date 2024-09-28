@@ -14,7 +14,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
 import { Link } from "react-router-dom";
 import useCreatePost from "../../../hooks/user/useCreatePost";
@@ -39,12 +39,12 @@ const CreatePost = () => {
 
   const { firstName, lastName, profilePicture } = useUserStore();
   const handlePostInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setPost(e.target.value);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     setImageFile(files ? files : null);
   };

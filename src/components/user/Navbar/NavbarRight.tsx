@@ -50,7 +50,7 @@ const NavbarRight = () => {
             <Avatar
               src={
                 profilePicture ||
-                "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+                "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
               }
               size="sm"
             />
@@ -64,7 +64,7 @@ const NavbarRight = () => {
               <Avatar
                 src={
                   profilePicture ||
-                  "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+                  "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
                 }
                 size="xs"
                 ml="3px"
