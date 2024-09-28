@@ -20,9 +20,10 @@ import useLikePost from "../../../hooks/user/useLikePost";
 interface Props {
   posts: FetchAllUserPostsProps;
   onOpen: () => void;
+  isOpen: boolean;
 }
 
-const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
+const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
   const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
@@ -88,9 +89,10 @@ const LikeCommentShareButton = ({ posts, onOpen }: Props) => {
             height="auto"
             padding={2}
             color="black"
-            zIndex={1}
+            zIndex={100}
             position="absolute"
-            bottom="75px"
+            bottom={isOpen ? undefined : "75px"}
+            mb={isOpen ? "110px" : "0"}
           >
             <Text fontWeight="semibold" fontSize="md">
               Like

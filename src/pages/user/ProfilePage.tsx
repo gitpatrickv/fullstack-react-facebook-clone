@@ -34,7 +34,7 @@ const ProfilePage = () => {
     base: "1fr",
     md: "0.1fr 1fr 0.1fr",
     lg: "0.4fr 0.6fr",
-    xl: "0.2fr 0.4fr 0.6fr 0.2fr",
+    xl: "0.3fr 0.4fr 0.6fr 0.3fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({

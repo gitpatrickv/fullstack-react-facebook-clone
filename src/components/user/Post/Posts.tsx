@@ -10,7 +10,7 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import Comments from "./Comments";
 import LikeCommentShareButton from "./LikeCommentShareButton";
@@ -27,12 +27,18 @@ const Posts = ({ posts }: PostProps) => {
   const initialRef = useRef(null);
   const finalRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsModalOpen(isOpen);
+  }, [isOpen]);
+
   return (
     <>
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
         <PostImages posts={posts} />
-        <LikeCommentShareButton posts={posts} onOpen={onOpen} />
+        <LikeCommentShareButton posts={posts} onOpen={onOpen} isOpen={isOpen} />
       </Card>
 
       <Modal
@@ -59,7 +65,11 @@ const Posts = ({ posts }: PostProps) => {
           <ModalBody>
             <PostContent posts={posts} />
             <PostImages posts={posts} />
-            <LikeCommentShareButton posts={posts} onOpen={onOpen} />
+            <LikeCommentShareButton
+              posts={posts}
+              onOpen={onOpen}
+              isOpen={isModalOpen}
+            />
             <Divider mt="5px" mb="5px" color="gray.500" />
             <Comments />
             <Comments />

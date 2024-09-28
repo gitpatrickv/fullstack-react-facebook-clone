@@ -14,17 +14,24 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { FaCamera, FaChevronDown, FaPlus } from "react-icons/fa";
+import {
+  FaCamera,
+  FaChevronDown,
+  FaFacebookMessenger,
+  FaPlus,
+  FaUserCheck,
+} from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
-
+import { useParams } from "react-router-dom";
+import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 import useUploadUserImage from "../../hooks/user/useUploadUserImage";
 import { useAuthQueryStore } from "../../store/auth-store";
-import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
-import { useParams } from "react-router-dom";
+import { useUserStore } from "../../store/user-store";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
+  const { userId: currentUserId } = useUserStore();
   const { colorMode } = useColorMode();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
@@ -89,39 +96,41 @@ const ProfilePageHeader = () => {
                 borderBottomRightRadius="10px"
               />
             )}
-            <Box
-              display="flex"
-              justifyContent="end"
-              mb="20px"
-              mr={{ base: "10px", md: "30px" }}
-              position="absolute"
-              right="0"
-            >
-              <Button
-                color="black"
-                bg="white"
-                _hover={{ bg: "white" }}
-                onClick={() => handleInputClick("COVER_PHOTO")}
+            {currentUserId === userId && (
+              <Box
+                display="flex"
+                justifyContent="end"
+                mb="20px"
+                mr={{ base: "10px", md: "30px" }}
+                position="absolute"
+                right="0"
               >
-                <FaCamera size={isSmallScreen ? "20px" : "15px"} />
-                {isSmallScreen ? (
-                  ""
-                ) : (
-                  <Text ml="5px">
-                    {getUserProfile?.coverPhoto
-                      ? "Edit Cover Photo"
-                      : "Add Cover Photo"}
-                  </Text>
-                )}
-              </Button>
-              <input
-                type="file"
-                accept=".jpeg, .png"
-                ref={fileInputRef}
-                onChange={handleUploadImage}
-                style={{ display: "none" }}
-              />
-            </Box>
+                <Button
+                  color="black"
+                  bg="white"
+                  _hover={{ bg: "white" }}
+                  onClick={() => handleInputClick("COVER_PHOTO")}
+                >
+                  <FaCamera size={isSmallScreen ? "20px" : "15px"} />
+                  {isSmallScreen ? (
+                    ""
+                  ) : (
+                    <Text ml="5px">
+                      {getUserProfile?.coverPhoto
+                        ? "Edit Cover Photo"
+                        : "Add Cover Photo"}
+                    </Text>
+                  )}
+                </Button>
+                <input
+                  type="file"
+                  accept=".jpeg, .png"
+                  ref={fileInputRef}
+                  onChange={handleUploadImage}
+                  style={{ display: "none" }}
+                />
+              </Box>
+            )}
           </Box>
 
           <Box
@@ -134,6 +143,7 @@ const ProfilePageHeader = () => {
                 position="relative"
                 bottom={{ base: "100px", lg: "25px" }}
                 left={{ base: "20px", md: "30px" }}
+                mr={currentUserId === userId ? "0px" : "36px"}
               >
                 <Avatar
                   src={
@@ -146,33 +156,40 @@ const ProfilePageHeader = () => {
                   height="180px"
                 />
               </Box>
-              <Box
-                height="36px"
-                width="36px"
-                bg={colorMode === "dark" ? "gray.600" : "gray.200"}
-                borderRadius="full"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                position="relative"
-                top={{ base: "15px", md: "25px", lg: "100px" }}
-                right="14px"
-                cursor="pointer"
-                onClick={() => handleInputClick("PROFILE_PICTURE")}
-              >
-                <FaCamera size="20px" />
-              </Box>
-              <input
-                type="file"
-                accept=".jpeg, .png"
-                ref={fileInputRef}
-                onChange={handleUploadImage}
-                style={{ display: "none" }}
-              />
+              {currentUserId === userId && (
+                <>
+                  <Box
+                    height="36px"
+                    width="36px"
+                    bg={colorMode === "dark" ? "gray.600" : "gray.200"}
+                    borderRadius="full"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    position="relative"
+                    top={{ base: "15px", md: "25px", lg: "100px" }}
+                    right="14px"
+                    cursor="pointer"
+                    onClick={() => handleInputClick("PROFILE_PICTURE")}
+                  >
+                    <FaCamera size="20px" />
+                  </Box>
+                  <input
+                    type="file"
+                    accept=".jpeg, .png"
+                    ref={fileInputRef}
+                    onChange={handleUploadImage}
+                    style={{ display: "none" }}
+                  />
+                </>
+              )}
             </Box>
 
             <Box
-              ml={{ base: "0px", lg: "10px" }}
+              ml={{
+                base: "0px",
+                lg: "10px",
+              }}
               mt={{ base: "0px", lg: "20px" }}
               textAlign={{ base: "center", lg: "start" }}
               position={{ base: "relative", lg: "static" }}
@@ -185,18 +202,22 @@ const ProfilePageHeader = () => {
               >
                 {getUserProfile?.firstName} {getUserProfile?.lastName}
               </Text>
-              <Text
-                fontSize="md"
-                color="gray.500"
-                fontWeight="semibold"
-                mb="10px"
-              >
-                X friends and avatar
-              </Text>
-              <Avatar
-                src="https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-                size="sm"
-              />
+              {currentUserId === userId && (
+                <>
+                  <Text
+                    fontSize="md"
+                    color="gray.500"
+                    fontWeight="semibold"
+                    mb="10px"
+                  >
+                    X friends and avatar
+                  </Text>
+                  <Avatar
+                    src="https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+                    size="sm"
+                  />
+                </>
+              )}
             </Box>
             <Spacer />
             <Box
@@ -206,18 +227,33 @@ const ProfilePageHeader = () => {
               position={{ base: "relative", lg: "static" }}
               bottom={{ base: "50px", md: "70px", lg: "0" }}
             >
-              <Button
-                mr="7px"
-                colorScheme="blue"
-                ml={{ base: "10px", md: "0px" }}
-              >
-                <FaPlus size="15px" />
-                <Text ml="5px">Add to Story</Text>
-              </Button>
-              <Button mr="7px">
-                <MdModeEdit size="20px" />
-                <Text ml="5px">Edit profile</Text>
-              </Button>
+              {currentUserId === userId ? (
+                <>
+                  <Button
+                    mr="7px"
+                    colorScheme="blue"
+                    ml={{ base: "10px", md: "0px" }}
+                  >
+                    <FaPlus size="15px" />
+                    <Text ml="5px">Add to Story</Text>
+                  </Button>
+                  <Button mr="7px">
+                    <MdModeEdit size="20px" />
+                    <Text ml="5px">Edit profile</Text>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
+                    <FaUserCheck size="20px" />
+                    <Text ml="5px">Friends</Text>
+                  </Button>
+                  <Button mr="7px" bg="blue.500">
+                    <FaFacebookMessenger size="20px" />
+                    <Text ml="5px">Message</Text>
+                  </Button>
+                </>
+              )}
               <Button
                 width={{ base: "80%", md: "0" }}
                 mt={{ base: "10px", md: "0px" }}
