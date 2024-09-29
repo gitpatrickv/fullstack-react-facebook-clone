@@ -8,6 +8,9 @@ import {
   GridItem,
   Image,
   Show,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
   Spacer,
   Text,
   useBreakpointValue,
@@ -27,6 +30,7 @@ import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 import useUploadUserImage from "../../hooks/user/useUploadUserImage";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { useUserStore } from "../../store/user-store";
+import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
@@ -38,7 +42,7 @@ const ProfilePageHeader = () => {
   const [imageType, setImageType] = useState<string>("");
   const uploadPhoto = useUploadUserImage();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { data: getUserProfile } = useGetUserProfileInfo(userId);
+  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
 
   const handleInputClick = (image: string) => {
     fileInputRef.current?.click();
@@ -74,64 +78,68 @@ const ProfilePageHeader = () => {
         templateAreas={gridTemplateAreas}
       >
         <GridItem area="header">
-          <Box
-            width="100%"
-            height={{ base: "250px", md: "330px", lg: "400px", xl: "450px" }}
-            bg={colorMode === "dark" ? "#181818" : "gray.100"}
-            _hover={{ bg: colorMode === "dark" ? "#282828" : "gray.200" }}
-            borderBottomLeftRadius="10px"
-            borderBottomRightRadius="10px"
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-end"
-            position="relative"
-          >
-            {getUserProfile?.coverPhoto && (
-              <Image
-                src={getUserProfile.coverPhoto}
-                width="100%"
-                height="450px"
-                objectFit="cover"
-                borderBottomLeftRadius="10px"
-                borderBottomRightRadius="10px"
-              />
-            )}
-            {currentUserId === userId && (
-              <Box
-                display="flex"
-                justifyContent="end"
-                mb="20px"
-                mr={{ base: "10px", md: "30px" }}
-                position="absolute"
-                right="0"
-              >
-                <Button
-                  color="black"
-                  bg="white"
-                  _hover={{ bg: "white" }}
-                  onClick={() => handleInputClick("COVER_PHOTO")}
-                >
-                  <FaCamera size={isSmallScreen ? "20px" : "15px"} />
-                  {isSmallScreen ? (
-                    ""
-                  ) : (
-                    <Text ml="5px">
-                      {getUserProfile?.coverPhoto
-                        ? "Edit Cover Photo"
-                        : "Add Cover Photo"}
-                    </Text>
-                  )}
-                </Button>
-                <input
-                  type="file"
-                  accept=".jpeg, .png"
-                  ref={fileInputRef}
-                  onChange={handleUploadImage}
-                  style={{ display: "none" }}
+          {isLoading ? (
+            <ProfilePageHeaderSkeleton />
+          ) : (
+            <Box
+              width="100%"
+              height={{ base: "250px", md: "330px", lg: "400px", xl: "450px" }}
+              bg={colorMode === "dark" ? "#181818" : "gray.100"}
+              _hover={{ bg: colorMode === "dark" ? "#282828" : "gray.200" }}
+              borderBottomLeftRadius="10px"
+              borderBottomRightRadius="10px"
+              display="flex"
+              flexDirection="column"
+              justifyContent="flex-end"
+              position="relative"
+            >
+              {getUserProfile?.coverPhoto && (
+                <Image
+                  src={getUserProfile.coverPhoto}
+                  width="100%"
+                  height="450px"
+                  objectFit="cover"
+                  borderBottomLeftRadius="10px"
+                  borderBottomRightRadius="10px"
                 />
-              </Box>
-            )}
-          </Box>
+              )}
+              {currentUserId === userId && (
+                <Box
+                  display="flex"
+                  justifyContent="end"
+                  mb="20px"
+                  mr={{ base: "10px", md: "30px" }}
+                  position="absolute"
+                  right="0"
+                >
+                  <Button
+                    color="black"
+                    bg="white"
+                    _hover={{ bg: "white" }}
+                    onClick={() => handleInputClick("COVER_PHOTO")}
+                  >
+                    <FaCamera size={isSmallScreen ? "20px" : "15px"} />
+                    {isSmallScreen ? (
+                      ""
+                    ) : (
+                      <Text ml="5px">
+                        {getUserProfile?.coverPhoto
+                          ? "Edit Cover Photo"
+                          : "Add Cover Photo"}
+                      </Text>
+                    )}
+                  </Button>
+                  <input
+                    type="file"
+                    accept=".jpeg, .png"
+                    ref={fileInputRef}
+                    onChange={handleUploadImage}
+                    style={{ display: "none" }}
+                  />
+                </Box>
+              )}
+            </Box>
+          )}
 
           <Box
             display="flex"
@@ -145,16 +153,25 @@ const ProfilePageHeader = () => {
                 left={{ base: "20px", md: "30px" }}
                 mr={currentUserId === userId ? "0px" : "36px"}
               >
-                <Avatar
-                  src={
-                    getUserProfile?.profilePicture ||
-                    "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                  }
-                  borderWidth="6px"
-                  borderColor={colorMode === "dark" ? "gray.700" : "white"}
-                  width="180px"
-                  height="180px"
-                />
+                {isLoading ? (
+                  <SkeletonCircle
+                    width="180px"
+                    height="180px"
+                    borderWidth="6px"
+                    borderColor={colorMode === "dark" ? "gray.700" : "white"}
+                  />
+                ) : (
+                  <Avatar
+                    src={
+                      getUserProfile?.profilePicture ||
+                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
+                    }
+                    borderWidth="6px"
+                    borderColor={colorMode === "dark" ? "gray.700" : "white"}
+                    width="180px"
+                    height="180px"
+                  />
+                )}
               </Box>
               {currentUserId === userId && (
                 <>
@@ -195,27 +212,41 @@ const ProfilePageHeader = () => {
               position={{ base: "relative", lg: "static" }}
               bottom={{ base: "80px", lg: "0" }}
             >
-              <Text
-                fontSize="xx-large"
-                fontWeight="bold"
-                textTransform="capitalize"
-              >
-                {getUserProfile?.firstName} {getUserProfile?.lastName}
-              </Text>
+              {isLoading ? (
+                <SkeletonText />
+              ) : (
+                <Text
+                  fontSize="xx-large"
+                  fontWeight="bold"
+                  textTransform="capitalize"
+                >
+                  {getUserProfile?.firstName} {getUserProfile?.lastName}
+                </Text>
+              )}
+
               {currentUserId === userId && (
                 <>
-                  <Text
-                    fontSize="md"
-                    color="gray.500"
-                    fontWeight="semibold"
-                    mb="10px"
-                  >
-                    X friends and avatar
-                  </Text>
-                  <Avatar
-                    src="https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-                    size="sm"
-                  />
+                  {isLoading ? (
+                    <>
+                      <SkeletonText />
+                      <SkeletonCircle size="sm" />
+                    </>
+                  ) : (
+                    <>
+                      <Text
+                        fontSize="md"
+                        color="gray.500"
+                        fontWeight="semibold"
+                        mb="10px"
+                      >
+                        X friends and avatar
+                      </Text>
+                      <Avatar
+                        src="https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
+                        size="sm"
+                      />
+                    </>
+                  )}
                 </>
               )}
             </Box>
@@ -227,39 +258,49 @@ const ProfilePageHeader = () => {
               position={{ base: "relative", lg: "static" }}
               bottom={{ base: "50px", md: "70px", lg: "0" }}
             >
-              {currentUserId === userId ? (
+              {isLoading ? (
                 <>
-                  <Button
-                    mr="7px"
-                    colorScheme="blue"
-                    ml={{ base: "10px", md: "0px" }}
-                  >
-                    <FaPlus size="15px" />
-                    <Text ml="5px">Add to Story</Text>
-                  </Button>
-                  <Button mr="7px">
-                    <MdModeEdit size="20px" />
-                    <Text ml="5px">Edit profile</Text>
-                  </Button>
+                  <Skeleton height="40px" />
+                  <Skeleton height="40px" />
+                  <Skeleton height="40px" />
                 </>
               ) : (
                 <>
-                  <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
-                    <FaUserCheck size="20px" />
-                    <Text ml="5px">Friends</Text>
-                  </Button>
-                  <Button mr="7px" bg="blue.500">
-                    <FaFacebookMessenger size="20px" />
-                    <Text ml="5px">Message</Text>
+                  {currentUserId === userId ? (
+                    <>
+                      <Button
+                        mr="7px"
+                        colorScheme="blue"
+                        ml={{ base: "10px", md: "0px" }}
+                      >
+                        <FaPlus size="15px" />
+                        <Text ml="5px">Add to Story</Text>
+                      </Button>
+                      <Button mr="7px">
+                        <MdModeEdit size="20px" />
+                        <Text ml="5px">Edit profile</Text>
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
+                        <FaUserCheck size="20px" />
+                        <Text ml="5px">Friends</Text>
+                      </Button>
+                      <Button mr="7px" bg="blue.500">
+                        <FaFacebookMessenger size="20px" />
+                        <Text ml="5px">Message</Text>
+                      </Button>
+                    </>
+                  )}
+                  <Button
+                    width={{ base: "80%", md: "0" }}
+                    mt={{ base: "10px", md: "0px" }}
+                  >
+                    <FaChevronDown />
                   </Button>
                 </>
               )}
-              <Button
-                width={{ base: "80%", md: "0" }}
-                mt={{ base: "10px", md: "0px" }}
-              >
-                <FaChevronDown />
-              </Button>
             </Box>
           </Box>
           <Divider position="relative" bottom="15px" />

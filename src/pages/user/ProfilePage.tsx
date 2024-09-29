@@ -4,6 +4,7 @@ import {
   Grid,
   GridItem,
   Show,
+  Skeleton,
   Spacer,
   Text,
   useBreakpointValue,
@@ -16,11 +17,22 @@ import Posts from "../../components/user/Post/Posts";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
 import { useParams } from "react-router-dom";
 import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
+import ErrorPage from "./ErrorPage";
+import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
+  const { isLoading } = useGetUserProfileInfo(userId);
+  if (
+    typeof userId !== "number" ||
+    isNaN(userId) ||
+    typeof userId === "string"
+  ) {
+    return <ErrorPage />;
+  }
+
   const [page, _setPage] = useState<number>(1);
   const pageSize = 25;
   const { data: _getUserInfo } = useGetCurrentUserInfo();
@@ -100,7 +112,11 @@ const ProfilePage = () => {
           </Card>
         </GridItem>
         <GridItem area="section2">
-          <CreatePost />
+          {isLoading ? (
+            <Skeleton width="100%" height="100px" />
+          ) : (
+            <CreatePost />
+          )}
           {fetchAllUserPosts?.postList.map((posts) => (
             <Posts key={posts.postId} posts={posts} />
           ))}
