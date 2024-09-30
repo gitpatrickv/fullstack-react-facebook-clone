@@ -5,33 +5,44 @@ import {
   Textarea,
   useColorMode,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { BaseSyntheticEvent, ChangeEvent, RefObject } from "react";
+import { SubmitHandler, UseFormRegister } from "react-hook-form";
 import { CiCamera } from "react-icons/ci";
 import { IoMdSend } from "react-icons/io";
-import useWritePostComment from "../../../hooks/user/useWritePostComment";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
+import { WriteCommentProps } from "../../../hooks/user/useWritePostComment";
+import { useUserStore } from "../../../store/user-store";
 
 interface PostProps {
-  posts: FetchAllUserPostsProps;
   isOpen: boolean;
+  focusRef: RefObject<HTMLTextAreaElement>;
+  register: UseFormRegister<WriteCommentProps>;
+  onSubmit: SubmitHandler<WriteCommentProps>;
+  loading: boolean;
+  fileInputRef: RefObject<HTMLInputElement>;
+  comment: string;
+  handleInputClick: () => void;
+  handleCommentChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (
+    onSubmit: SubmitHandler<WriteCommentProps>
+  ) => (event?: BaseSyntheticEvent) => Promise<void>;
+  handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const WriteComment = ({ posts, isOpen }: PostProps) => {
+const WriteComment = ({
+  isOpen,
+  focusRef,
+  register,
+  onSubmit,
+  loading,
+  comment,
+  handleInputClick,
+  handleCommentChange,
+  handleSubmit,
+  fileInputRef,
+  handleFileChange,
+}: PostProps) => {
   const { colorMode } = useColorMode();
-  const { register, handleSubmit, onSubmit, loading, setValue } =
-    useWritePostComment(posts.postId);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleInputClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setValue("file", e.target.files);
-    }
-  };
-
+  const { profilePicture } = useUserStore();
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -48,6 +59,7 @@ const WriteComment = ({ posts, isOpen }: PostProps) => {
           <Box display="flex">
             <Avatar
               src={
+                profilePicture ||
                 "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
               }
               size="sm"
@@ -61,11 +73,14 @@ const WriteComment = ({ posts, isOpen }: PostProps) => {
             >
               <Textarea
                 {...register("comment")}
+                value={comment}
+                ref={focusRef}
                 placeholder="Write a comment..."
                 border="none"
                 _focus={{ border: "none", boxShadow: "none" }}
                 _hover={{ border: "none" }}
                 resize="none"
+                onChange={handleCommentChange}
               />
 
               <Box>

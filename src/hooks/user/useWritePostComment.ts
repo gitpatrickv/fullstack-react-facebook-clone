@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 
-interface WriteCommentProps {
+export interface WriteCommentProps {
   comment?: string;
   file?: FileList;
 }
@@ -19,6 +19,7 @@ const useWritePostComment = (postId: number) => {
   const jwtToken = authStore.jwtToken;
   const { register, handleSubmit, reset, setValue } =
     useForm<WriteCommentProps>();
+  const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const mutation = useMutation(
     (formData: FormData) =>
@@ -35,6 +36,7 @@ const useWritePostComment = (postId: number) => {
         queryClient.invalidateQueries(["postCommentCount", postId]);
         setLoading(false);
         reset();
+        setComment("");
       },
       onError: (error: any) => {
         console.error("Error posting:", error);
@@ -72,6 +74,8 @@ const useWritePostComment = (postId: number) => {
     onSubmit,
     loading,
     setValue,
+    comment,
+    setComment,
   };
 };
 

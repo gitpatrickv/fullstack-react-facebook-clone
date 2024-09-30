@@ -12,19 +12,23 @@ import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
+import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
 import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useLikePost from "../../../hooks/user/useLikePost";
-import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
 
 interface Props {
   posts: FetchAllUserPostsProps;
   onOpen: () => void;
-  isOpen: boolean;
+  handleFocusInputClick: () => void;
 }
 
-const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
+const LikeCommentShareButton = ({
+  posts,
+  onOpen,
+  handleFocusInputClick,
+}: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
   const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
@@ -93,8 +97,7 @@ const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
             color="black"
             zIndex={100}
             position="absolute"
-            bottom={isOpen ? undefined : "75px"}
-            mb={isOpen ? "110px" : "0"}
+            mb="100px"
           >
             <Text fontWeight="semibold" fontSize="md">
               Like
@@ -147,7 +150,7 @@ const LikeCommentShareButton = ({ posts, onOpen, isOpen }: Props) => {
           {postLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
           <Text ml="5px">Like</Text>
         </Box>
-        <Box {...boxStyles} onClick={onOpen}>
+        <Box {...boxStyles} onClick={handleFocusInputClick}>
           <FaRegComment size="20px" />
           <Text ml="5px">Comment</Text>
         </Box>
