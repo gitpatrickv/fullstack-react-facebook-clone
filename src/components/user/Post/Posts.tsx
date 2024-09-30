@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -42,12 +43,30 @@ const Posts = ({ posts }: PostProps) => {
     pageSize: pageSize,
   });
 
+  const postCommentSize =
+    fetchAllPostComments && fetchAllPostComments?.postCommentList.length >= 2;
+
   return (
     <>
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
         <PostImages posts={posts} />
         <LikeCommentShareButton posts={posts} onOpen={onOpen} isOpen={isOpen} />
+        <Divider mt="5px" mb="5px" color="gray.500" />
+        {postCommentSize && (
+          <Text
+            onClick={onOpen}
+            cursor="pointer"
+            color="gray.500"
+            fontWeight="semibold"
+          >
+            View more comments
+          </Text>
+        )}
+        {fetchAllPostComments?.postCommentList.slice(-1).map((comments) => (
+          <Comments key={comments.postCommentId} comments={comments} />
+        ))}
+        <WriteComment posts={posts} isOpen={isModalOpen} />
       </Card>
 
       <Modal
@@ -85,7 +104,7 @@ const Posts = ({ posts }: PostProps) => {
             ))}
           </ModalBody>
           <Divider />
-          <WriteComment posts={posts} />
+          <WriteComment posts={posts} isOpen={isModalOpen} />
         </ModalContent>
       </Modal>
     </>

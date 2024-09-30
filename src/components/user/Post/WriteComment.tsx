@@ -9,9 +9,14 @@ import { useRef } from "react";
 import { CiCamera } from "react-icons/ci";
 import { IoMdSend } from "react-icons/io";
 import useWritePostComment from "../../../hooks/user/useWritePostComment";
-import { PostProps } from "./Posts";
+import { FetchAllUserPostsProps } from "../../../entities/Post";
 
-const WriteComment = ({ posts }: PostProps) => {
+interface PostProps {
+  posts: FetchAllUserPostsProps;
+  isOpen: boolean;
+}
+
+const WriteComment = ({ posts, isOpen }: PostProps) => {
   const { colorMode } = useColorMode();
   const { register, handleSubmit, onSubmit, loading, setValue } =
     useWritePostComment(posts.postId);
@@ -31,13 +36,14 @@ const WriteComment = ({ posts }: PostProps) => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
-          padding={3}
+          padding={isOpen ? 3 : 0}
           position="sticky"
           bottom="0"
           zIndex={10}
-          ml="10px"
+          ml={isOpen ? "10px" : "0"}
           mr="10px"
           bg={colorMode === "dark" ? "gray.700" : "white"}
+          mt={isOpen ? "0" : "10px"}
         >
           <Box display="flex">
             <Avatar
