@@ -68,9 +68,14 @@ const Posts = ({ posts }: PostProps) => {
     setImageFile,
   } = useWritePostComment(posts.postId);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputClick = () => {
-    fileInputRef.current?.click();
+    if (isModalOpen) {
+      fileInputRef.current?.click();
+    } else {
+      inputRef.current?.click();
+    }
   };
 
   const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -121,7 +126,7 @@ const Posts = ({ posts }: PostProps) => {
           imageFile={imageFile}
           handleInputClick={handleInputClick}
           handleCommentChange={handleCommentChange}
-          fileInputRef={fileInputRef}
+          fileInputRef={inputRef}
           handleFileChange={handleFileChange}
         />
       </Card>
