@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   Divider,
   Modal,
@@ -63,6 +64,8 @@ const Posts = ({ posts }: PostProps) => {
     setValue,
     comment,
     setComment,
+    imageFile,
+    setImageFile,
   } = useWritePostComment(posts.postId);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -76,8 +79,10 @@ const Posts = ({ posts }: PostProps) => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setValue("file", e.target.files);
+    const files = e.target.files;
+    if (files) {
+      setImageFile(files);
+      setValue("file", files);
     }
   };
 
@@ -113,6 +118,7 @@ const Posts = ({ posts }: PostProps) => {
           onSubmit={onSubmit}
           loading={loading}
           comment={comment}
+          imageFile={imageFile}
           handleInputClick={handleInputClick}
           handleCommentChange={handleCommentChange}
           fileInputRef={fileInputRef}
@@ -155,19 +161,22 @@ const Posts = ({ posts }: PostProps) => {
             ))}
           </ModalBody>
           <Divider />
-          <WriteComment
-            isOpen={isModalOpen}
-            focusRef={initialRef}
-            register={register}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            loading={loading}
-            comment={comment}
-            handleInputClick={handleInputClick}
-            handleCommentChange={handleCommentChange}
-            fileInputRef={fileInputRef}
-            handleFileChange={handleFileChange}
-          />
+          <Box position="sticky" bottom="0" zIndex={10}>
+            <WriteComment
+              isOpen={isModalOpen}
+              focusRef={initialRef}
+              register={register}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              loading={loading}
+              comment={comment}
+              imageFile={imageFile}
+              handleInputClick={handleInputClick}
+              handleCommentChange={handleCommentChange}
+              fileInputRef={fileInputRef}
+              handleFileChange={handleFileChange}
+            />
+          </Box>
         </ModalContent>
       </Modal>
     </>

@@ -20,6 +20,7 @@ const useWritePostComment = (postId: number) => {
   const { register, handleSubmit, reset, setValue } =
     useForm<WriteCommentProps>();
   const [comment, setComment] = useState("");
+  const [imageFile, setImageFile] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
   const mutation = useMutation(
     (formData: FormData) =>
@@ -37,6 +38,7 @@ const useWritePostComment = (postId: number) => {
         setLoading(false);
         reset();
         setComment("");
+        setImageFile(null);
       },
       onError: (error: any) => {
         console.error("Error posting:", error);
@@ -64,6 +66,7 @@ const useWritePostComment = (postId: number) => {
     }
     if (data.file) {
       formData.append("file", data.file[0]);
+      setImageFile(data.file);
     }
     await mutation.mutate(formData);
   };
@@ -76,6 +79,8 @@ const useWritePostComment = (postId: number) => {
     setValue,
     comment,
     setComment,
+    imageFile,
+    setImageFile,
   };
 };
 

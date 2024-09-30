@@ -120,7 +120,11 @@ const LikeCommentShareButton = ({
             display="flex"
             mr="15px"
             alignItems="center"
-            onClick={onOpen}
+            onClick={
+              postCommentCount.postCommentCount > 1
+                ? onOpen
+                : handleFocusInputClick
+            }
             cursor="pointer"
             userSelect="none"
           >

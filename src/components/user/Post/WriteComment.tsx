@@ -20,6 +20,7 @@ interface PostProps {
   loading: boolean;
   fileInputRef: RefObject<HTMLInputElement>;
   comment: string;
+  imageFile: FileList | null;
   handleInputClick: () => void;
   handleCommentChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: (
@@ -35,6 +36,7 @@ const WriteComment = ({
   onSubmit,
   loading,
   comment,
+  imageFile,
   handleInputClick,
   handleCommentChange,
   handleSubmit,
@@ -48,9 +50,6 @@ const WriteComment = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           padding={isOpen ? 3 : 0}
-          position="sticky"
-          bottom="0"
-          zIndex={10}
           ml={isOpen ? "10px" : "0"}
           mr="10px"
           bg={colorMode === "dark" ? "gray.700" : "white"}
@@ -105,8 +104,9 @@ const WriteComment = ({
                     aria-label="show"
                     icon={<IoMdSend size="20px" />}
                     bg="transparent"
-                    _hover={{ bg: "transparent" }}
+                    _hover={{ bg: "transparent", color: "blue.500" }}
                     type="submit"
+                    isDisabled={comment || imageFile ? false : true}
                   />
                 </Box>
               </Box>
