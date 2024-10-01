@@ -26,10 +26,10 @@ import {
 } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
-import useUploadUserImage from "../../hooks/user/useUploadUserImage";
-import { useAuthQueryStore } from "../../store/auth-store";
-import { useUserStore } from "../../store/user-store";
+import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
+import useUploadUserImage from "../../../hooks/user/useUploadUserImage";
+import { useAuthQueryStore } from "../../../store/auth-store";
+import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 
 const ProfilePageHeader = () => {

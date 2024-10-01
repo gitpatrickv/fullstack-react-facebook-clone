@@ -10,8 +10,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import Photos from "../../components/ProfilePage/Photos";
-import ProfilePageHeader from "../../components/ProfilePage/ProfilePageHeader";
+
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
@@ -19,6 +18,8 @@ import { useParams } from "react-router-dom";
 import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
 import ErrorPage from "./ErrorPage";
 import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
+import Photos from "../../components/user/ProfilePage/Photos";
+import ProfilePageHeader from "../../components/user/ProfilePage/ProfilePageHeader";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];

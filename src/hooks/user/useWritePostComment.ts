@@ -7,7 +7,7 @@ import { useToast } from "@chakra-ui/react";
 
 export interface WriteCommentProps {
   comment?: string;
-  file?: FileList;
+  file?: File;
 }
 
 const apiClient = axiosInstance;
@@ -20,7 +20,8 @@ const useWritePostComment = (postId: number) => {
   const { register, handleSubmit, reset, setValue } =
     useForm<WriteCommentProps>();
   const [comment, setComment] = useState("");
-  const [imageFile, setImageFile] = useState<FileList | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const mutation = useMutation(
     (formData: FormData) =>
@@ -39,6 +40,7 @@ const useWritePostComment = (postId: number) => {
         reset();
         setComment("");
         setImageFile(null);
+        setImagePreview(null);
       },
       onError: (error: any) => {
         console.error("Error posting:", error);
@@ -65,7 +67,7 @@ const useWritePostComment = (postId: number) => {
       formData.append("comment", data.comment || "");
     }
     if (data.file) {
-      formData.append("file", data.file[0]);
+      formData.append("file", data.file);
       setImageFile(data.file);
     }
     await mutation.mutate(formData);
@@ -81,6 +83,8 @@ const useWritePostComment = (postId: number) => {
     setComment,
     imageFile,
     setImageFile,
+    setImagePreview,
+    imagePreview,
   };
 };
 

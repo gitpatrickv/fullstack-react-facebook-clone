@@ -9,7 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import { FaRegComment } from "react-icons/fa";
+import { IoIosShareAlt } from "react-icons/io";
+import { FaComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 import { FetchAllUserPostsProps } from "../../../entities/Post";
 import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
@@ -130,7 +131,7 @@ const LikeCommentShareButton = ({
           >
             <Text mr="3px">{postCommentCount?.postCommentCount}</Text>
             {isSmallScreen ? (
-              <FaRegComment />
+              <FaComment />
             ) : (
               <Text>
                 {postCommentCount.postCommentCount > 1 ? "comments" : "comment"}
@@ -149,17 +150,17 @@ const LikeCommentShareButton = ({
         <Box
           {...boxStyles}
           onClick={handleLikePostClick}
-          color={postLike?.liked ? "blue.500" : "white"}
+          color={postLike?.liked ? "blue.500" : "white.500"}
         >
           {postLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
           <Text ml="5px">Like</Text>
         </Box>
         <Box {...boxStyles} onClick={handleFocusInputClick}>
-          <FaRegComment size="20px" />
+          <FaComment size="20px" />
           <Text ml="5px">Comment</Text>
         </Box>
         <Box {...boxStyles}>
-          <PiShareFatLight size="20px" />
+          <IoIosShareAlt size="25px" />
           <Text ml="5px">Share</Text>
         </Box>
       </Box>

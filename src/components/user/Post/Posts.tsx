@@ -28,8 +28,8 @@ export interface PostProps {
 
 const Posts = ({ posts }: PostProps) => {
   const { colorMode } = useColorMode();
-  const initialRef = useRef<HTMLTextAreaElement | null>(null);
-  const finalRef = useRef<HTMLTextAreaElement | null>(null);
+  const initialRef = useRef<HTMLInputElement | null>(null);
+  const finalRef = useRef<HTMLInputElement | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [page, _setPage] = useState<number>(1);
@@ -66,6 +66,8 @@ const Posts = ({ posts }: PostProps) => {
     setComment,
     imageFile,
     setImageFile,
+    setImagePreview,
+    imagePreview,
   } = useWritePostComment(posts.postId);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -78,17 +80,25 @@ const Posts = ({ posts }: PostProps) => {
     }
   };
 
-  const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
     setValue("comment", e.target.value);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      setImageFile(files);
-      setValue("file", files);
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setValue("file", file);
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
     }
+  };
+
+  const handleRemoveImagePreviewClick = () => {
+    setImagePreview(null);
+    setImageFile(null);
+    setValue("file", undefined);
   };
 
   return (
@@ -128,6 +138,8 @@ const Posts = ({ posts }: PostProps) => {
           handleCommentChange={handleCommentChange}
           fileInputRef={inputRef}
           handleFileChange={handleFileChange}
+          imagePreview={imagePreview}
+          removeImageClick={handleRemoveImagePreviewClick}
         />
       </Card>
 
@@ -180,6 +192,8 @@ const Posts = ({ posts }: PostProps) => {
               handleCommentChange={handleCommentChange}
               fileInputRef={fileInputRef}
               handleFileChange={handleFileChange}
+              imagePreview={imagePreview}
+              removeImageClick={handleRemoveImagePreviewClick}
             />
           </Box>
         </ModalContent>

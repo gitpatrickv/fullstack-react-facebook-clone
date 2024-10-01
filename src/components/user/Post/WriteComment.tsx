@@ -2,31 +2,34 @@ import {
   Avatar,
   Box,
   IconButton,
-  Textarea,
+  Image,
+  Input,
   useColorMode,
 } from "@chakra-ui/react";
 import { BaseSyntheticEvent, ChangeEvent, RefObject } from "react";
 import { SubmitHandler, UseFormRegister } from "react-hook-form";
 import { CiCamera } from "react-icons/ci";
-import { IoMdSend } from "react-icons/io";
+import { IoMdCloseCircle, IoMdSend } from "react-icons/io";
 import { WriteCommentProps } from "../../../hooks/user/useWritePostComment";
 import { useUserStore } from "../../../store/user-store";
 
 interface PostProps {
   isOpen: boolean;
-  focusRef: RefObject<HTMLTextAreaElement>;
+  focusRef: RefObject<HTMLInputElement>;
   register: UseFormRegister<WriteCommentProps>;
   onSubmit: SubmitHandler<WriteCommentProps>;
   loading: boolean;
   fileInputRef: RefObject<HTMLInputElement>;
   comment: string;
-  imageFile: FileList | null;
+  imageFile: File | null;
   handleInputClick: () => void;
-  handleCommentChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  handleCommentChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (
     onSubmit: SubmitHandler<WriteCommentProps>
   ) => (event?: BaseSyntheticEvent) => Promise<void>;
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  imagePreview: string | null;
+  removeImageClick: () => void;
 }
 
 const WriteComment = ({
@@ -42,6 +45,8 @@ const WriteComment = ({
   handleSubmit,
   fileInputRef,
   handleFileChange,
+  imagePreview,
+  removeImageClick,
 }: PostProps) => {
   const { colorMode } = useColorMode();
   const { profilePicture } = useUserStore();
@@ -51,7 +56,6 @@ const WriteComment = ({
         <Box
           padding={isOpen ? 3 : 0}
           ml={isOpen ? "10px" : "0"}
-          mr="10px"
           bg={colorMode === "dark" ? "gray.700" : "white"}
           mt={isOpen ? "0" : "10px"}
         >
@@ -70,7 +74,7 @@ const WriteComment = ({
               borderRadius="20px"
               borderColor="gray.500"
             >
-              <Textarea
+              <Input
                 {...register("comment")}
                 value={comment}
                 ref={focusRef}
@@ -112,6 +116,14 @@ const WriteComment = ({
               </Box>
             </Box>
           </Box>
+          {imagePreview && (
+            <Box mt="10px" ml="40px" display="flex">
+              <Image src={imagePreview} width="20%" height="auto" />
+              <Box onClick={removeImageClick} ml="5px" cursor="pointer">
+                <IoMdCloseCircle size="20px" />
+              </Box>
+            </Box>
+          )}
         </Box>
       </form>
     </>
