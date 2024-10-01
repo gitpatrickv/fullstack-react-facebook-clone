@@ -82,7 +82,6 @@ const WriteComment = ({
                 border="none"
                 _focus={{ border: "none", boxShadow: "none" }}
                 _hover={{ border: "none" }}
-                resize="none"
                 onChange={handleCommentChange}
               />
 
@@ -118,7 +117,11 @@ const WriteComment = ({
           </Box>
           {imagePreview && (
             <Box mt="10px" ml="40px" display="flex">
-              <Image src={imagePreview} width="20%" height="auto" />
+              <Image
+                src={imagePreview}
+                width={{ base: "40%", md: "30%" }}
+                height="auto"
+              />
               <Box onClick={removeImageClick} ml="5px" cursor="pointer">
                 <IoMdCloseCircle size="20px" />
               </Box>

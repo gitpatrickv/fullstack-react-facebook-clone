@@ -15,8 +15,9 @@ import {
   Text,
   useBreakpointValue,
   useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   FaCamera,
   FaChevronDown,
@@ -27,37 +28,22 @@ import {
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
-import useUploadUserImage from "../../../hooks/user/useUploadUserImage";
-import { useAuthQueryStore } from "../../../store/auth-store";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
+import UploadUserImageModal from "./UploadUserImageModal";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
+  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
   const { userId: currentUserId } = useUserStore();
   const { colorMode } = useColorMode();
-  const { authStore } = useAuthQueryStore();
-  const jwtToken = authStore.jwtToken;
   const [imageType, setImageType] = useState<string>("");
-  const uploadPhoto = useUploadUserImage();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleInputClick = (image: string) => {
-    fileInputRef.current?.click();
+  const handleOpenModalClick = (image: string) => {
     setImageType(image);
-  };
-
-  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      uploadPhoto.mutate({
-        file: file,
-        jwtToken: jwtToken,
-        imageType: imageType,
-      });
-    }
+    onOpen();
   };
 
   const gridTemplateColumns = useBreakpointValue({
@@ -73,6 +59,11 @@ const ProfilePageHeader = () => {
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   return (
     <Card>
+      <UploadUserImageModal
+        isOpen={isOpen}
+        onClose={onClose}
+        imageType={imageType}
+      />
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
@@ -116,7 +107,7 @@ const ProfilePageHeader = () => {
                     color="black"
                     bg="white"
                     _hover={{ bg: "white" }}
-                    onClick={() => handleInputClick("COVER_PHOTO")}
+                    onClick={() => handleOpenModalClick("COVER_PHOTO")}
                   >
                     <FaCamera size={isSmallScreen ? "20px" : "15px"} />
                     {isSmallScreen ? (
@@ -129,13 +120,6 @@ const ProfilePageHeader = () => {
                       </Text>
                     )}
                   </Button>
-                  <input
-                    type="file"
-                    accept=".jpeg, .png"
-                    ref={fileInputRef}
-                    onChange={handleUploadImage}
-                    style={{ display: "none" }}
-                  />
                 </Box>
               )}
             </Box>
@@ -187,17 +171,10 @@ const ProfilePageHeader = () => {
                     top={{ base: "15px", md: "25px", lg: "100px" }}
                     right="14px"
                     cursor="pointer"
-                    onClick={() => handleInputClick("PROFILE_PICTURE")}
+                    onClick={() => handleOpenModalClick("PROFILE_PICTURE")}
                   >
                     <FaCamera size="20px" />
                   </Box>
-                  <input
-                    type="file"
-                    accept=".jpeg, .png"
-                    ref={fileInputRef}
-                    onChange={handleUploadImage}
-                    style={{ display: "none" }}
-                  />
                 </>
               )}
             </Box>
