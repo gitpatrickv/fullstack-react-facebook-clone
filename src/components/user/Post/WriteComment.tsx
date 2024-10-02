@@ -110,6 +110,7 @@ const WriteComment = ({
                     _hover={{ bg: "transparent", color: "blue.500" }}
                     type="submit"
                     isDisabled={comment || imageFile ? false : true}
+                    isLoading={loading}
                   />
                 </Box>
               </Box>

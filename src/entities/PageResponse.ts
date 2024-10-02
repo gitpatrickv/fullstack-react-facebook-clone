@@ -5,9 +5,3 @@ export default interface PageResponse {
   totalPages: number;
   last: boolean;
 }
-
-export interface PaginateProps {
-  userId: number;
-  pageNo: number;
-  pageSize: number;
-}

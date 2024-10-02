@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   useColorMode,
   useDisclosure,
@@ -21,6 +22,7 @@ import LikeCommentShareButton from "./LikeCommentShareButton";
 import PostContent from "./PostContent";
 import PostImages from "./PostImages";
 import WriteComment from "./WriteComment";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export interface PostProps {
   posts: FetchAllUserPostsProps;
@@ -32,21 +34,30 @@ const Posts = ({ posts }: PostProps) => {
   const finalRef = useRef<HTMLInputElement | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [page, _setPage] = useState<number>(1);
-  const pageSize = 25;
 
   useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
 
-  const { data: fetchAllPostComments } = useFetchAllPostComments({
+  const {
+    data: fetchAllPostComments,
+    fetchNextPage,
+    hasNextPage,
+  } = useFetchAllPostComments({
     postId: posts.postId,
-    pageNo: page,
-    pageSize: pageSize,
+    pageSize: 10,
   });
 
-  const postCommentSize =
-    fetchAllPostComments && fetchAllPostComments?.postCommentList.length >= 2;
+  const postCommentList =
+    fetchAllPostComments?.pages.flatMap((page) => page.postCommentList) || [];
+
+  const postCommentSize = postCommentList.length >= 2;
+
+  const fetchedCommentData =
+    fetchAllPostComments?.pages.reduce(
+      (total, page) => total + page.postCommentList.length,
+      0
+    ) || 0;
 
   const handleFocusInputClick = () => {
     if (isModalOpen) {
@@ -101,6 +112,15 @@ const Posts = ({ posts }: PostProps) => {
     setValue("file", undefined);
   };
 
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    return () => {
+      URL.revokeObjectURL(imagePreview);
+      console.log("cleaning up " + imagePreview);
+    };
+  }, [imagePreview]);
+
   return (
     <>
       <Card padding={3} mt="10px">
@@ -122,9 +142,12 @@ const Posts = ({ posts }: PostProps) => {
             View more comments
           </Text>
         )}
-        {fetchAllPostComments?.postCommentList.slice(-1).map((comments) => (
-          <Comments key={comments.postCommentId} comments={comments} />
-        ))}
+        {fetchAllPostComments?.pages
+          .flatMap((page) => page.postCommentList)
+          .slice(-1)
+          .map((comments) => (
+            <Comments key={comments.postCommentId} comments={comments} />
+          ))}
         <WriteComment
           isOpen={isModalOpen}
           focusRef={finalRef}
@@ -164,7 +187,7 @@ const Posts = ({ posts }: PostProps) => {
             {posts.firstName} {posts.lastName}'s Post
             <ModalCloseButton />
           </ModalHeader>
-          <ModalBody>
+          <ModalBody maxHeight="700px" overflowY="auto" id="scrollable-body">
             <PostContent posts={posts} />
             <PostImages posts={posts} />
             <LikeCommentShareButton
@@ -173,9 +196,19 @@ const Posts = ({ posts }: PostProps) => {
               handleFocusInputClick={handleFocusInputClick}
             />
             <Divider mt="5px" mb="5px" color="gray.500" />
-            {fetchAllPostComments?.postCommentList.map((comments) => (
-              <Comments key={comments.postCommentId} comments={comments} />
-            ))}
+            <InfiniteScroll
+              dataLength={fetchedCommentData}
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={<Spinner />}
+              scrollableTarget="scrollable-body"
+            >
+              {fetchAllPostComments?.pages.map((page) =>
+                page.postCommentList.map((comments) => (
+                  <Comments key={comments.postCommentId} comments={comments} />
+                ))
+              )}
+            </InfiniteScroll>
           </ModalBody>
           <Divider />
           <Box position="sticky" bottom="0" zIndex={10}>

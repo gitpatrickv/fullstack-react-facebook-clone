@@ -498,6 +498,7 @@ const LoginPage = () => {
                   _hover={{ bg: "green.500" }}
                   _active={{ bg: "green.600" }}
                   width="150px"
+                  isLoading={loadingRegister}
                 >
                   Sign Up
                 </Button>

@@ -6,20 +6,21 @@ import {
   Show,
   Skeleton,
   Spacer,
+  Spinner,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useParams } from "react-router-dom";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
-import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
-import { useParams } from "react-router-dom";
-import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
-import ErrorPage from "./ErrorPage";
-import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 import Photos from "../../components/user/ProfilePage/Photos";
 import ProfilePageHeader from "../../components/user/ProfilePage/ProfilePageHeader";
+import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
+import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
+import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
+import ErrorPage from "./ErrorPage";
 
 const ProfilePage = () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -33,14 +34,10 @@ const ProfilePage = () => {
   ) {
     return <ErrorPage />;
   }
-
-  const [page, _setPage] = useState<number>(1);
-  const pageSize = 25;
   const { data: _getUserInfo } = useGetCurrentUserInfo();
-  const { data: fetchAllUserPosts } = useFetchAllUserPosts({
+  const { data, fetchNextPage, hasNextPage } = useFetchAllUserPosts({
     userId: userId,
-    pageNo: page,
-    pageSize,
+    pageSize: 5,
   });
 
   const gridTemplateColumns = useBreakpointValue({
@@ -67,13 +64,15 @@ const ProfilePage = () => {
          `,
   });
 
+  const fetchedPostData =
+    data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
+
   return (
     <>
       <ProfilePageHeader />
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
-        // mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
         padding={{ base: 2, md: 7, lg: 2 }}
       >
         <Show above="xl">
@@ -113,14 +112,24 @@ const ProfilePage = () => {
           </Card>
         </GridItem>
         <GridItem area="section2">
-          {isLoading ? (
-            <Skeleton width="100%" height="100px" />
-          ) : (
-            <CreatePost />
-          )}
-          {fetchAllUserPosts?.postList.map((posts) => (
-            <Posts key={posts.postId} posts={posts} />
-          ))}
+          <InfiniteScroll
+            dataLength={fetchedPostData}
+            next={fetchNextPage}
+            hasMore={!!hasNextPage}
+            loader={<Spinner />}
+            endMessage={<Text>No more posts to show.</Text>}
+          >
+            {isLoading ? (
+              <Skeleton width="100%" height="100px" />
+            ) : (
+              <CreatePost />
+            )}
+            {data?.pages.map((page) =>
+              page.postList.map((posts) => (
+                <Posts key={posts.postId} posts={posts} />
+              ))
+            )}
+          </InfiniteScroll>
         </GridItem>
       </Grid>
     </>

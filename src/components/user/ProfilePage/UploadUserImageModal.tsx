@@ -83,6 +83,15 @@ const UploadUserImageModal = ({
     onClose();
   };
 
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    return () => {
+      URL.revokeObjectURL(imagePreview);
+      console.log("cleaning up " + imagePreview);
+    };
+  }, [imagePreview]);
+
   return (
     <>
       <Modal
@@ -171,6 +180,7 @@ const UploadUserImageModal = ({
                 ml="5px"
                 isDisabled={!imageFile}
                 type="submit"
+                isLoading={loading}
               >
                 Save
               </Button>

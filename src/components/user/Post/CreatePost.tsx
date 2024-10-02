@@ -152,6 +152,7 @@ const CreatePost = () => {
                 _active={{ bg: "blue.600" }}
                 mt="20px"
                 isDisabled={post || imageFile ? false : true}
+                isLoading={loading}
               >
                 Post
               </Button>
