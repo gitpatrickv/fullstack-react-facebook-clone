@@ -2,17 +2,15 @@ import PageResponse from "./PageResponse";
 import PostImage from "./PostImage";
 import { UserData } from "./User";
 
-export default interface Post {
+export default interface Post extends UserData {
   postId: number;
   content: string;
   timestamp: string;
-}
-
-export interface FetchAllUserPostsProps extends Post, UserData {
   postImages: PostImage[];
+  sharedPost?: Post;
 }
 
 export default interface PostListResponse {
-  postList: FetchAllUserPostsProps[];
+  postList: Post[];
   pageResponse: PageResponse;
 }

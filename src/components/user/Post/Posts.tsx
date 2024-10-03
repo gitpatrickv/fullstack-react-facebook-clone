@@ -14,7 +14,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Post from "../../../entities/Post";
 import useFetchAllPostComments from "../../../hooks/user/useFetchAllPostComments";
 import useWritePostComment from "../../../hooks/user/useWritePostComment";
 import Comments from "./Comments";
@@ -22,10 +23,9 @@ import LikeCommentShareButton from "./LikeCommentShareButton";
 import PostContent from "./PostContent";
 import PostImages from "./PostImages";
 import WriteComment from "./WriteComment";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 export interface PostProps {
-  posts: FetchAllUserPostsProps;
+  posts: Post;
 }
 
 const Posts = ({ posts }: PostProps) => {

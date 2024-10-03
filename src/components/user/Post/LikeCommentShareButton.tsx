@@ -6,21 +6,23 @@ import {
   Text,
   useBreakpointValue,
   useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import { IoIosShareAlt } from "react-icons/io";
 import { FaComment } from "react-icons/fa";
+import { IoIosShareAlt } from "react-icons/io";
 import { PiShareFatLight } from "react-icons/pi";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
+import Post from "../../../entities/Post";
 import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
 import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useLikePost from "../../../hooks/user/useLikePost";
+import SharePostModal from "./SharePostModal";
 
 interface Props {
-  posts: FetchAllUserPostsProps;
+  posts: Post;
   onOpen: () => void;
   handleFocusInputClick: () => void;
 }
@@ -53,6 +55,12 @@ const LikeCommentShareButton = ({
     borderRadius: "5px",
   };
   const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const {
+    isOpen: isOpenShareModal,
+    onOpen: onOpenShareModal,
+    onClose: onCloseShareModal,
+  } = useDisclosure();
 
   return (
     <>
@@ -159,10 +167,15 @@ const LikeCommentShareButton = ({
           <FaComment size="20px" />
           <Text ml="5px">Comment</Text>
         </Box>
-        <Box {...boxStyles}>
+        <Box {...boxStyles} onClick={onOpenShareModal}>
           <IoIosShareAlt size="25px" />
           <Text ml="5px">Share</Text>
         </Box>
+        <SharePostModal
+          isOpen={isOpenShareModal}
+          onClose={onCloseShareModal}
+          posts={posts}
+        />
       </Box>
     </>
   );

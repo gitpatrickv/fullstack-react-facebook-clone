@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FetchAllUserPostsProps } from "../../../entities/Post";
+import Post from "../../../entities/Post";
 import PostImage from "../../../entities/PostImage";
 import NavbarRight from "../Navbar/NavbarRight";
 import PostContent from "./PostContent";
@@ -27,7 +27,7 @@ interface ImageModalProps {
   nextLeftImage: () => void;
   activeImage: PostImage | null;
   postImages: PostImage[];
-  posts: FetchAllUserPostsProps;
+  posts: Post;
 }
 
 const PostImagesModal = ({
