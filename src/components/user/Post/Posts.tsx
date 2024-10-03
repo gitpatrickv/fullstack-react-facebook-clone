@@ -22,6 +22,8 @@ import Comments from "./Comments";
 import LikeCommentShareButton from "./LikeCommentShareButton";
 import PostContent from "./PostContent";
 import PostImages from "./PostImages";
+import PostShareContent from "./PostShareContent";
+import PostShareImages from "./PostShareImages";
 import WriteComment from "./WriteComment";
 
 export interface PostProps {
@@ -125,6 +127,18 @@ const Posts = ({ posts }: PostProps) => {
     <>
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
+        {posts.sharedPost && (
+          <Card
+            border="1px solid"
+            borderColor="gray.500"
+            borderRadius="20px"
+            overflow="hidden"
+          >
+            {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
+            <PostShareContent posts={posts} />
+          </Card>
+        )}
+
         <PostImages posts={posts} />
         <LikeCommentShareButton
           posts={posts}
