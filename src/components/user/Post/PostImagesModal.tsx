@@ -10,16 +10,19 @@ import {
   ModalContent,
   ModalOverlay,
   Show,
-  Text,
+  Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef } from "react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import Post from "../../../entities/Post";
 import PostImage from "../../../entities/PostImage";
+import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostImageComments";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import NavbarRight from "../Navbar/NavbarRight";
+import Comments from "./Comments";
 import PostContent from "./PostContent";
 import PostImagesButtons from "./PostImagesButtons";
 import PostShareContent from "./PostShareContent";
@@ -77,6 +80,21 @@ const PostImagesModal = ({
       onClick={direction === "left" ? nextLeftImage : nextRightImage}
     />
   );
+
+  const {
+    data: fetchAllPostImageComments,
+    fetchNextPage,
+    hasNextPage,
+  } = useFetchAllPostImageComments({
+    postImageId: activeImage?.postImageId ?? 0,
+    pageSize: 10,
+  });
+
+  const fetchedCommentData =
+    fetchAllPostImageComments?.pages.reduce(
+      (total, page) => total + page.postCommentList.length,
+      0
+    ) || 0;
 
   const {
     register,
@@ -223,8 +241,28 @@ const PostImagesModal = ({
               <PostImagesButtons activeImage={activeImage} />
             </Box>
             <Divider mt="5px" color="gray.500" />
-            <Box padding={3}>
-              <Text>IMAGES COMMENTS HERE</Text>
+            <Box
+              padding={3}
+              maxHeight="500px"
+              overflowY="auto"
+              id="scrollable-body"
+            >
+              <InfiniteScroll
+                dataLength={fetchedCommentData}
+                next={fetchNextPage}
+                hasMore={!!hasNextPage}
+                loader={<Spinner />}
+                scrollableTarget="scrollable-body"
+              >
+                {fetchAllPostImageComments?.pages.map((page) =>
+                  page.postCommentList.map((comments) => (
+                    <Comments
+                      key={comments.postCommentId}
+                      comments={comments}
+                    />
+                  ))
+                )}
+              </InfiniteScroll>
             </Box>
             <Box padding={3}>
               <WriteComment

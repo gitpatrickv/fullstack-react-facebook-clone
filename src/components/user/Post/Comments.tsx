@@ -14,6 +14,14 @@ const Comments = ({ comments }: Props) => {
     _hover: { textDecoration: "underline" },
   };
 
+  // const commentBottom = useRef<HTMLDivElement>(null);
+
+  // useEffect(() => {
+  //   if (commentBottom.current) {
+  //     commentBottom.current.scrollIntoView();
+  //   }
+  // }, [comments.comment, comments.commentImage]);
+
   return (
     <>
       <Box mt="10px">
@@ -68,6 +76,7 @@ const Comments = ({ comments }: Props) => {
           <Text {...textStyles}>Reply</Text>
         </Box>
       </Box>
+      {/* <Box ref={commentBottom}></Box> */}
     </>
   );
 };

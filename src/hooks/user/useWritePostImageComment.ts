@@ -30,7 +30,7 @@ const useWritePostImageComment = (postImageId: number) => {
 
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(["postCommentList", postImageId]);
+        queryClient.invalidateQueries(["postImageCommentList", postImageId]);
         // queryClient.invalidateQueries(["postCommentCount", postImageId]);
         setLoading(false);
         reset();
