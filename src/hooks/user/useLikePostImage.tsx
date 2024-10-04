@@ -25,7 +25,7 @@ const useLikePostImage = () => {
         const postImageId = data;
         queryClient.invalidateQueries(["postImageLike", postImageId]);
         queryClient.invalidateQueries(["postImageLikeCount", postImageId]);
-        // queryClient.invalidateQueries(["postLikeUserList", postImageId]);
+        queryClient.invalidateQueries(["postLikeImageUserList", postImageId]);
       },
     }
   );
