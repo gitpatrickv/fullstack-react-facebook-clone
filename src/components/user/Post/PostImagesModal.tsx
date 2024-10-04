@@ -19,6 +19,7 @@ import Post from "../../../entities/Post";
 import PostImage from "../../../entities/PostImage";
 import NavbarRight from "../Navbar/NavbarRight";
 import PostContent from "./PostContent";
+import PostShareContent from "./PostShareContent";
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -150,11 +151,17 @@ const PostImagesModal = ({
               </Box>
             </Show>
             <Divider />
-            <Box padding={4}>
-              <PostContent posts={posts} />
+            <Box>
+              {posts.sharedPost ? (
+                <PostShareContent posts={posts} />
+              ) : (
+                <Box padding={3}>
+                  <PostContent posts={posts} />
+                </Box>
+              )}
             </Box>
             <Divider />
-            <Box padding={4}>
+            <Box padding={3}>
               {/* <Comments /> */}
               <Text>IMAGES COMMENTS HERE</Text>
             </Box>
