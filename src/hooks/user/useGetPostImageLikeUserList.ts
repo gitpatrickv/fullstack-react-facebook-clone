@@ -1,15 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { axiosInstance } from "../../services/api-client";
+import { UserListProps } from "./useGetPostLikeUserList";
 
 const apiClient = axiosInstance;
-
-interface UserListProps {
-  postLikeId: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-}
 
 const useGetPostImageLikeUserList = (postImageId: number) => {
   const { authStore } = useAuthQueryStore();

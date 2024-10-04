@@ -162,22 +162,23 @@ const Posts = ({ posts }: PostProps) => {
           .map((comments) => (
             <Comments key={comments.postCommentId} comments={comments} />
           ))}
-        <WriteComment
-          isOpen={isModalOpen}
-          focusRef={finalRef}
-          register={register}
-          handleSubmit={handleSubmit}
-          onSubmit={onSubmit}
-          loading={loading}
-          comment={comment}
-          imageFile={imageFile}
-          handleInputClick={handleInputClick}
-          handleCommentChange={handleCommentChange}
-          fileInputRef={inputRef}
-          handleFileChange={handleFileChange}
-          imagePreview={imagePreview}
-          removeImageClick={handleRemoveImagePreviewClick}
-        />
+        <Box mt="10px">
+          <WriteComment
+            focusRef={finalRef}
+            register={register}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            loading={loading}
+            comment={comment}
+            imageFile={imageFile}
+            handleInputClick={handleInputClick}
+            handleCommentChange={handleCommentChange}
+            fileInputRef={inputRef}
+            handleFileChange={handleFileChange}
+            imagePreview={imagePreview}
+            removeImageClick={handleRemoveImagePreviewClick}
+          />
+        </Box>
       </Card>
 
       <Modal
@@ -226,22 +227,23 @@ const Posts = ({ posts }: PostProps) => {
           </ModalBody>
           <Divider />
           <Box position="sticky" bottom="0" zIndex={10}>
-            <WriteComment
-              isOpen={isModalOpen}
-              focusRef={initialRef}
-              register={register}
-              handleSubmit={handleSubmit}
-              onSubmit={onSubmit}
-              loading={loading}
-              comment={comment}
-              imageFile={imageFile}
-              handleInputClick={handleInputClick}
-              handleCommentChange={handleCommentChange}
-              fileInputRef={fileInputRef}
-              handleFileChange={handleFileChange}
-              imagePreview={imagePreview}
-              removeImageClick={handleRemoveImagePreviewClick}
-            />
+            <Box padding={3} ml="12px">
+              <WriteComment
+                focusRef={initialRef}
+                register={register}
+                handleSubmit={handleSubmit}
+                onSubmit={onSubmit}
+                loading={loading}
+                comment={comment}
+                imageFile={imageFile}
+                handleInputClick={handleInputClick}
+                handleCommentChange={handleCommentChange}
+                fileInputRef={fileInputRef}
+                handleFileChange={handleFileChange}
+                imagePreview={imagePreview}
+                removeImageClick={handleRemoveImagePreviewClick}
+              />
+            </Box>
           </Box>
         </ModalContent>
       </Modal>

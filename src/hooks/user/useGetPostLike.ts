@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 
-interface Props {
+export interface LikeProps {
   liked: boolean;
 }
 
@@ -14,7 +14,7 @@ const useGetPostLike = (postId: number) => {
   return useQuery({
     queryKey: ["postLike", postId],
     queryFn: async () => {
-      const { data } = await apiClient.get<Props>(`/post/${postId}/like`, {
+      const { data } = await apiClient.get<LikeProps>(`/post/${postId}/like`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

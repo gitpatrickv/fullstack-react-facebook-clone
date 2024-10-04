@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-interface Props {
+export interface LikeCountProps {
   postLikeCount: number;
 }
 
@@ -13,7 +13,7 @@ const useGetPostLikeCount = (postId: number) => {
   return useQuery({
     queryKey: ["postLikeCount", postId],
     queryFn: async () => {
-      const { data } = await apiClient.get<Props>(
+      const { data } = await apiClient.get<LikeCountProps>(
         `/post/${postId}/like/count`,
         {
           headers: {

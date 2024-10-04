@@ -4,7 +4,7 @@ import { axiosInstance } from "../../services/api-client";
 
 const apiClient = axiosInstance;
 
-interface UserListProps {
+export interface UserListProps {
   postLikeId: number;
   userId: number;
   firstName: string;

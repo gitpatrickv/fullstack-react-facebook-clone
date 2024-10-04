@@ -13,14 +13,17 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Post from "../../../entities/Post";
 import PostImage from "../../../entities/PostImage";
+import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import NavbarRight from "../Navbar/NavbarRight";
 import PostContent from "./PostContent";
-import PostShareContent from "./PostShareContent";
 import PostImagesButtons from "./PostImagesButtons";
+import PostShareContent from "./PostShareContent";
+import WriteComment from "./WriteComment";
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -75,8 +78,64 @@ const PostImagesModal = ({
     />
   );
 
+  const {
+    register,
+    handleSubmit,
+    onSubmit,
+    loading,
+    setValue,
+    comment,
+    setComment,
+    imageFile,
+    setImageFile,
+    setImagePreview,
+    imagePreview,
+  } = useWritePostImageComment(activeImage?.postImageId ?? 0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const initialRef = useRef<HTMLInputElement | null>(null);
+  const finalRef = useRef<HTMLInputElement | null>(null);
+  const handleInputClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+    setValue("comment", e.target.value);
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setValue("file", file);
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+    }
+  };
+
+  const handleRemoveImagePreviewClick = () => {
+    setImagePreview(null);
+    setImageFile(null);
+    setValue("file", undefined);
+  };
+
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    return () => {
+      URL.revokeObjectURL(imagePreview);
+      console.log("cleaning up " + imagePreview);
+    };
+  }, [imagePreview]);
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="full"
+      initialFocusRef={initialRef}
+      finalFocusRef={finalRef}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton
@@ -165,8 +224,24 @@ const PostImagesModal = ({
             </Box>
             <Divider mt="5px" color="gray.500" />
             <Box padding={3}>
-              {/* <Comments /> */}
               <Text>IMAGES COMMENTS HERE</Text>
+            </Box>
+            <Box padding={3}>
+              <WriteComment
+                focusRef={initialRef}
+                register={register}
+                handleSubmit={handleSubmit}
+                onSubmit={onSubmit}
+                loading={loading}
+                comment={comment}
+                imageFile={imageFile}
+                handleInputClick={handleInputClick}
+                handleCommentChange={handleCommentChange}
+                fileInputRef={fileInputRef}
+                handleFileChange={handleFileChange}
+                imagePreview={imagePreview}
+                removeImageClick={handleRemoveImagePreviewClick}
+              />
             </Box>
           </GridItem>
           <Show above="lg">

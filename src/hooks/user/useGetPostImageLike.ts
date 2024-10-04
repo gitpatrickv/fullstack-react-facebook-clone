@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-
-interface Props {
-  liked: boolean;
-}
+import { LikeProps } from "./useGetPostLike";
 
 const apiClient = axiosInstance;
 
@@ -14,7 +11,7 @@ const useGetPostImageLike = (postImageId: number) => {
   return useQuery({
     queryKey: ["postImageLike", postImageId],
     queryFn: async () => {
-      const { data } = await apiClient.get<Props>(
+      const { data } = await apiClient.get<LikeProps>(
         `/post/${postImageId}/image/like`,
         {
           headers: {

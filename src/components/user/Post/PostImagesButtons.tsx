@@ -17,11 +17,11 @@ import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCou
 import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLikeUserList";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
 
-interface Props {
+export interface PostImageProps {
   activeImage: PostImage | null;
 }
 
-const PostImagesButtons = ({ activeImage }: Props) => {
+const PostImagesButtons = ({ activeImage }: PostImageProps) => {
   const postImageId = activeImage?.postImageId ?? 0;
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });

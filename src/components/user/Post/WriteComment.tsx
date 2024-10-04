@@ -14,7 +14,6 @@ import { WriteCommentProps } from "../../../hooks/user/useWritePostComment";
 import { useUserStore } from "../../../store/user-store";
 
 interface PostProps {
-  isOpen: boolean;
   focusRef: RefObject<HTMLInputElement>;
   register: UseFormRegister<WriteCommentProps>;
   onSubmit: SubmitHandler<WriteCommentProps>;
@@ -33,7 +32,6 @@ interface PostProps {
 }
 
 const WriteComment = ({
-  isOpen,
   focusRef,
   register,
   onSubmit,
@@ -53,12 +51,7 @@ const WriteComment = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          padding={isOpen ? 3 : 0}
-          ml={isOpen ? "10px" : "0"}
-          bg={colorMode === "dark" ? "gray.700" : "white"}
-          mt={isOpen ? "0" : "10px"}
-        >
+        <Box bg={colorMode === "dark" ? "gray.700" : "white"}>
           <Box display="flex">
             <Avatar
               src={
