@@ -6,23 +6,26 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { BiSolidLike } from "react-icons/bi";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaComment } from "react-icons/fa";
 import { IoIosShareAlt } from "react-icons/io";
 import PostImage from "../../../entities/PostImage";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
+import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
 
 interface Props {
   activeImage: PostImage | null;
 }
 
 const PostShareButtons = ({ activeImage }: Props) => {
+  const postImageId = activeImage?.postImageId ?? 0;
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { mutate: likePostImage } = useLikePostImage();
+  const { data: postImageLike } = useGetPostImageLike(postImageId);
 
   const handleLikePostImageClick = () => {
-    likePostImage(activeImage?.postImageId ?? 0);
+    likePostImage(postImageId);
   };
 
   const boxStyles = {
@@ -58,6 +61,7 @@ const PostShareButtons = ({ activeImage }: Props) => {
             <BiSolidLike size="14px" />
           </Box>
         </>
+
         {/* <Card
           bg="gray.100"
           width="fit-content"
@@ -84,8 +88,12 @@ const PostShareButtons = ({ activeImage }: Props) => {
       </Box>
       <Divider mt="5px" mb="5px" color="gray.500" />
       <Box display="flex" justifyContent="space-around">
-        <Box {...boxStyles} onClick={handleLikePostImageClick}>
-          <BiSolidLike size="20px" />
+        <Box
+          {...boxStyles}
+          onClick={handleLikePostImageClick}
+          color={postImageLike?.liked ? "blue.500" : "white.500"}
+        >
+          {postImageLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
           <Text ml="5px">Like</Text>
         </Box>
         <Box {...boxStyles}>

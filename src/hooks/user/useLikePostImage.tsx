@@ -19,15 +19,15 @@ const useLikePostImage = () => {
         }
       );
       return postImageId;
+    },
+    {
+      onSuccess: (data) => {
+        const postImageId = data;
+        queryClient.invalidateQueries(["postImageLike", postImageId]);
+        // queryClient.invalidateQueries(["postLikeCount", postImageId]);
+        // queryClient.invalidateQueries(["postLikeUserList", postImageId]);
+      },
     }
-    //   {
-    //     onSuccess: (data) => {
-    //       const postImageId = data;
-    //       queryClient.invalidateQueries(["postLike", postImageId]);
-    //       queryClient.invalidateQueries(["postLikeCount", postImageId]);
-    //       queryClient.invalidateQueries(["postLikeUserList", postImageId]);
-    //     },
-    //   }
   );
 };
 
