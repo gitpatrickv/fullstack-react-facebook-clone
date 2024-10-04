@@ -146,6 +146,10 @@ const PostImagesModal = ({
     };
   }, [imagePreview]);
 
+  const handleFocusInputClick = () => {
+    initialRef.current?.focus();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -238,7 +242,10 @@ const PostImagesModal = ({
                 </Box>
               )}
 
-              <PostImagesButtons activeImage={activeImage} />
+              <PostImagesButtons
+                activeImage={activeImage}
+                focusInputClick={handleFocusInputClick}
+              />
             </Box>
             <Divider mt="5px" color="gray.500" />
             <Box

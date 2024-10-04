@@ -4,7 +4,6 @@ import {
   Divider,
   Spacer,
   Text,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -12,6 +11,7 @@ import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaComment } from "react-icons/fa";
 import { IoIosShareAlt } from "react-icons/io";
 import PostImage from "../../../entities/PostImage";
+import useGetPostImageCommentCount from "../../../hooks/user/useGetPostImageCommentCount";
 import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
 import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCount";
 import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLikeUserList";
@@ -19,17 +19,22 @@ import useLikePostImage from "../../../hooks/user/useLikePostImage";
 
 export interface PostImageProps {
   activeImage: PostImage | null;
+  focusInputClick: () => void;
 }
 
-const PostImagesButtons = ({ activeImage }: PostImageProps) => {
+const PostImagesButtons = ({
+  activeImage,
+  focusInputClick,
+}: PostImageProps) => {
   const postImageId = activeImage?.postImageId ?? 0;
   const { colorMode } = useColorMode();
-  const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { mutate: likePostImage } = useLikePostImage();
   const { data: postImageLike } = useGetPostImageLike(postImageId);
   const { data: postImageLikeCount } = useGetPostImageLikeCount(postImageId);
   const { data: postImageLikeUserList } =
     useGetPostImageLikeUserList(postImageId);
+  const { data: postImageCommentCount } =
+    useGetPostImageCommentCount(postImageId);
 
   const handleLikePostImageClick = () => {
     likePostImage(postImageId);
@@ -110,7 +115,7 @@ const PostImagesButtons = ({ activeImage }: PostImageProps) => {
         )}
         <Spacer />
         <Box display="flex" alignItems="center" mr="10px">
-          <Text mr="3px">1</Text>
+          <Text mr="5px">{postImageCommentCount?.postCommentCount}</Text>
           <FaComment />
         </Box>
         <Box display="flex" alignItems="center">
@@ -128,7 +133,7 @@ const PostImagesButtons = ({ activeImage }: PostImageProps) => {
           {postImageLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
           <Text ml="5px">Like</Text>
         </Box>
-        <Box {...boxStyles}>
+        <Box {...boxStyles} onClick={focusInputClick}>
           <FaComment size="20px" />
           <Text ml="5px">Comment</Text>
         </Box>

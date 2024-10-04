@@ -1,21 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { axiosInstance } from "../../services/api-client";
+import { CommentCountProps } from "./useGetPostCommentCount";
 
 const apiClient = axiosInstance;
 
-export interface CommentCountProps {
-  postCommentCount: number;
-}
-
-const useGetPostCommentCount = (postId: number) => {
+const useGetPostImageCommentCount = (postImageId: number) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   return useQuery({
-    queryKey: ["postCommentCount", postId],
+    queryKey: ["postImageCommentCount", postImageId],
     queryFn: async () => {
       const { data } = await apiClient.get<CommentCountProps>(
-        `/post/${postId}/comment/count`,
+        `/post/${postImageId}/image/comment/count`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -24,8 +21,8 @@ const useGetPostCommentCount = (postId: number) => {
       );
       return data;
     },
-    enabled: !!jwtToken && !!postId,
+    enabled: !!jwtToken && !!postImageId,
   });
 };
 
-export default useGetPostCommentCount;
+export default useGetPostImageCommentCount;
