@@ -12,6 +12,8 @@ import { IoIosShareAlt } from "react-icons/io";
 import PostImage from "../../../entities/PostImage";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
 import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
+import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCount";
+import { useState } from "react";
 
 interface Props {
   activeImage: PostImage | null;
@@ -23,6 +25,7 @@ const PostShareButtons = ({ activeImage }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { mutate: likePostImage } = useLikePostImage();
   const { data: postImageLike } = useGetPostImageLike(postImageId);
+  const { data: postImageLikeCount } = useGetPostImageLikeCount(postImageId);
 
   const handleLikePostImageClick = () => {
     likePostImage(postImageId);
@@ -39,28 +42,44 @@ const PostShareButtons = ({ activeImage }: Props) => {
     },
     borderRadius: "5px",
   };
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
     <>
       {console.log(activeImage?.postImageId)}
       <Box display="flex" alignItems="center" ml="12px" mr="12px">
-        <>
-          <Box
-            border="1px solid"
-            borderRadius="full"
-            width="20px"
-            height="20px"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            borderColor="blue.500"
-            bg="blue.500"
-            mr="5px"
-            cursor="pointer"
-          >
-            <BiSolidLike size="14px" />
-          </Box>
-        </>
+        {postImageLikeCount && postImageLikeCount.postLikeCount >= 1 && (
+          <>
+            <Box
+              border="1px solid"
+              borderRadius="full"
+              width="20px"
+              height="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              borderColor="blue.500"
+              bg="blue.500"
+              mr="5px"
+              cursor="pointer"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <BiSolidLike size="14px" />
+            </Box>
+            <Text>
+              {postImageLike?.liked
+                ? postImageLikeCount.postLikeCount > 1
+                  ? `You and ${postImageLikeCount.postLikeCount - 1} others`
+                  : "You"
+                : postImageLikeCount.postLikeCount > 0
+                ? `${postImageLikeCount.postLikeCount} ${
+                    postImageLikeCount.postLikeCount === 1 ? "like" : "likes"
+                  }`
+                : ""}
+            </Text>
+          </>
+        )}
 
         {/* <Card
           bg="gray.100"
