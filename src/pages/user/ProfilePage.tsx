@@ -117,7 +117,6 @@ const ProfilePage = () => {
             next={fetchNextPage}
             hasMore={!!hasNextPage}
             loader={<Spinner />}
-            endMessage={<Text>No more posts to show.</Text>}
           >
             {isLoading ? (
               <Skeleton width="100%" height="100px" />
