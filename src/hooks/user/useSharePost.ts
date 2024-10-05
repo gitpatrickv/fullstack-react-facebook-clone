@@ -28,6 +28,7 @@ const useSharePost = (postId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["postShareCount", postId]);
         setLoading(false);
         setIsSuccessful(true);
         reset();

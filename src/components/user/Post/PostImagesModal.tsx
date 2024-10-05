@@ -250,7 +250,7 @@ const PostImagesModal = ({
             <Divider mt="5px" color="gray.500" />
             <Box
               padding={3}
-              maxHeight="500px"
+              maxHeight="600px"
               overflowY="auto"
               id="scrollable-body"
             >
@@ -271,7 +271,8 @@ const PostImagesModal = ({
                 )}
               </InfiniteScroll>
             </Box>
-            <Box padding={3}>
+
+            <Box position="relative" padding={3}>
               <WriteComment
                 focusRef={initialRef}
                 register={register}

@@ -20,6 +20,7 @@ import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useLikePost from "../../../hooks/user/useLikePost";
 import SharePostModal from "./SharePostModal";
+import useGetPostShareCount from "../../../hooks/user/useGetPostShareCount";
 
 interface Props {
   posts: Post;
@@ -36,6 +37,7 @@ const LikeCommentShareButton = ({
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
   const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
   const { data: postCommentCount } = useGetPostCommentCount(posts.postId);
+  const { data: postShareCount } = useGetPostShareCount(posts.postId);
   const { mutate: likePost } = useLikePost();
 
   const handleLikePostClick = () => {
@@ -147,11 +149,18 @@ const LikeCommentShareButton = ({
             )}
           </Box>
         )}
-
-        <Box display="flex" alignItems="center">
-          <Text mr="3px">50</Text>
-          {isSmallScreen ? <PiShareFatLight /> : <Text>shares</Text>}
-        </Box>
+        {postShareCount && postShareCount.sharedPostCount >= 1 && (
+          <Box display="flex" alignItems="center">
+            <Text mr="3px">{postShareCount?.sharedPostCount}</Text>
+            {isSmallScreen ? (
+              <PiShareFatLight />
+            ) : (
+              <Text>
+                {postShareCount?.sharedPostCount > 1 ? "shares" : "share"}
+              </Text>
+            )}
+          </Box>
+        )}
       </Box>
       <Divider mt="5px" mb="5px" color="gray.500" />
       <Box display="flex" justifyContent="space-around">
