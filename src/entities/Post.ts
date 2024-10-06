@@ -2,12 +2,18 @@ import PageResponse from "./PageResponse";
 import PostImage from "./PostImage";
 import { UserData } from "./User";
 
-export default interface Post extends UserData {
+export interface PostModel {
   postId: number;
   content: string;
   timestamp: string;
   postImages: PostImage[];
-  sharedPost?: Post;
+}
+
+export interface SharedPostResponse extends PostModel, UserData {}
+
+export default interface Post extends PostModel, UserData {
+  sharedPost?: SharedPostResponse;
+  sharedImage?: PostImage;
 }
 
 export default interface PostListResponse {

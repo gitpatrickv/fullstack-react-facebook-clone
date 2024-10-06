@@ -37,6 +37,7 @@ export const schema = z
   });
 
 export interface UserData {
+  userId: number;
   firstName: string;
   lastName: string;
   profilePicture?: string;

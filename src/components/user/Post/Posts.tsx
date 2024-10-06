@@ -127,6 +127,7 @@ const Posts = ({ posts }: PostProps) => {
     <>
       <Card padding={3} mt="10px">
         <PostContent posts={posts} />
+        {posts.postImages && <PostImages posts={posts} />}
         {posts.sharedPost && (
           <Card
             border="1px solid"
@@ -138,8 +139,6 @@ const Posts = ({ posts }: PostProps) => {
             <PostShareContent posts={posts} />
           </Card>
         )}
-
-        <PostImages posts={posts} />
         <LikeCommentShareButton
           posts={posts}
           onOpen={onOpen}
