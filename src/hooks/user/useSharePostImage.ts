@@ -24,8 +24,8 @@ const useSharePostImage = (postId: number, postImageId: number) => {
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["userPostList"]);
-        //   queryClient.invalidateQueries(["postShareCount", postId]);
+        // queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["postShareImageCount", postImageId]);
         setLoading(false);
         setIsSuccessful(true);
         reset();

@@ -19,6 +19,7 @@ import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLike
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
 import useSharePostImage from "../../../hooks/user/useSharePostImage";
 import SharePostModal from "./SharePostModal";
+import useGetPostImageShareCount from "../../../hooks/user/useGetPostImageShareCount";
 
 export interface PostImageProps {
   activeImage: PostImage | null;
@@ -40,6 +41,7 @@ const PostImagesButtons = ({
     useGetPostImageLikeUserList(postImageId);
   const { data: postImageCommentCount } =
     useGetPostImageCommentCount(postImageId);
+  const { data: getImageShareCount } = useGetPostImageShareCount(postImageId);
 
   const handleLikePostImageClick = () => {
     likePostImage(postImageId);
@@ -139,10 +141,12 @@ const PostImagesButtons = ({
               <FaComment />
             </Box>
           )}
-        <Box display="flex" alignItems="center">
-          <Text mr="3px">50</Text>
-          <IoIosShareAlt />
-        </Box>
+        {getImageShareCount && getImageShareCount.sharedPostCount >= 1 && (
+          <Box display="flex" alignItems="center">
+            <Text mr="3px">{getImageShareCount?.sharedPostCount}</Text>
+            <IoIosShareAlt />
+          </Box>
+        )}
       </Box>
       <Divider mt="5px" mb="5px" color="gray.500" />
       <Box display="flex" justifyContent="space-around">
