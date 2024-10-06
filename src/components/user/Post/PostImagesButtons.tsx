@@ -124,7 +124,7 @@ const PostImagesButtons = ({
             </Text>
             {postImageLikeUserList?.map((user) => (
               <Text
-                key={user.postLikeId}
+                key={user.uniqueId}
                 fontSize="sm"
                 textTransform="capitalize"
               >
@@ -138,13 +138,13 @@ const PostImagesButtons = ({
           postImageCommentCount?.postCommentCount >= 1 && (
             <Box display="flex" alignItems="center" mr="10px">
               <Text mr="5px">{postImageCommentCount?.postCommentCount}</Text>
-              <FaComment />
+              <FaComment size="20px" />
             </Box>
           )}
         {getImageShareCount && getImageShareCount.sharedPostCount >= 1 && (
           <Box display="flex" alignItems="center">
             <Text mr="3px">{getImageShareCount?.sharedPostCount}</Text>
-            <IoIosShareAlt />
+            <IoIosShareAlt size="25px" />
           </Box>
         )}
       </Box>

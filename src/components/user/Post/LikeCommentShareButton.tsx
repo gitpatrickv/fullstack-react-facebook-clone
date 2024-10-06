@@ -2,7 +2,14 @@ import {
   Box,
   Card,
   Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
+  Spinner,
   Text,
   useBreakpointValue,
   useColorMode,
@@ -13,15 +20,17 @@ import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaComment } from "react-icons/fa";
 import { IoIosShareAlt } from "react-icons/io";
 import { PiShareFatLight } from "react-icons/pi";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Post from "../../../entities/Post";
 import useGetPostCommentCount from "../../../hooks/user/useGetPostCommentCount";
 import useGetPostLike from "../../../hooks/user/useGetPostLike";
 import useGetPostLikeCount from "../../../hooks/user/useGetPostLikeCount";
 import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
-import useLikePost from "../../../hooks/user/useLikePost";
-import SharePostModal from "./SharePostModal";
 import useGetPostShareCount from "../../../hooks/user/useGetPostShareCount";
+import useLikePost from "../../../hooks/user/useLikePost";
 import useSharePost from "../../../hooks/user/useSharePost";
+import SharePostModal from "./SharePostModal";
+import UserListModel from "./UserListModel";
 
 interface Props {
   posts: Post;
@@ -36,7 +45,6 @@ const LikeCommentShareButton = ({
 }: Props) => {
   const { data: postLike } = useGetPostLike(posts.postId);
   const { data: postLikeCount } = useGetPostLikeCount(posts.postId);
-  const { data: postLikeUserList } = useGetPostLikeUserList(posts.postId);
   const { data: postCommentCount } = useGetPostCommentCount(posts.postId);
   const { data: postShareCount } = useGetPostShareCount(posts.postId);
   const { mutate: likePost } = useLikePost();
@@ -66,6 +74,12 @@ const LikeCommentShareButton = ({
   } = useDisclosure();
 
   const {
+    isOpen: isOpenLikeList,
+    onOpen: onOpenLikeList,
+    onClose: onCloseLikeList,
+  } = useDisclosure();
+
+  const {
     register,
     loading,
     handleSubmit,
@@ -75,11 +89,33 @@ const LikeCommentShareButton = ({
     setIsSuccessful,
   } = useSharePost(posts.postId);
 
+  const {
+    data: postLikeUserList,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetPostLikeUserList({
+    postId: posts.postId,
+    pageSize: 10,
+  });
+  const fetchedPostData =
+    postLikeUserList?.pages.reduce(
+      (total, page) => total + page.userList.length,
+      0
+    ) || 0;
+  const count = postLikeCount?.postLikeCount ?? 0;
+  const likeCount = count - 3;
+
   return (
     <>
       <Box display="flex" mt="5px" alignItems="center">
         {postLikeCount && postLikeCount.postLikeCount >= 1 && (
-          <>
+          <Box
+            display="flex"
+            alignItems="center"
+            onClick={onOpenLikeList}
+            cursor="pointer"
+            userSelect="none"
+          >
             <Box
               border="1px solid"
               borderRadius="full"
@@ -108,7 +144,7 @@ const LikeCommentShareButton = ({
                   }`
                 : ""}
             </Text>
-          </>
+          </Box>
         )}
         {isHovered && (
           <Card
@@ -119,23 +155,25 @@ const LikeCommentShareButton = ({
             color="black"
             zIndex={100}
             position="absolute"
-            mb="100px"
+            mb={count > 3 ? "150px" : "110px"}
           >
             <Text fontWeight="semibold" fontSize="md">
               Like
             </Text>
-            {postLikeUserList?.map((user) => (
-              <Text
-                key={user.postLikeId}
-                fontSize="sm"
-                textTransform="capitalize"
-              >
-                {user.firstName} {user.lastName}
-              </Text>
-            ))}
+            {postLikeUserList?.pages.map((page) =>
+              page.userList.slice(0, 3).map((user) => (
+                <Text
+                  key={user.uniqueId}
+                  fontSize="sm"
+                  textTransform="capitalize"
+                >
+                  {user.firstName} {user.lastName}
+                </Text>
+              ))
+            )}
+            {count > 3 && <Text fontSize="sm">and {likeCount} more...</Text>}
           </Card>
         )}
-
         <Spacer />
         {postCommentCount && postCommentCount?.postCommentCount >= 1 && (
           <Box
@@ -203,6 +241,34 @@ const LikeCommentShareButton = ({
           setIsSuccessful={setIsSuccessful}
         />
       </Box>
+
+      <Modal
+        isOpen={isOpenLikeList}
+        onClose={onCloseLikeList}
+        size="2xl"
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent height="500px">
+          <ModalHeader>All Likes</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody maxHeight="400px" overflowY="auto" id="scrollable-body">
+            <InfiniteScroll
+              dataLength={fetchedPostData}
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={<Spinner />}
+              scrollableTarget="scrollable-body"
+            >
+              {postLikeUserList?.pages.map((page) =>
+                page.userList.map((users) => (
+                  <UserListModel key={users.userId} users={users} />
+                ))
+              )}
+            </InfiniteScroll>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
