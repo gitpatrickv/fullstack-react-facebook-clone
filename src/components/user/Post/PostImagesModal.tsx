@@ -245,6 +245,7 @@ const PostImagesModal = ({
               <PostImagesButtons
                 activeImage={activeImage}
                 focusInputClick={handleFocusInputClick}
+                postId={posts.postId}
               />
             </Box>
             <Divider mt="5px" color="gray.500" />

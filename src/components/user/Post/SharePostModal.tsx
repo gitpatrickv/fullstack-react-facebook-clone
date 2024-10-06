@@ -13,31 +13,45 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
+import {
+  SubmitHandler,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { Link } from "react-router-dom";
-import Post from "../../../entities/Post";
+import { ShareProps } from "../../../hooks/user/useSharePost";
 import { useUserStore } from "../../../store/user-store";
-import useSharePost from "../../../hooks/user/useSharePost";
 
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  posts: Post;
+  register: UseFormRegister<ShareProps>;
+  onSubmit: SubmitHandler<ShareProps>;
+  loading: boolean;
+  handleSubmit: (
+    onSubmit: SubmitHandler<ShareProps>
+  ) => (event?: BaseSyntheticEvent) => Promise<void>;
+  setValue: UseFormSetValue<ShareProps>;
+  isSuccessful: boolean;
+  setIsSuccessful: (value: boolean) => void;
 }
 
-const SharePostModal = ({ isOpen, onClose, posts }: ShareModalProps) => {
+const SharePostModal = ({
+  isOpen,
+  onClose,
+  register,
+  onSubmit,
+  loading,
+  handleSubmit,
+  setValue,
+  isSuccessful,
+  setIsSuccessful,
+}: ShareModalProps) => {
   const { firstName, lastName, profilePicture } = useUserStore();
   const initialRef = useRef<HTMLTextAreaElement | null>(null);
   const finalRef = useRef<HTMLTextAreaElement | null>(null);
-  const {
-    register,
-    loading,
-    handleSubmit,
-    onSubmit,
-    setValue,
-    isSuccessful,
-    setIsSuccessful,
-  } = useSharePost(posts.postId);
+
   const [content, setContent] = useState("");
 
   const handleShareInputChange = (

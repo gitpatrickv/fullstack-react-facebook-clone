@@ -21,6 +21,7 @@ import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useLikePost from "../../../hooks/user/useLikePost";
 import SharePostModal from "./SharePostModal";
 import useGetPostShareCount from "../../../hooks/user/useGetPostShareCount";
+import useSharePost from "../../../hooks/user/useSharePost";
 
 interface Props {
   posts: Post;
@@ -63,6 +64,16 @@ const LikeCommentShareButton = ({
     onOpen: onOpenShareModal,
     onClose: onCloseShareModal,
   } = useDisclosure();
+
+  const {
+    register,
+    loading,
+    handleSubmit,
+    onSubmit,
+    setValue,
+    isSuccessful,
+    setIsSuccessful,
+  } = useSharePost(posts.postId);
 
   return (
     <>
@@ -183,7 +194,13 @@ const LikeCommentShareButton = ({
         <SharePostModal
           isOpen={isOpenShareModal}
           onClose={onCloseShareModal}
-          posts={posts}
+          register={register}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          loading={loading}
+          setValue={setValue}
+          isSuccessful={isSuccessful}
+          setIsSuccessful={setIsSuccessful}
         />
       </Box>
     </>

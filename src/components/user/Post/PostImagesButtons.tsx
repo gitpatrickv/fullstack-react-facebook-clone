@@ -5,6 +5,7 @@ import {
   Spacer,
   Text,
   useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
@@ -16,15 +17,19 @@ import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
 import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCount";
 import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLikeUserList";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
+import useSharePostImage from "../../../hooks/user/useSharePostImage";
+import SharePostModal from "./SharePostModal";
 
 export interface PostImageProps {
   activeImage: PostImage | null;
   focusInputClick: () => void;
+  postId: number;
 }
 
 const PostImagesButtons = ({
   activeImage,
   focusInputClick,
+  postId,
 }: PostImageProps) => {
   const postImageId = activeImage?.postImageId ?? 0;
   const { colorMode } = useColorMode();
@@ -39,6 +44,15 @@ const PostImagesButtons = ({
   const handleLikePostImageClick = () => {
     likePostImage(postImageId);
   };
+  const {
+    register,
+    loading,
+    handleSubmit,
+    onSubmit,
+    setValue,
+    isSuccessful,
+    setIsSuccessful,
+  } = useSharePostImage(postId, postImageId);
 
   const boxStyles = {
     display: "flex",
@@ -52,7 +66,11 @@ const PostImagesButtons = ({
     borderRadius: "5px",
   };
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
+  const {
+    isOpen: isOpenShareModal,
+    onOpen: onOpenShareModal,
+    onClose: onCloseShareModal,
+  } = useDisclosure();
   return (
     <>
       <Box display="flex" alignItems="center" ml="12px" mr="12px">
@@ -114,10 +132,13 @@ const PostImagesButtons = ({
           </Card>
         )}
         <Spacer />
-        <Box display="flex" alignItems="center" mr="10px">
-          <Text mr="5px">{postImageCommentCount?.postCommentCount}</Text>
-          <FaComment />
-        </Box>
+        {postImageCommentCount &&
+          postImageCommentCount?.postCommentCount >= 1 && (
+            <Box display="flex" alignItems="center" mr="10px">
+              <Text mr="5px">{postImageCommentCount?.postCommentCount}</Text>
+              <FaComment />
+            </Box>
+          )}
         <Box display="flex" alignItems="center">
           <Text mr="3px">50</Text>
           <IoIosShareAlt />
@@ -137,10 +158,21 @@ const PostImagesButtons = ({
           <FaComment size="20px" />
           <Text ml="5px">Comment</Text>
         </Box>
-        <Box {...boxStyles}>
+        <Box {...boxStyles} onClick={onOpenShareModal}>
           <IoIosShareAlt size="25px" />
           <Text ml="5px">Share</Text>
         </Box>
+        <SharePostModal
+          isOpen={isOpenShareModal}
+          onClose={onCloseShareModal}
+          register={register}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          loading={loading}
+          setValue={setValue}
+          isSuccessful={isSuccessful}
+          setIsSuccessful={setIsSuccessful}
+        />
       </Box>
     </>
   );

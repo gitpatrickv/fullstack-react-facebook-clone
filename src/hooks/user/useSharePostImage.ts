@@ -3,14 +3,11 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-
-export interface ShareProps {
-  content?: string;
-}
+import { ShareProps } from "./useSharePost";
 
 const apiClient = axiosInstance;
 
-const useSharePost = (postId: number) => {
+const useSharePostImage = (postId: number, postImageId: number) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const [loading, setLoading] = useState(false);
@@ -20,7 +17,7 @@ const useSharePost = (postId: number) => {
 
   const mutation = useMutation(
     (data: ShareProps) =>
-      apiClient.post(`/post/share/${postId}`, data, {
+      apiClient.post(`/post/share/image/${postId}/${postImageId}`, data, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -28,7 +25,7 @@ const useSharePost = (postId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
-        queryClient.invalidateQueries(["postShareCount", postId]);
+        //   queryClient.invalidateQueries(["postShareCount", postId]);
         setLoading(false);
         setIsSuccessful(true);
         reset();
@@ -57,4 +54,4 @@ const useSharePost = (postId: number) => {
   };
 };
 
-export default useSharePost;
+export default useSharePostImage;
