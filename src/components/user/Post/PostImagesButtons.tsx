@@ -2,7 +2,14 @@ import {
   Box,
   Card,
   Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
+  Spinner,
   Text,
   useColorMode,
   useDisclosure,
@@ -20,6 +27,8 @@ import useLikePostImage from "../../../hooks/user/useLikePostImage";
 import useSharePostImage from "../../../hooks/user/useSharePostImage";
 import SharePostModal from "./SharePostModal";
 import useGetPostImageShareCount from "../../../hooks/user/useGetPostImageShareCount";
+import InfiniteScroll from "react-infinite-scroll-component";
+import UserListModel from "./UserListModel";
 
 export interface PostImageProps {
   activeImage: PostImage | null;
@@ -37,8 +46,6 @@ const PostImagesButtons = ({
   const { mutate: likePostImage } = useLikePostImage();
   const { data: postImageLike } = useGetPostImageLike(postImageId);
   const { data: postImageLikeCount } = useGetPostImageLikeCount(postImageId);
-  const { data: postImageLikeUserList } =
-    useGetPostImageLikeUserList(postImageId);
   const { data: postImageCommentCount } =
     useGetPostImageCommentCount(postImageId);
   const { data: getImageShareCount } = useGetPostImageShareCount(postImageId);
@@ -73,11 +80,42 @@ const PostImagesButtons = ({
     onOpen: onOpenShareModal,
     onClose: onCloseShareModal,
   } = useDisclosure();
+
+  const {
+    data: postImageLikeUserList,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetPostImageLikeUserList({
+    postImageId: postImageId,
+    pageSize: 10,
+  });
+
+  const {
+    isOpen: isOpenLikeList,
+    onOpen: onOpenLikeList,
+    onClose: onCloseLikeList,
+  } = useDisclosure();
+
+  const fetchedPostData =
+    postImageLikeUserList?.pages.reduce(
+      (total, page) => total + page.userList.length,
+      0
+    ) || 0;
+
+  const count = postImageLikeCount?.postLikeCount ?? 0;
+  const likeCount = count - 3;
+
   return (
     <>
       <Box display="flex" alignItems="center" ml="12px" mr="12px">
         {postImageLikeCount && postImageLikeCount.postLikeCount >= 1 && (
-          <>
+          <Box
+            display="flex"
+            alignItems="center"
+            onClick={onOpenLikeList}
+            cursor="pointer"
+            userSelect="none"
+          >
             <Box
               border="1px solid"
               borderRadius="full"
@@ -106,7 +144,7 @@ const PostImagesButtons = ({
                   }`
                 : ""}
             </Text>
-          </>
+          </Box>
         )}
         {isHovered && (
           <Card
@@ -117,20 +155,23 @@ const PostImagesButtons = ({
             color="black"
             zIndex={100}
             position="absolute"
-            mb="100px"
+            mb={count > 3 ? "150px" : "110px"}
           >
             <Text fontWeight="semibold" fontSize="md">
               Like
             </Text>
-            {postImageLikeUserList?.map((user) => (
-              <Text
-                key={user.uniqueId}
-                fontSize="sm"
-                textTransform="capitalize"
-              >
-                {user.firstName} {user.lastName}
-              </Text>
-            ))}
+            {postImageLikeUserList?.pages.map((page) =>
+              page.userList.slice(0, 3).map((user) => (
+                <Text
+                  key={user.uniqueId}
+                  fontSize="sm"
+                  textTransform="capitalize"
+                >
+                  {user.firstName} {user.lastName}
+                </Text>
+              ))
+            )}
+            {count > 3 && <Text fontSize="sm">and {likeCount} more...</Text>}
           </Card>
         )}
         <Spacer />
@@ -178,6 +219,34 @@ const PostImagesButtons = ({
           setIsSuccessful={setIsSuccessful}
         />
       </Box>
+
+      <Modal
+        isOpen={isOpenLikeList}
+        onClose={onCloseLikeList}
+        size="2xl"
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent height="500px">
+          <ModalHeader>All Likes</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody maxHeight="400px" overflowY="auto" id="list-body">
+            <InfiniteScroll
+              dataLength={fetchedPostData}
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={<Spinner />}
+              scrollableTarget="list-body"
+            >
+              {postImageLikeUserList?.pages.map((page) =>
+                page.userList.map((users) => (
+                  <UserListModel key={users.userId} users={users} />
+                ))
+              )}
+            </InfiniteScroll>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
