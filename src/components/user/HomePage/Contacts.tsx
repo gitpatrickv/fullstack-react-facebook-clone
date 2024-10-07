@@ -2,9 +2,9 @@ import { Box, Divider, Text } from "@chakra-ui/react";
 import ChatList from "./ChatList";
 import GroupChatList from "./GroupChatList";
 
-const Chat = () => {
+const Contacts = () => {
   return (
-    <Box>
+    <Box ml={{ base: "0px", lg: "30px", xl: "0px" }}>
       <Text fontWeight="semibold">Contacts</Text>
       <ChatList />
       <Divider mt="10px" mb="10px" />
@@ -14,4 +14,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Contacts;

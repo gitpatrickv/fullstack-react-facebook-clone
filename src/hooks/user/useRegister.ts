@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { User, schema } from "../../entities/User";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 const apiClient = axiosInstance;
 const useRegister = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -27,6 +28,7 @@ const useRegister = () => {
       apiClient.post("/user/register", data).then((res) => res.data),
 
     onSuccess: (response) => {
+      queryClient.invalidateQueries(["user"]);
       onClose();
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);

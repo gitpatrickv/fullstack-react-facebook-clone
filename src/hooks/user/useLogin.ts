@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ interface FormData {
 const apiClient = axiosInstance;
 
 const useLogin = () => {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -29,6 +30,8 @@ const useLogin = () => {
       apiClient.post("/user/login", data).then((res) => res.data),
 
     onSuccess: (response) => {
+      queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries(["userPostList"]);
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);
       const currentUser = response.currentUser;

@@ -1,40 +1,43 @@
 import { Grid, GridItem, Show, useBreakpointValue } from "@chakra-ui/react";
-import Chat from "../../components/user/HomePage/Chat";
-import CreatePost from "../../components/user/HomePage/CreatePost";
+import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
-import Post from "../../components/user/HomePage/Post";
+import CreatePost from "../../components/user/Post/CreatePost";
+import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
 
 const HomePage = () => {
+  const { data: _getUserInfo } = useGetCurrentUserInfo();
+
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
     lg: "0.6fr 0.4fr",
-    xl: "0.2fr 0.6fr 0.2fr",
+    xl: "0.2fr 0.2fr 0.5fr 0.2fr 0.2fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({
-    base: `"main"`,
-    lg: `"main right"`,
-    xl: `"left main right"`,
+    base: `"section"`,
+    lg: `"section asideRight"`,
+    xl: `"asideLeft left section right asideRight"`,
   });
   return (
     <>
       <Grid
         templateColumns={gridTemplateColumns}
         templateAreas={gridTemplateAreas}
-        mt={{ base: "60px", md: "40px", lg: "65px", xl: "5px" }}
+        mt={{ base: "55px", md: "35px", lg: "55px", xl: "5px" }}
+        padding={{ base: 2, md: 7, lg: 2 }}
       >
-        <GridItem area="main">
+        <GridItem area="section" as="section">
           <CreatePost />
-          <Post />
+          {/* <Posts /> */}
         </GridItem>
         <Show above="xl">
-          <GridItem area="left">
+          <GridItem area="asideLeft" as="aside">
             <Sidebar />
           </GridItem>
         </Show>
         <Show above="lg">
-          <GridItem area="right">
-            <Chat />
+          <GridItem area="asideRight" as="aside">
+            <Contacts />
           </GridItem>
         </Show>
       </Grid>

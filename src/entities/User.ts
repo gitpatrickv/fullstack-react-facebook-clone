@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 export interface User {
+  userId: number;
   firstName: string;
   lastName: string;
   email: string;
   dateOfBirth: string;
   password: string;
   confirmPassword: string;
-  profilePicture: string;
+  profilePicture?: string;
+  coverPhoto?: string;
   gender: string;
   role: string;
   userModel: string;
@@ -33,3 +35,10 @@ export const schema = z
     message: "Password & Confirm Password do not match!",
     path: ["confirmPassword"],
   });
+
+export interface UserData {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  profilePicture?: string;
+}
