@@ -27,6 +27,7 @@ import {
 } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
@@ -146,10 +147,7 @@ const ProfilePageHeader = () => {
                   />
                 ) : (
                   <Avatar
-                    src={
-                      getUserProfile?.profilePicture ||
-                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                    }
+                    src={getUserProfile?.profilePicture || pic}
                     borderWidth="6px"
                     borderColor={colorMode === "dark" ? "gray.700" : "white"}
                     width="180px"

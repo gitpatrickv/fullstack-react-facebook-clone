@@ -6,6 +6,7 @@ import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 import { useUserStore } from "../../../store/user-store";
 
 const Sidebar = () => {
@@ -25,14 +26,7 @@ const Sidebar = () => {
     <Box>
       <Link to={`/profile/${userId}`}>
         <Box {...boxStyles} cursor="pointer">
-          <Avatar
-            src={
-              profilePicture ||
-              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-            }
-            height="30px"
-            width="30px"
-          />
+          <Avatar src={profilePicture || pic} height="30px" width="30px" />
           <Text ml="10px" textTransform="capitalize">
             {firstName} {lastName}
           </Text>

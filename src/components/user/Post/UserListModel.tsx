@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Spacer, Text } from "@chakra-ui/react";
 import { UserData } from "../../../entities/User";
 import { FaUserPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 
 interface Props {
   users: UserData;
@@ -23,10 +24,7 @@ const UserListModel = ({ users }: Props) => {
       cursor="pointer"
     >
       <Avatar
-        src={
-          users.profilePicture ||
-          "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-        }
+        src={users.profilePicture || pic}
         width="40px"
         height="40px"
         mr="10px"

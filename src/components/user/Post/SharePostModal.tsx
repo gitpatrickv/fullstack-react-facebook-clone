@@ -20,6 +20,7 @@ import {
   UseFormSetValue,
 } from "react-hook-form";
 import { Link } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 import { ShareProps } from "../../../hooks/user/useSharePost";
 import { useUserStore } from "../../../store/user-store";
 
@@ -90,10 +91,7 @@ const SharePostModal = ({
               <Box display="flex" alignItems="center" padding={3}>
                 <Link to="/profile">
                   <Avatar
-                    src={
-                      profilePicture ||
-                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                    }
+                    src={profilePicture || pic}
                     height="30px"
                     width="30px"
                   />

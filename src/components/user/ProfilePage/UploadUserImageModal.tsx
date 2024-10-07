@@ -20,6 +20,7 @@ import { ChangeEvent, useEffect, useRef } from "react";
 import { GoPlus } from "react-icons/go";
 import useUploadUserImage from "../../../hooks/user/useUploadUserImage";
 import { useUserStore } from "../../../store/user-store";
+import pic from "../../../assets/profpic.jpeg";
 interface UploadPhotoProps {
   isOpen: boolean;
   onClose: () => void;
@@ -130,11 +131,7 @@ const UploadUserImageModal = ({
               {imageType === "PROFILE_PICTURE" ? (
                 <Box width="300px" height="300px" mt="30px">
                   <Avatar
-                    src={
-                      imagePreview ||
-                      profilePicture ||
-                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                    }
+                    src={imagePreview || profilePicture || pic}
                     objectFit="cover"
                     width="100%"
                     height="100%"

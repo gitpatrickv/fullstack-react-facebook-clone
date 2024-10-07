@@ -12,6 +12,7 @@ import { CiCamera } from "react-icons/ci";
 import { IoMdCloseCircle, IoMdSend } from "react-icons/io";
 import { WriteCommentProps } from "../../../hooks/user/useWritePostComment";
 import { useUserStore } from "../../../store/user-store";
+import pic from "../../../assets/profpic.jpeg";
 
 interface PostProps {
   focusRef: RefObject<HTMLInputElement>;
@@ -57,14 +58,7 @@ const WriteComment = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box bg={colorMode === "dark" ? "gray.700" : "white"}>
           <Box display="flex">
-            <Avatar
-              src={
-                profilePicture ||
-                "https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-              }
-              size="sm"
-              mr="10px"
-            />
+            <Avatar src={profilePicture || pic} size="sm" mr="10px" />
             <Box
               width="100%"
               border="1px solid"

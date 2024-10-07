@@ -64,10 +64,10 @@ const Posts = ({ posts }: PostProps) => {
   const handleFocusInputClick = () => {
     if (isModalOpen) {
       initialRef.current?.focus();
-      setIsClicked(!isClicked);
+      setIsClicked(true);
     } else {
       finalRef.current?.focus();
-      setIsClicked(!isClicked);
+      setIsClicked(true);
     }
   };
 

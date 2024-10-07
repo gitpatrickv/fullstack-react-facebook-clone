@@ -17,6 +17,7 @@ import {
 import { ChangeEvent, useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
 import { Link } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 import useCreatePost from "../../../hooks/user/useCreatePost";
 import { useUserStore } from "../../../store/user-store";
 
@@ -53,14 +54,7 @@ const CreatePost = () => {
     <>
       <Card padding={2}>
         <Box display="flex" alignItems="center">
-          <Avatar
-            src={
-              profilePicture ||
-              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-            }
-            size="sm"
-            mr="10px"
-          />
+          <Avatar src={profilePicture || pic} size="sm" mr="10px" />
           <Input
             borderRadius={20}
             placeholder={`What's on your mind, ${firstName}?`}
@@ -103,10 +97,7 @@ const CreatePost = () => {
               <Box display="flex" alignItems="center" mb="10px">
                 <Link to="/profile">
                   <Avatar
-                    src={
-                      profilePicture ||
-                      "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                    }
+                    src={profilePicture || pic}
                     height="30px"
                     width="30px"
                   />

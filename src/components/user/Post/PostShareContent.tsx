@@ -1,25 +1,36 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
-import { PostProps } from "./Posts";
+import { useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
+import pic from "../../../assets/profpic.jpeg";
+import { PostProps } from "./Posts";
 
 const PostShareContent = ({ posts }: PostProps) => {
+  const navigate = useNavigate();
   const time = new Date(
     posts.sharedPost?.timestamp ?? new Date().toISOString()
   );
 
+  const handleNavigateClick = () => {
+    navigate(`/profile/${posts.sharedPost?.userId}`);
+  };
   return (
     <Box padding={3}>
       <Box display="flex" alignItems="center">
         <Avatar
-          src={
-            posts.sharedPost?.profilePicture ||
-            "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-          }
+          src={posts.sharedPost?.profilePicture || pic}
           size="sm"
           mr="10px"
+          cursor="pointer"
+          onClick={handleNavigateClick}
         />
         <Box flexDirection="column">
-          <Text fontSize="sm" textTransform="capitalize" fontWeight="semibold">
+          <Text
+            fontSize="sm"
+            textTransform="capitalize"
+            fontWeight="semibold"
+            cursor="pointer"
+            onClick={handleNavigateClick}
+          >
             {posts.sharedPost?.firstName} {posts.sharedPost?.lastName}
           </Text>
           <Text fontSize="xs" color="gray.500" fontWeight="semibold">

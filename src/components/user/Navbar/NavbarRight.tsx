@@ -8,6 +8,7 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
@@ -19,10 +20,10 @@ import {
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import ColorModeSwitch from "../../ColorModeSwitch";
-import { useUserStore } from "../../../store/user-store";
+import pic from "../../../assets/profpic.jpeg";
 import { useAuthQueryStore } from "../../../store/auth-store";
-import { useQueryClient } from "@tanstack/react-query";
+import { useUserStore } from "../../../store/user-store";
+import ColorModeSwitch from "../../ColorModeSwitch";
 
 const NavbarRight = () => {
   const { firstName, lastName, profilePicture, userId, resetUser } =
@@ -48,29 +49,14 @@ const NavbarRight = () => {
         <MenuButton
           as={IconButton}
           aria-label="Options"
-          icon={
-            <Avatar
-              src={
-                profilePicture ||
-                "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-              }
-              size="sm"
-            />
-          }
+          icon={<Avatar src={profilePicture || pic} size="sm" />}
           variant="none"
         />
 
         <MenuList>
           <Link to={`/profile/${userId}`}>
             <MenuItem paddingBottom={3} paddingTop={3}>
-              <Avatar
-                src={
-                  profilePicture ||
-                  "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-                }
-                size="xs"
-                ml="3px"
-              />
+              <Avatar src={profilePicture || pic} size="xs" ml="3px" />
               <Text ml="12px" textTransform="capitalize">
                 {firstName} {lastName}
               </Text>

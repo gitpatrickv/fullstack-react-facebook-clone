@@ -148,7 +148,7 @@ const PostImagesModal = ({
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const handleFocusInputClick = () => {
     initialRef.current?.focus();
-    setIsClicked(!isClicked);
+    setIsClicked(true);
   };
 
   return (
