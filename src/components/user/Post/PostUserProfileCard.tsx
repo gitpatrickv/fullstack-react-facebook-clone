@@ -10,17 +10,17 @@ import { FaFacebookMessenger, FaUserPlus } from "react-icons/fa";
 import pic from "../../../assets/profpic.jpeg";
 import Post from "../../../entities/Post";
 
-interface Props {
+export interface ProfileCardProps {
   posts: Post;
   setIsHovered: (value: boolean) => void;
   handleNavigateClick: () => void;
 }
 
-const UserProfileCard = ({
+const PostUserProfileCard = ({
   posts,
   setIsHovered,
   handleNavigateClick,
-}: Props) => {
+}: ProfileCardProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   return (
     <Card
@@ -71,4 +71,4 @@ const UserProfileCard = ({
   );
 };
 
-export default UserProfileCard;
+export default PostUserProfileCard;

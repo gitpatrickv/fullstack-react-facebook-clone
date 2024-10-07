@@ -18,7 +18,7 @@ import pic from "../../../assets/profpic.jpeg";
 import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useUserStore } from "../../../store/user-store";
 import { PostProps } from "./Posts";
-import UserProfileCard from "./UserProfileCard";
+import PostUserProfileCard from "./PostUserProfileCard";
 
 const PostContent = ({ posts }: PostProps) => {
   const time = new Date(posts.timestamp);
@@ -39,7 +39,7 @@ const PostContent = ({ posts }: PostProps) => {
   return (
     <>
       {isHovered && (
-        <UserProfileCard
+        <PostUserProfileCard
           posts={posts}
           setIsHovered={setIsHovered}
           handleNavigateClick={handleNavigateClick}

@@ -1,6 +1,7 @@
 import { Avatar, Box, Image, Text, useColorMode } from "@chakra-ui/react";
 import ReactTimeAgo from "react-time-ago";
 import { PostComment } from "../../../entities/PostComment";
+import pic from "../../../assets/profpic.jpeg";
 interface Props {
   comments: PostComment;
 }
@@ -26,14 +27,7 @@ const Comments = ({ comments }: Props) => {
     <>
       <Box mt="10px">
         <Box display="flex">
-          <Avatar
-            src={
-              comments.profilePicture ||
-              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png"
-            }
-            size="sm"
-            mr="5px"
-          />
+          <Avatar src={comments.profilePicture || pic} size="sm" mr="5px" />
           <Box
             bg={
               comments.comment

@@ -131,13 +131,10 @@ const Posts = ({ posts }: PostProps) => {
         <PostContent posts={posts} />
         {posts.postImages && <PostImages posts={posts} />}
         {posts.sharedPost && (
-          <Card
-            border="1px solid"
-            borderColor="gray.500"
-            borderRadius="20px"
-            overflow="hidden"
-          >
-            {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
+          <Card border="1px solid" borderColor="gray.500" borderRadius="20px">
+            <Box overflow="hidden" borderTopRadius="20px">
+              {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
+            </Box>
             <PostShareContent posts={posts} />
           </Card>
         )}
