@@ -160,16 +160,18 @@ const LikeCommentShareButton = ({
             <Text fontWeight="semibold" fontSize="md">
               Like
             </Text>
-            {postLikeUserList?.pages.map((page) =>
-              page.userList.slice(0, 3).map((user) => (
-                <Text
-                  key={user.uniqueId}
-                  fontSize="sm"
-                  textTransform="capitalize"
-                >
-                  {user.firstName} {user.lastName}
-                </Text>
-              ))
+            {postLikeUserList?.pages.map((page, pageIndex) =>
+              pageIndex === 0
+                ? page.userList.slice(0, 3).map((user) => (
+                    <Text
+                      key={user.uniqueId}
+                      fontSize="sm"
+                      textTransform="capitalize"
+                    >
+                      {user.firstName} {user.lastName}
+                    </Text>
+                  ))
+                : null
             )}
             {count > 3 && <Text fontSize="sm">and {likeCount} more...</Text>}
           </Card>
@@ -252,13 +254,13 @@ const LikeCommentShareButton = ({
         <ModalContent height="500px">
           <ModalHeader>All Likes</ModalHeader>
           <ModalCloseButton />
-          <ModalBody maxHeight="400px" overflowY="auto" id="scrollable-body">
+          <ModalBody maxHeight="400px" overflowY="auto" id="list">
             <InfiniteScroll
               dataLength={fetchedPostData}
               next={fetchNextPage}
               hasMore={!!hasNextPage}
               loader={<Spinner />}
-              scrollableTarget="scrollable-body"
+              scrollableTarget="list"
             >
               {postLikeUserList?.pages.map((page) =>
                 page.userList.map((users) => (

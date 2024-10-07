@@ -17,6 +17,7 @@ const useGetCurrentUserInfo = () => {
     setCoverPhoto,
     setDateOfBirth,
     setGender,
+    setEmail,
   } = useUserStore();
   return useQuery({
     queryKey: ["user"],
@@ -34,6 +35,7 @@ const useGetCurrentUserInfo = () => {
       setLastName(data.lastName);
       setDateOfBirth(data.dateOfBirth);
       setGender(data.gender);
+      setEmail(data.email);
       if (data.profilePicture) {
         setProfilePicture(data.profilePicture);
       }

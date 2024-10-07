@@ -29,6 +29,8 @@ interface PostProps {
   handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
   imagePreview: string | null;
   removeImageClick: () => void;
+  isClicked: boolean;
+  setIsClicked: (value: boolean) => void;
 }
 
 const WriteComment = ({
@@ -45,6 +47,8 @@ const WriteComment = ({
   handleFileChange,
   imagePreview,
   removeImageClick,
+  isClicked,
+  setIsClicked,
 }: PostProps) => {
   const { colorMode } = useColorMode();
   const { profilePicture } = useUserStore();
@@ -76,9 +80,11 @@ const WriteComment = ({
                 _focus={{ border: "none", boxShadow: "none" }}
                 _hover={{ border: "none" }}
                 onChange={handleCommentChange}
+                onClick={() => setIsClicked(true)}
+                size="sm"
               />
 
-              <Box>
+              {isClicked && (
                 <Box
                   display="flex"
                   alignItems="center"
@@ -106,7 +112,7 @@ const WriteComment = ({
                     isLoading={loading}
                   />
                 </Box>
-              </Box>
+              )}
             </Box>
           </Box>
           {imagePreview && (

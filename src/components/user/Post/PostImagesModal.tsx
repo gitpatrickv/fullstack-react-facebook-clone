@@ -13,7 +13,7 @@ import {
   Spinner,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
@@ -145,9 +145,10 @@ const PostImagesModal = ({
       console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
-
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const handleFocusInputClick = () => {
     initialRef.current?.focus();
+    setIsClicked(!isClicked);
   };
 
   return (
@@ -241,7 +242,6 @@ const PostImagesModal = ({
                   <PostContent posts={posts} />
                 </Box>
               )}
-
               <PostImagesButtons
                 activeImage={activeImage}
                 focusInputClick={handleFocusInputClick}
@@ -288,6 +288,8 @@ const PostImagesModal = ({
                 handleFileChange={handleFileChange}
                 imagePreview={imagePreview}
                 removeImageClick={handleRemoveImagePreviewClick}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
               />
             </Box>
           </GridItem>

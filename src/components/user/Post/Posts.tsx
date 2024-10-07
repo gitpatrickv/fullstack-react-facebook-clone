@@ -60,12 +60,14 @@ const Posts = ({ posts }: PostProps) => {
       (total, page) => total + page.postCommentList.length,
       0
     ) || 0;
-
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const handleFocusInputClick = () => {
     if (isModalOpen) {
       initialRef.current?.focus();
+      setIsClicked(!isClicked);
     } else {
       finalRef.current?.focus();
+      setIsClicked(!isClicked);
     }
   };
 
@@ -176,6 +178,8 @@ const Posts = ({ posts }: PostProps) => {
             handleFileChange={handleFileChange}
             imagePreview={imagePreview}
             removeImageClick={handleRemoveImagePreviewClick}
+            isClicked={isClicked}
+            setIsClicked={setIsClicked}
           />
         </Box>
       </Card>
@@ -241,6 +245,8 @@ const Posts = ({ posts }: PostProps) => {
                 handleFileChange={handleFileChange}
                 imagePreview={imagePreview}
                 removeImageClick={handleRemoveImagePreviewClick}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
               />
             </Box>
           </Box>

@@ -8,6 +8,7 @@ interface UserStore {
   coverPhoto: string | null;
   dateOfBirth: string | null;
   gender: string | null;
+  email: string | null;
   setUserId: (id: number | null) => void;
   setFirstName: (fName: string | null) => void;
   setLastName: (lName: string | null) => void;
@@ -15,6 +16,7 @@ interface UserStore {
   setCoverPhoto: (photo: string | null) => void;
   setDateOfBirth: (birth: string | null) => void;
   setGender: (g: string | null) => void;
+  setEmail: (e: string | null) => void;
   resetUser: () => void;
 }
 
@@ -26,6 +28,7 @@ export const useUserStore = create<UserStore>((set) => ({
   coverPhoto: null,
   dateOfBirth: null,
   gender: null,
+  email: null,
   setUserId: (id: number | null) => set({ userId: id }),
   setFirstName: (fName: string | null) => set({ firstName: fName }),
   setLastName: (lName: string | null) => set({ lastName: lName }),
@@ -34,6 +37,7 @@ export const useUserStore = create<UserStore>((set) => ({
   setCoverPhoto: (photo: string | null) => set({ coverPhoto: photo }),
   setDateOfBirth: (birth: string | null) => set({ dateOfBirth: birth }),
   setGender: (g: string | null) => set({ gender: g }),
+  setEmail: (e: string | null) => set({ email: e }),
   resetUser: () =>
     set({
       userId: null,
@@ -43,5 +47,6 @@ export const useUserStore = create<UserStore>((set) => ({
       coverPhoto: null,
       dateOfBirth: null,
       gender: null,
+      email: null,
     }),
 }));

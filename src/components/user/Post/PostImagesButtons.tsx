@@ -160,16 +160,18 @@ const PostImagesButtons = ({
             <Text fontWeight="semibold" fontSize="md">
               Like
             </Text>
-            {postImageLikeUserList?.pages.map((page) =>
-              page.userList.slice(0, 3).map((user) => (
-                <Text
-                  key={user.uniqueId}
-                  fontSize="sm"
-                  textTransform="capitalize"
-                >
-                  {user.firstName} {user.lastName}
-                </Text>
-              ))
+            {postImageLikeUserList?.pages.map((page, pageIndex) =>
+              pageIndex === 0
+                ? page.userList.slice(0, 3).map((user) => (
+                    <Text
+                      key={user.uniqueId}
+                      fontSize="sm"
+                      textTransform="capitalize"
+                    >
+                      {user.firstName} {user.lastName}
+                    </Text>
+                  ))
+                : null
             )}
             {count > 3 && <Text fontSize="sm">and {likeCount} more...</Text>}
           </Card>
