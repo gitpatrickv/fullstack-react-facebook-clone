@@ -64,10 +64,10 @@ const Comments = ({ comments }: Props) => {
           <Text mr="20px" {...textStyles}>
             <ReactTimeAgo date={time} locale="en-US" />
           </Text>
-          <Text mr="20px" {...textStyles}>
+          {/* <Text mr="20px" {...textStyles}>
             Like
           </Text>
-          <Text {...textStyles}>Reply</Text>
+          <Text {...textStyles}>Reply</Text> */}
         </Box>
       </Box>
       {/* <Box ref={commentBottom}></Box> */}
