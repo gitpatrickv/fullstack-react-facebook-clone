@@ -18,7 +18,6 @@ import Posts from "../../components/user/Post/Posts";
 import Photos from "../../components/user/ProfilePage/Photos";
 import ProfilePageHeader from "../../components/user/ProfilePage/ProfilePageHeader";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
-import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
 import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 import ErrorPage from "./ErrorPage";
 
@@ -34,7 +33,6 @@ const ProfilePage = () => {
   ) {
     return <ErrorPage />;
   }
-  const { data: _getUserInfo } = useGetCurrentUserInfo();
   const { data, fetchNextPage, hasNextPage } = useFetchAllUserPosts({
     userId: userId,
     pageSize: 5,

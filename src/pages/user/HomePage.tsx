@@ -2,11 +2,8 @@ import { Grid, GridItem, Show, useBreakpointValue } from "@chakra-ui/react";
 import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
 import CreatePost from "../../components/user/Post/CreatePost";
-import useGetCurrentUserInfo from "../../hooks/user/useGetCurrentUserInfo";
 
 const HomePage = () => {
-  const { data: _getUserInfo } = useGetCurrentUserInfo();
-
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
     lg: "0.6fr 0.4fr",

@@ -24,6 +24,7 @@ import {
   FaFacebookMessenger,
   FaPlus,
   FaUserCheck,
+  FaUserPlus,
 } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
@@ -32,6 +33,7 @@ import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import UploadUserImageModal from "./UploadUserImageModal";
+import useAddToFriend from "../../../hooks/user/useAddToFriend";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
@@ -41,6 +43,16 @@ const ProfilePageHeader = () => {
   const { colorMode } = useColorMode();
   const [imageType, setImageType] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    mutation,
+    isLoading: addFriendIsLoading,
+    setIsLoading: setAddFriendIsLoading,
+  } = useAddToFriend();
+
+  const handleAddFriendClick = () => {
+    mutation.mutate(userId);
+    setAddFriendIsLoading(true);
+  };
 
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
@@ -258,9 +270,17 @@ const ProfilePageHeader = () => {
                     </>
                   ) : (
                     <>
-                      <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
+                      {/* <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
                         <FaUserCheck size="20px" />
                         <Text ml="5px">Friends</Text>
+                      </Button> */}
+                      <Button
+                        mr="5px"
+                        onClick={handleAddFriendClick}
+                        isLoading={addFriendIsLoading}
+                      >
+                        <FaUserPlus size="20px" />
+                        <Text ml="10px">Add friend</Text>
                       </Button>
                       <Button mr="7px" bg="blue.500">
                         <FaFacebookMessenger size="20px" />
