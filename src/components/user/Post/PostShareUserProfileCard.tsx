@@ -3,15 +3,27 @@ import {
   Box,
   Button,
   Card,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { FaFacebookMessenger, FaPlus, FaUserPlus } from "react-icons/fa";
+import {
+  FaFacebookMessenger,
+  FaPlus,
+  FaUserCheck,
+  FaUserPlus,
+} from "react-icons/fa";
 import pic from "../../../assets/profpic.jpeg";
 import { ProfileCardProps } from "./PostUserProfileCard";
 import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import { useUserStore } from "../../../store/user-store";
 import { MdModeEdit } from "react-icons/md";
+import useUnfriend from "../../../hooks/user/useUnfriend";
+import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
+import { FaUserXmark } from "react-icons/fa6";
 
 const PostShareUserProfileCard = ({
   posts,
@@ -21,17 +33,30 @@ const PostShareUserProfileCard = ({
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { userId } = useUserStore();
   const { mutation, isLoading, setIsLoading } = useAddToFriend();
-
+  const { data: friendshipStatus } = useGetFriendshipStatus(
+    posts.sharedPost?.userId ?? 0
+  );
   const handleAddFriendClick = () => {
     if (posts.sharedPost) {
       mutation.mutate(posts.sharedPost?.userId);
       setIsLoading(true);
     }
   };
+
+  const {
+    mutation: unfriend,
+    isLoading: unfriendIsLoading,
+    setIsLoading: setUnfriendIsLoading,
+  } = useUnfriend();
+
+  const handleUnfriendClick = () => {
+    if (posts.sharedPost) unfriend.mutate(posts.sharedPost?.userId);
+    setUnfriendIsLoading(true);
+  };
+
   return (
     <Card
       padding={5}
-      width={{ base: "250px", md: "430px" }}
       position="absolute"
       zIndex={100}
       left="10px"
@@ -79,14 +104,50 @@ const PostShareUserProfileCard = ({
               </>
             ) : (
               <>
-                <Button
-                  mr="10px"
-                  onClick={handleAddFriendClick}
-                  isLoading={isLoading}
-                >
-                  <FaUserPlus size="20px" />
-                  {isSmallScreen ? null : <Text ml="10px">Add Friend</Text>}
-                </Button>
+                {friendshipStatus && friendshipStatus?.status === "FRIENDS" ? (
+                  <Menu>
+                    <MenuButton
+                      as={Button}
+                      mr="7px"
+                      isLoading={unfriendIsLoading}
+                    >
+                      <Box display="flex">
+                        <FaUserCheck size="20px" />
+                        {isSmallScreen ? null : <Text ml="10px">Friends</Text>}
+                      </Box>
+                    </MenuButton>
+
+                    <MenuList>
+                      <MenuItem onClick={handleUnfriendClick}>
+                        <FaUserXmark size="20px" />
+                        <Text ml="10px">Unfriend</Text>
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                ) : (
+                  <Button
+                    mr="7px"
+                    onClick={handleAddFriendClick}
+                    isLoading={isLoading}
+                  >
+                    {friendshipStatus &&
+                    friendshipStatus?.status === "PENDING" ? (
+                      <>
+                        <FaUserXmark size="20px" />
+                        {isSmallScreen ? null : (
+                          <Text ml="10px">Cancel request</Text>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <FaUserPlus size="20px" />
+                        {isSmallScreen ? null : (
+                          <Text ml="10px">Add friend</Text>
+                        )}
+                      </>
+                    )}
+                  </Button>
+                )}
                 <Button mr="7px" colorScheme="blue">
                   <FaFacebookMessenger size="20px" />
                   {isSmallScreen ? null : <Text ml="5px">Message</Text>}

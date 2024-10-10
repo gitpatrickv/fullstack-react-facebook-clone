@@ -1,9 +1,6 @@
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 
-import FriendRequestCard from "../../components/user/FriendsPage/FriendRequestCard";
-
 const FriendRequestPage = () => {
-  const array = Array.from({ length: 10 }, (_, i) => i + 1);
   return (
     <>
       <Box
@@ -20,9 +17,9 @@ const FriendRequestPage = () => {
         </Text>
       </Box>
       <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 7 }} spacing={2}>
-        {array.map((card) => (
+        {/* {array.map((card) => (
           <FriendRequestCard key={card} />
-        ))}
+        ))} */}
       </SimpleGrid>
     </>
   );
