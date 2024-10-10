@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
+import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   request: UserDataModelList;
@@ -16,6 +18,17 @@ interface Props {
 
 const FriendRequestCard = ({ request }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const { mutation, isLoading, setIsLoading } = useAcceptFriendRequest();
+  const navigate = useNavigate();
+  const handleAcceptFriendRequestClick = () => {
+    mutation.mutate(request.userId);
+    setIsLoading(true);
+  };
+
+  const handleNavigateClick = () => {
+    navigate(`/profile/${request.userId}`);
+  };
+
   return (
     <Card overflow="hidden">
       <Box
@@ -24,7 +37,12 @@ const FriendRequestCard = ({ request }: Props) => {
         padding={isSmallScreen ? 2 : 0}
       >
         {isSmallScreen ? (
-          <Avatar src={request.profilePicture || pic} size="xl" />
+          <Avatar
+            src={request.profilePicture || pic}
+            size="xl"
+            onClick={handleNavigateClick}
+            cursor="pointer"
+          />
         ) : (
           <Image
             src={request.profilePicture || pic}
@@ -32,6 +50,8 @@ const FriendRequestCard = ({ request }: Props) => {
             height="100%"
             objectFit="cover"
             boxSize="220px"
+            onClick={handleNavigateClick}
+            cursor="pointer"
           />
         )}
         <Box padding={2}>
@@ -40,6 +60,8 @@ const FriendRequestCard = ({ request }: Props) => {
             fontWeight="semibold"
             textTransform="capitalize"
             fontSize="lg"
+            onClick={handleNavigateClick}
+            cursor="pointer"
           >
             {request.firstName} {request.lastName}
           </Text>
@@ -52,6 +74,8 @@ const FriendRequestCard = ({ request }: Props) => {
               colorScheme="blue"
               mb={{ base: "0px", md: "10px" }}
               mr={{ base: "10px", md: "0" }}
+              onClick={handleAcceptFriendRequestClick}
+              isLoading={isLoading}
             >
               Confirm
             </Button>

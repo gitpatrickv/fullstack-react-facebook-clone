@@ -20,7 +20,7 @@ const PeopleYouMayKnow = () => {
   const requestList =
     fetchAllRequest?.pages.flatMap((page) => page.userList) || [];
   const requestListSize = requestList.length > 10;
-  const requestSize = requestList.length > 1;
+  const requestSize = requestList.length >= 1;
 
   return (
     <>
