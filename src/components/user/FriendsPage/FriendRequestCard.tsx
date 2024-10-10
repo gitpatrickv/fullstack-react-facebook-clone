@@ -8,8 +8,13 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import pic from "../../../assets/profpic.jpeg";
+import { UserDataModelList } from "../../../entities/User";
 
-const FriendRequestCard = () => {
+interface Props {
+  request: UserDataModelList;
+}
+
+const FriendRequestCard = ({ request }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   return (
     <Card overflow="hidden">
@@ -18,10 +23,25 @@ const FriendRequestCard = () => {
         alignItems="center"
         padding={isSmallScreen ? 2 : 0}
       >
-        {isSmallScreen ? <Avatar src={pic} size="xl" /> : <Image src={pic} />}
+        {isSmallScreen ? (
+          <Avatar src={request.profilePicture || pic} size="xl" />
+        ) : (
+          <Image
+            src={request.profilePicture || pic}
+            width="100%"
+            height="100%"
+            objectFit="cover"
+            boxSize="220px"
+          />
+        )}
         <Box padding={2}>
-          <Text isTruncated={true} fontWeight="semibold">
-            NAME HERE HERE
+          <Text
+            isTruncated={true}
+            fontWeight="semibold"
+            textTransform="capitalize"
+            fontSize="lg"
+          >
+            {request.firstName} {request.lastName}
           </Text>
           <Box
             display="flex"

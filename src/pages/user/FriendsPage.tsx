@@ -1,7 +1,8 @@
 import { Grid, GridItem, useBreakpointValue } from "@chakra-ui/react";
 
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import FriendsPageSideBar from "../../components/user/FriendsPage/FriendsPageSidebar";
+import PeopleYouMayKnow from "../../components/user/FriendsPage/PeopleYouMayKnow";
 
 const FriendsPage = () => {
   const gridTemplateColumns = useBreakpointValue({
@@ -19,6 +20,8 @@ const FriendsPage = () => {
            `,
   });
 
+  const location = useLocation();
+
   return (
     <>
       <Grid
@@ -33,7 +36,7 @@ const FriendsPage = () => {
           padding={{ base: 2, md: 5, lg: 7 }}
           mt={{ lg: "40px", xl: "0" }}
         >
-          <Outlet />
+          {location.pathname === "/friends" ? <PeopleYouMayKnow /> : <Outlet />}
         </GridItem>
       </Grid>
     </>
