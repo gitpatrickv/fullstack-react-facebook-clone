@@ -1,27 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
+import { useState } from "react";
 
 const apiClient = axiosInstance;
 
-const useAddToFriend = () => {
+const useUnfriend = () => {
   const { authStore } = useAuthQueryStore();
-  const queryClient = useQueryClient();
   const jwtToken = authStore.jwtToken;
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const mutation = useMutation(
-    async (strangerUserId: number) => {
-      await apiClient.post(
-        `/friends/add/${strangerUserId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-    },
+    async (friendId: number) =>
+      await apiClient.delete(`/friends/unfriend/${friendId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }),
     {
       onSuccess: () => {
         setIsLoading(false);
@@ -33,4 +28,4 @@ const useAddToFriend = () => {
   return { mutation, isLoading, setIsLoading };
 };
 
-export default useAddToFriend;
+export default useUnfriend;

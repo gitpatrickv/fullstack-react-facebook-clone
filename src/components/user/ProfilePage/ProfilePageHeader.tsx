@@ -7,6 +7,10 @@ import {
   Grid,
   GridItem,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Show,
   Skeleton,
   SkeletonCircle,
@@ -26,32 +30,46 @@ import {
   FaUserCheck,
   FaUserPlus,
 } from "react-icons/fa";
+import { FaUserXmark } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import useAddToFriend from "../../../hooks/user/useAddToFriend";
+import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import UploadUserImageModal from "./UploadUserImageModal";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
+import useUnfriend from "../../../hooks/user/useUnfriend";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
-  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
   const { userId: currentUserId } = useUserStore();
+  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
   const { colorMode } = useColorMode();
   const [imageType, setImageType] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const {
     mutation,
     isLoading: addFriendIsLoading,
     setIsLoading: setAddFriendIsLoading,
   } = useAddToFriend();
+  const {
+    mutation: unfriend,
+    isLoading: deleteIsLoading,
+    setIsLoading: setDeleteIsLoading,
+  } = useUnfriend();
 
   const handleAddFriendClick = () => {
     mutation.mutate(userId);
     setAddFriendIsLoading(true);
+  };
+
+  const handleUnfriendClick = () => {
+    unfriend.mutate(userId);
+    setDeleteIsLoading(true);
   };
 
   const handleOpenModalClick = (image: string) => {
@@ -270,18 +288,47 @@ const ProfilePageHeader = () => {
                     </>
                   ) : (
                     <>
-                      {/* <Button mr="7px" ml={{ base: "10px", md: "0px" }}>
-                        <FaUserCheck size="20px" />
-                        <Text ml="5px">Friends</Text>
-                      </Button> */}
-                      <Button
-                        mr="5px"
-                        onClick={handleAddFriendClick}
-                        isLoading={addFriendIsLoading}
-                      >
-                        <FaUserPlus size="20px" />
-                        <Text ml="10px">Add friend</Text>
-                      </Button>
+                      {friendshipStatus &&
+                      friendshipStatus?.status === "FRIENDS" ? (
+                        <Menu>
+                          <MenuButton
+                            as={Button}
+                            mr="7px"
+                            isLoading={deleteIsLoading}
+                          >
+                            <Box display="flex">
+                              <FaUserCheck size="20px" />
+                              <Text ml="10px">Friends</Text>
+                            </Box>
+                          </MenuButton>
+
+                          <MenuList>
+                            <MenuItem onClick={handleUnfriendClick}>
+                              <FaUserXmark size="20px" />
+                              <Text ml="10px">Unfriend</Text>
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                      ) : (
+                        <Button
+                          mr="7px"
+                          onClick={handleAddFriendClick}
+                          isLoading={addFriendIsLoading}
+                        >
+                          {friendshipStatus &&
+                          friendshipStatus?.status === "PENDING" ? (
+                            <>
+                              <FaUserXmark size="20px" />
+                              <Text ml="10px">Cancel request</Text>
+                            </>
+                          ) : (
+                            <>
+                              <FaUserPlus size="20px" />
+                              <Text ml="10px">Add friend</Text>
+                            </>
+                          )}
+                        </Button>
+                      )}
                       <Button mr="7px" bg="blue.500">
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
