@@ -1,9 +1,9 @@
 import { Box, Button, Divider, SimpleGrid, Text } from "@chakra-ui/react";
+import { FaCaretDown } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import useFetchAllFriendRequest from "../../../hooks/user/useFetchAllFriendRequest";
 import { useUserStore } from "../../../store/user-store";
 import FriendRequestCard from "./FriendRequestCard";
-import { FaCaretDown } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 const PeopleYouMayKnow = () => {
   const { userId } = useUserStore();

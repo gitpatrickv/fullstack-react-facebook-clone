@@ -67,7 +67,7 @@ const PostShareUserProfileCard = ({
       position="absolute"
       zIndex={100}
       left="10px"
-      bottom="80px"
+      bottom="50px"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       border="1px solid"
@@ -100,6 +100,7 @@ const PostShareUserProfileCard = ({
                   mr="7px"
                   bg="blue.500"
                   _hover={{ bg: "blue.600" }}
+                  _active={{ bg: "blue.700" }}
                   ml={{ base: "10px", md: "0px" }}
                 >
                   <FaPlus size="15px" />

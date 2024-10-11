@@ -43,6 +43,7 @@ import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import UploadUserImageModal from "./UploadUserImageModal";
+import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
@@ -80,9 +81,21 @@ const ProfilePageHeader = () => {
     isLoading: acceptRequestIsLoading,
     setIsLoading: setAcceptRequestIsLoading,
   } = useAcceptFriendRequest();
+
   const handleAcceptFriendRequestClick = () => {
     acceptRequest.mutate(userId);
     setAcceptRequestIsLoading(true);
+  };
+
+  const {
+    mutation: deleteRequest,
+    isLoading: deleteRequestIsLoading,
+    setIsLoading: setDeleteRequestIsLoading,
+  } = useDeleteFriendRequest();
+
+  const handleDeleteFriendRequestClick = () => {
+    deleteRequest.mutate(userId);
+    setDeleteRequestIsLoading(true);
   };
 
   const handleOpenModalClick = (image: string) => {
@@ -291,6 +304,7 @@ const ProfilePageHeader = () => {
                         mr="7px"
                         bg="blue.500"
                         _hover={{ bg: "blue.600" }}
+                        _active={{ bg: "blue.700" }}
                         ml={{ base: "10px", md: "0px" }}
                       >
                         <FaPlus size="15px" />
@@ -361,6 +375,7 @@ const ProfilePageHeader = () => {
                         mr="7px"
                         bg="blue.500"
                         _hover={{ bg: "blue.600" }}
+                        _active={{ bg: "blue.700" }}
                       >
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
@@ -401,6 +416,7 @@ const ProfilePageHeader = () => {
                   mr="7px"
                   bg="blue.500"
                   _hover={{ bg: "blue.600" }}
+                  _active={{ bg: "blue.700" }}
                   onClick={handleAcceptFriendRequestClick}
                   isLoading={acceptRequestIsLoading}
                 >
@@ -409,7 +425,10 @@ const ProfilePageHeader = () => {
                     <Text ml="10px">Confirm Request</Text>
                   )}
                 </Button>
-                <Button>
+                <Button
+                  onClick={handleDeleteFriendRequestClick}
+                  isLoading={deleteRequestIsLoading}
+                >
                   <IoTrashOutline size="20px" />{" "}
                   {isMobileScreen ? null : (
                     <Text ml="10px">Delete Request</Text>

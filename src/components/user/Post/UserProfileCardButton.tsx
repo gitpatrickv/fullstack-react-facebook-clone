@@ -79,7 +79,12 @@ const UserProfileCardButton = ({
           )}
         </Button>
       )}
-      <Button mr="7px" bg="blue.500" _hover={{ bg: "blue.600" }}>
+      <Button
+        mr="7px"
+        bg="blue.500"
+        _hover={{ bg: "blue.600" }}
+        _active={{ bg: "blue.700" }}
+      >
         <FaFacebookMessenger size="20px" />
         {isSmallScreen ? null : <Text ml="5px">Message</Text>}
       </Button>

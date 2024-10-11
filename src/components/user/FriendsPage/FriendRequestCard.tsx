@@ -11,6 +11,7 @@ import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import { useNavigate } from "react-router-dom";
+import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 
 interface Props {
   request: UserDataModelList;
@@ -23,6 +24,17 @@ const FriendRequestCard = ({ request }: Props) => {
   const handleAcceptFriendRequestClick = () => {
     mutation.mutate(request.userId);
     setIsLoading(true);
+  };
+
+  const {
+    mutation: deleteRequest,
+    isLoading: deleteRequestIsLoading,
+    setIsLoading: setDeleteRequestIsLoading,
+  } = useDeleteFriendRequest();
+
+  const handleDeleteFriendRequestClick = () => {
+    deleteRequest.mutate(request.userId);
+    setDeleteRequestIsLoading(true);
   };
 
   const handleNavigateClick = () => {
@@ -79,7 +91,12 @@ const FriendRequestCard = ({ request }: Props) => {
             >
               Confirm
             </Button>
-            <Button>Delete</Button>
+            <Button
+              onClick={handleDeleteFriendRequestClick}
+              isLoading={deleteRequestIsLoading}
+            >
+              Delete
+            </Button>
           </Box>
         </Box>
       </Box>

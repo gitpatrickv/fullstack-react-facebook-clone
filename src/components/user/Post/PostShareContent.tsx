@@ -41,17 +41,15 @@ const PostShareContent = ({ posts }: PostProps) => {
               onClick={handleNavigateClick}
             />
           </Box>
-          <Box
-            flexDirection="column"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
+          <Box flexDirection="column">
             <Text
               fontSize="sm"
               textTransform="capitalize"
               fontWeight="semibold"
               cursor="pointer"
               onClick={handleNavigateClick}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               {posts.sharedPost?.firstName} {posts.sharedPost?.lastName}
             </Text>
