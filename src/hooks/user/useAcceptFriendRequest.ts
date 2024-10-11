@@ -28,6 +28,7 @@ const useAcceptFriendRequest = () => {
         queryClient.invalidateQueries(["friendRequestList"]);
         queryClient.invalidateQueries(["friendRequestStatus", strangerUserId]);
         queryClient.invalidateQueries(["friendshipStatus", strangerUserId]);
+        queryClient.invalidateQueries(["userFriendList"]);
       },
     }
   );

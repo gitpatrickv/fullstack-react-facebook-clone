@@ -44,7 +44,7 @@ const PostShareUserProfileCard = ({
     mutation: unfriend,
     isLoading: unfriendIsLoading,
     setIsLoading: setUnfriendIsLoading,
-  } = useUnfriend();
+  } = useUnfriend(userId ?? 0);
 
   const handleUnfriendClick = () => {
     if (posts.sharedPost) unfriend.mutate(posts.sharedPost?.userId);

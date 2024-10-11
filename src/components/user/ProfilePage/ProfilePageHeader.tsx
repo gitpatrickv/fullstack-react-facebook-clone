@@ -66,7 +66,7 @@ const ProfilePageHeader = () => {
     mutation: unfriend,
     isLoading: deleteIsLoading,
     setIsLoading: setDeleteIsLoading,
-  } = useUnfriend();
+  } = useUnfriend(currentUserId ?? 0);
 
   const handleAddFriendClick = () => {
     mutation.mutate(userId);
@@ -93,7 +93,7 @@ const ProfilePageHeader = () => {
     mutation: deleteRequest,
     isLoading: deleteRequestIsLoading,
     setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest();
+  } = useDeleteFriendRequest(currentUserId ?? 0);
 
   const handleDeleteFriendRequestClick = () => {
     deleteRequest.mutate(userId);
@@ -276,7 +276,7 @@ const ProfilePageHeader = () => {
               ) : (
                 <>
                   {getFriendListCount && (
-                    <Text fontSize="md" fontWeight="semibold" mb="10px">
+                    <Text fontSize="md" fontWeight="semibold" mb="5px">
                       {getFriendListCount.count}{" "}
                       <Text as="span">
                         {getFriendListCount.count > 1 ? "friends" : "friend"}

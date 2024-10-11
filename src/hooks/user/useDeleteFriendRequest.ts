@@ -5,14 +5,14 @@ import { useAuthQueryStore } from "../../store/auth-store";
 
 const apiClient = axiosInstance;
 
-const useDeleteFriendRequest = () => {
+const useDeleteFriendRequest = (userId: number) => {
   const queryClient = useQueryClient();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const mutation = useMutation(
     async (strangerId: number) => {
-      await apiClient.delete(`/friends/delete/${strangerId}`, {
+      await apiClient.delete(`/friends/delete/${userId}/${strangerId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

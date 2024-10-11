@@ -44,7 +44,7 @@ const PostUserProfileCard = ({
     mutation: unfriend,
     isLoading: unfriendIsLoading,
     setIsLoading: setUnfriendIsLoading,
-  } = useUnfriend();
+  } = useUnfriend(userId ?? 0);
 
   const handleUnfriendClick = () => {
     unfriend.mutate(posts.userId);

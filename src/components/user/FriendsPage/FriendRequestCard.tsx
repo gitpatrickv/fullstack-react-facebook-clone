@@ -12,6 +12,7 @@ import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import { useNavigate } from "react-router-dom";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
+import { useUserStore } from "../../../store/user-store";
 
 interface Props {
   request: UserDataModelList;
@@ -25,12 +26,13 @@ const FriendRequestCard = ({ request }: Props) => {
     mutation.mutate(request.userId);
     setIsLoading(true);
   };
+  const { userId } = useUserStore();
 
   const {
     mutation: deleteRequest,
     isLoading: deleteRequestIsLoading,
     setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest();
+  } = useDeleteFriendRequest(userId ?? 0);
 
   const handleDeleteFriendRequestClick = () => {
     deleteRequest.mutate(request.userId);

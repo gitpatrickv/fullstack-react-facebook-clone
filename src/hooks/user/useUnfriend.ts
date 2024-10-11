@@ -5,14 +5,14 @@ import { useState } from "react";
 
 const apiClient = axiosInstance;
 
-const useUnfriend = () => {
+const useUnfriend = (userId: number) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const mutation = useMutation(
     async (friendId: number) =>
-      await apiClient.delete(`/friends/unfriend/${friendId}`, {
+      await apiClient.delete(`/friends/unfriend/${userId}/${friendId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -21,6 +21,8 @@ const useUnfriend = () => {
       onSuccess: () => {
         setIsLoading(false);
         queryClient.invalidateQueries(["friendshipStatus"]);
+        queryClient.invalidateQueries(["friendListCount"]);
+        queryClient.invalidateQueries(["userFriendList"]);
       },
     }
   );
