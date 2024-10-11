@@ -32,18 +32,20 @@ import {
 import { FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useAddToFriend from "../../../hooks/user/useAddToFriend";
+import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
+import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
+import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import UploadUserImageModal from "./UploadUserImageModal";
-import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
@@ -115,6 +117,14 @@ const ProfilePageHeader = () => {
 
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isMobileScreen = useBreakpointValue({ base: true, md: false });
+
+  const { data: fetchAllFriends } = useFetchAllUserFriends({
+    userId: userId,
+    pageSize: 6,
+  });
+
+  const { data: getFriendListCount } = useGetUserFriendListCount(userId);
+
   return (
     <Card>
       <UploadUserImageModal
@@ -256,31 +266,44 @@ const ProfilePageHeader = () => {
                 </Text>
               )}
 
-              {currentUserId === userId && (
+              {/* {currentUserId === userId && (
+                <> */}
+              {isLoading ? (
                 <>
-                  {isLoading ? (
-                    <>
-                      <SkeletonText />
-                      <SkeletonCircle size="sm" />
-                    </>
-                  ) : (
-                    <>
-                      <Text
-                        fontSize="md"
-                        color="gray.500"
-                        fontWeight="semibold"
-                        mb="10px"
-                      >
-                        X friends and avatar
+                  <SkeletonText />
+                  <SkeletonCircle size="sm" />
+                </>
+              ) : (
+                <>
+                  {getFriendListCount && (
+                    <Text fontSize="md" fontWeight="semibold" mb="10px">
+                      {getFriendListCount.count}{" "}
+                      <Text as="span">
+                        {getFriendListCount.count > 1 ? "friends" : "friend"}
                       </Text>
-                      <Avatar
-                        src="https://st.depositphotos.com/2101611/3925/v/450/depositphotos_39258193-stock-illustration-anonymous-business-man-icon.jpg"
-                        size="sm"
-                      />
-                    </>
+                    </Text>
+                  )}
+                  {fetchAllFriends?.pages.map((page) =>
+                    page.userList.map((list, index) => (
+                      <Link to={`/profile/${list.userId}`} key={list.uniqueId}>
+                        <Avatar
+                          src={list.profilePicture || pic}
+                          height="40px"
+                          width="40px"
+                          ml={index === 0 ? 0 : "-10px"}
+                          zIndex={page.userList.length - index}
+                          borderWidth="2px"
+                          borderColor={
+                            colorMode === "dark" ? "gray.700" : "white"
+                          }
+                        />
+                      </Link>
+                    ))
                   )}
                 </>
               )}
+              {/* </>
+              )} */}
             </Box>
             <Spacer />
             <Box
