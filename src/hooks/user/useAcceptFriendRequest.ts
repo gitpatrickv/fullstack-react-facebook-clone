@@ -23,9 +23,11 @@ const useAcceptFriendRequest = () => {
       );
     },
     {
-      onSuccess: () => {
+      onSuccess: (_, strangerUserId) => {
         setIsLoading(false);
         queryClient.invalidateQueries(["friendRequestList"]);
+        queryClient.invalidateQueries(["friendRequestStatus", strangerUserId]);
+        queryClient.invalidateQueries(["friendshipStatus", strangerUserId]);
       },
     }
   );

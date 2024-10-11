@@ -52,7 +52,7 @@ const CreatePost = () => {
 
   return (
     <>
-      <Card padding={2}>
+      <Card padding={3}>
         <Box display="flex" alignItems="center">
           <Avatar src={profilePicture || pic} size="sm" mr="10px" />
           <Input

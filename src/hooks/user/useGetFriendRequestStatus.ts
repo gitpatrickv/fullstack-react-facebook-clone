@@ -1,21 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-
-export interface FriendshipStatusProps {
-  status: string;
-}
+import { FriendshipStatusProps } from "./useGetFriendshipStatus";
+import { axiosInstance } from "../../services/api-client";
+import { useQuery } from "@tanstack/react-query";
 
 const apiClient = axiosInstance;
 
-const useGetFriendshipStatus = (friendId: number) => {
+const useGetFriendRequestStatus = (friendId: number) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   return useQuery({
-    queryKey: ["friendshipStatus", friendId],
+    queryKey: ["friendRequestStatus", friendId],
     queryFn: async () => {
       const { data } = await apiClient.get<FriendshipStatusProps>(
-        `/friends/status/${friendId}`,
+        `/friends/status/request/${friendId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -28,4 +25,4 @@ const useGetFriendshipStatus = (friendId: number) => {
   });
 };
 
-export default useGetFriendshipStatus;
+export default useGetFriendRequestStatus;

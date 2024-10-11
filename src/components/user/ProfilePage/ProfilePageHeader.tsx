@@ -24,23 +24,25 @@ import {
 import { useState } from "react";
 import {
   FaCamera,
-  FaChevronDown,
   FaFacebookMessenger,
   FaPlus,
   FaUserCheck,
   FaUserPlus,
 } from "react-icons/fa";
 import { FaUserXmark } from "react-icons/fa6";
+import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useAddToFriend from "../../../hooks/user/useAddToFriend";
+import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
+import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import UploadUserImageModal from "./UploadUserImageModal";
-import useUnfriend from "../../../hooks/user/useUnfriend";
 
 const ProfilePageHeader = () => {
   const params = useParams<{ userId: string }>();
@@ -51,6 +53,7 @@ const ProfilePageHeader = () => {
   const [imageType, setImageType] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
+  const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
   const {
     mutation,
     isLoading: addFriendIsLoading,
@@ -72,6 +75,16 @@ const ProfilePageHeader = () => {
     setDeleteIsLoading(true);
   };
 
+  const {
+    mutation: acceptRequest,
+    isLoading: acceptRequestIsLoading,
+    setIsLoading: setAcceptRequestIsLoading,
+  } = useAcceptFriendRequest();
+  const handleAcceptFriendRequestClick = () => {
+    acceptRequest.mutate(userId);
+    setAcceptRequestIsLoading(true);
+  };
+
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
     onOpen();
@@ -88,6 +101,7 @@ const ProfilePageHeader = () => {
   });
 
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
+  const isMobileScreen = useBreakpointValue({ base: true, md: false });
   return (
     <Card>
       <UploadUserImageModal
@@ -275,7 +289,8 @@ const ProfilePageHeader = () => {
                     <>
                       <Button
                         mr="7px"
-                        colorScheme="blue"
+                        bg="blue.500"
+                        _hover={{ bg: "blue.600" }}
                         ml={{ base: "10px", md: "0px" }}
                       >
                         <FaPlus size="15px" />
@@ -309,6 +324,18 @@ const ProfilePageHeader = () => {
                             </MenuItem>
                           </MenuList>
                         </Menu>
+                      ) : friendRequestStatus &&
+                        friendRequestStatus?.status === "PENDING" ? (
+                        <>
+                          <Button
+                            mr="7px"
+                            onClick={handleAcceptFriendRequestClick}
+                            isLoading={acceptRequestIsLoading}
+                          >
+                            <FaUserPlus size="20px" />
+                            <Text ml="10px">Respond</Text>
+                          </Button>
+                        </>
                       ) : (
                         <Button
                           mr="7px"
@@ -329,22 +356,68 @@ const ProfilePageHeader = () => {
                           )}
                         </Button>
                       )}
-                      <Button mr="7px" bg="blue.500">
+
+                      <Button
+                        mr="7px"
+                        bg="blue.500"
+                        _hover={{ bg: "blue.600" }}
+                      >
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
                       </Button>
                     </>
                   )}
-                  <Button
+                  {/* <Button
                     width={{ base: "80%", md: "0" }}
                     mt={{ base: "10px", md: "0px" }}
                   >
                     <FaChevronDown />
-                  </Button>
+                  </Button> */}
                 </>
               )}
             </Box>
           </Box>
+          {friendRequestStatus && friendRequestStatus?.status === "PENDING" && (
+            <Card
+              width="100%"
+              padding={{ base: 2, md: 3 }}
+              position="relative"
+              bottom="25px"
+              bg={colorMode === "dark" ? "gray.800" : "gray.100"}
+            >
+              <Box display="flex" alignItems="center">
+                <Text
+                  fontSize={{ base: "xs", md: "lg" }}
+                  textTransform="capitalize"
+                  mr="5px"
+                >
+                  {getUserProfile?.firstName}
+                </Text>
+                <Text fontSize={{ base: "xs", md: "lg" }} whiteSpace="nowrap">
+                  sent you a friend request
+                </Text>
+                <Spacer />
+                <Button
+                  mr="7px"
+                  bg="blue.500"
+                  _hover={{ bg: "blue.600" }}
+                  onClick={handleAcceptFriendRequestClick}
+                  isLoading={acceptRequestIsLoading}
+                >
+                  <FaUserPlus size="20px" />
+                  {isMobileScreen ? null : (
+                    <Text ml="10px">Confirm Request</Text>
+                  )}
+                </Button>
+                <Button>
+                  <IoTrashOutline size="20px" />{" "}
+                  {isMobileScreen ? null : (
+                    <Text ml="10px">Delete Request</Text>
+                  )}
+                </Button>
+              </Box>
+            </Card>
+          )}
           <Divider position="relative" bottom="15px" />
           <Box position="relative" bottom="7px">
             <Button bg="none" height="50px">
