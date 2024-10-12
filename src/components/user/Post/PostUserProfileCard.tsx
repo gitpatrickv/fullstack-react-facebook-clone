@@ -71,8 +71,8 @@ const PostUserProfileCard = ({
       padding={5}
       position="absolute"
       zIndex={100}
-      left="10px"
-      top="-125px"
+      // left="10px"
+      // top="-125px"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       border="1px solid"

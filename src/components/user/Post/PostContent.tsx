@@ -43,7 +43,7 @@ const PostContent = ({
   const navigate = useNavigate();
 
   const handleNavigateClick = () => {
-    navigate(`/profile/${userId}`);
+    navigate(`/profile/${postUserId}`);
   };
 
   const handleDeletePostClick = () => {

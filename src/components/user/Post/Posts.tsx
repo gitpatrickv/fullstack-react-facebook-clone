@@ -237,20 +237,35 @@ const Posts = ({ posts }: PostProps) => {
             borderBottom="1px solid"
             borderColor={colorMode === "dark" ? "gray.500" : "gray.200"}
           >
-            {posts.firstName} {posts.lastName}'s Post
+            {posts.guestPoster
+              ? `${posts.guestPoster.firstName} ${posts.guestPoster.lastName}`
+              : `${posts.firstName} ${posts.lastName}`}
+            's Post
             <ModalCloseButton />
           </ModalHeader>
           <ModalBody maxHeight="700px" overflowY="auto" id="scrollable-body">
-            <PostContent
-              firstName={posts.firstName}
-              lastName={posts.lastName}
-              postUserId={posts.userId}
-              profilePicture={posts.profilePicture}
-              timestamp={posts.timestamp}
-              postId={posts.postId}
-              content={posts.content}
-            />
-            <PostImages posts={posts} />
+            {posts.guestPoster && posts.guestPoster ? (
+              <PostContent
+                firstName={posts.guestPoster.firstName}
+                lastName={posts.guestPoster.lastName}
+                postUserId={posts.guestPoster.userId}
+                profilePicture={posts.guestPoster.profilePicture}
+                timestamp={posts.timestamp}
+                postId={posts.postId}
+                content={posts.content}
+              />
+            ) : (
+              <PostContent
+                firstName={posts.firstName}
+                lastName={posts.lastName}
+                postUserId={posts.userId}
+                profilePicture={posts.profilePicture}
+                timestamp={posts.timestamp}
+                postId={posts.postId}
+                content={posts.content}
+              />
+            )}
+            {posts.postImages && <PostImages posts={posts} />}
             <LikeCommentShareButton
               posts={posts}
               onOpen={onOpen}

@@ -50,7 +50,7 @@ const PostImagesModal = ({
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
     lg: "60px 0.7fr 60px 0.3fr",
-    xl: "60px 0.8fr 60px 0.2fr",
+    xl: "60px 0.8fr 60px 0.25fr",
   });
 
   const gridTemplateAreas = useBreakpointValue({
