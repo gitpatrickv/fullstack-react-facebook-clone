@@ -16,12 +16,24 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useCreatePost from "../../../hooks/user/useCreatePost";
 import { useUserStore } from "../../../store/user-store";
 
 const CreatePost = () => {
+  const params = useParams<{ userId: string }>();
+  const userId = Number(params.userId);
+  const {
+    firstName,
+    lastName,
+    profilePicture,
+    userId: currentUserId,
+  } = useUserStore();
+  const location = useLocation();
+  const getUserId = location.pathname.startsWith("/profile")
+    ? userId
+    : currentUserId ?? 0;
   const {
     onSubmit,
     register,
@@ -34,11 +46,10 @@ const CreatePost = () => {
     setPost,
     imageFile,
     setImageFile,
-  } = useCreatePost();
+  } = useCreatePost(getUserId);
   const initialRef = useRef(null);
   const finalRef = useRef(null);
 
-  const { firstName, lastName, profilePicture } = useUserStore();
   const handlePostInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {

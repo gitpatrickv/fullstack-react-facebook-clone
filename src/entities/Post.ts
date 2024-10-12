@@ -9,9 +9,12 @@ export interface PostModel {
   postImages: PostImage[];
 }
 
-export interface SharedPostResponse extends PostModel, UserData {}
+export interface SharedPostResponse extends PostModel, UserData {
+  guestPoster?: UserData;
+}
 
 export default interface Post extends PostModel, UserData {
+  guestPoster?: UserData;
   sharedPost?: SharedPostResponse;
   sharedImage?: PostImage;
 }

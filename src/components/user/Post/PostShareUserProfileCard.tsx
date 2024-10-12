@@ -19,25 +19,24 @@ import { ProfileCardProps } from "./PostUserProfileCard";
 import UserProfileCardButton from "./UserProfileCardButton";
 
 const PostShareUserProfileCard = ({
-  posts,
+  firstName,
+  lastName,
+  postUserId,
+  profilePicture,
   setIsHovered,
   handleNavigateClick,
 }: ProfileCardProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { userId } = useUserStore();
   const { mutation, isLoading, setIsLoading } = useAddToFriend();
-  const { data: friendshipStatus } = useGetFriendshipStatus(
-    posts.sharedPost?.userId ?? 0
-  );
+  const { data: friendshipStatus } = useGetFriendshipStatus(postUserId ?? 0);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(
-    posts.sharedPost?.userId ?? 0
+    postUserId ?? 0
   );
 
   const handleAddFriendClick = () => {
-    if (posts.sharedPost) {
-      mutation.mutate(posts.sharedPost?.userId);
-      setIsLoading(true);
-    }
+    mutation.mutate(postUserId);
+    setIsLoading(true);
   };
 
   const {
@@ -47,7 +46,7 @@ const PostShareUserProfileCard = ({
   } = useUnfriend(userId ?? 0);
 
   const handleUnfriendClick = () => {
-    if (posts.sharedPost) unfriend.mutate(posts.sharedPost?.userId);
+    unfriend.mutate(postUserId);
     setUnfriendIsLoading(true);
   };
 
@@ -57,7 +56,7 @@ const PostShareUserProfileCard = ({
     setIsLoading: setAcceptRequestIsLoading,
   } = useAcceptFriendRequest();
   const handleAcceptFriendRequestClick = () => {
-    if (posts.sharedPost) acceptRequest.mutate(posts.sharedPost?.userId);
+    acceptRequest.mutate(postUserId);
     setAcceptRequestIsLoading(true);
   };
 
@@ -76,7 +75,7 @@ const PostShareUserProfileCard = ({
     >
       <Box display="flex">
         <Avatar
-          src={posts.sharedPost?.profilePicture || pic}
+          src={profilePicture || pic}
           height={{ base: "75px", md: "100px" }}
           width={{ base: "75px", md: "100px" }}
           mr="10px"
@@ -91,10 +90,10 @@ const PostShareUserProfileCard = ({
             cursor="pointer"
             onClick={handleNavigateClick}
           >
-            {posts.sharedPost?.firstName} {posts.sharedPost?.lastName}
+            {firstName} {lastName}
           </Text>
           <Box display="flex" mt={{ base: "5px", md: "20px" }}>
-            {userId === posts.sharedPost?.userId ? (
+            {userId === postUserId ? (
               <>
                 <Button
                   mr="7px"

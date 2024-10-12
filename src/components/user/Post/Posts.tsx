@@ -128,14 +128,52 @@ const Posts = ({ posts }: PostProps) => {
   return (
     <>
       <Card padding={3} mt="10px">
-        <PostContent posts={posts} />
+        {posts.guestPoster && posts.guestPoster ? (
+          <PostContent
+            firstName={posts.guestPoster.firstName}
+            lastName={posts.guestPoster.lastName}
+            postUserId={posts.guestPoster.userId}
+            profilePicture={posts.guestPoster.profilePicture}
+            timestamp={posts.timestamp}
+            postId={posts.postId}
+            content={posts.content}
+          />
+        ) : (
+          <PostContent
+            firstName={posts.firstName}
+            lastName={posts.lastName}
+            postUserId={posts.userId}
+            profilePicture={posts.profilePicture}
+            timestamp={posts.timestamp}
+            postId={posts.postId}
+            content={posts.content}
+          />
+        )}
         {posts.postImages && <PostImages posts={posts} />}
         {posts.sharedPost && (
           <Card border="1px solid" borderColor="gray.500" borderRadius="20px">
             <Box overflow="hidden" borderTopRadius="20px">
               {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
             </Box>
-            <PostShareContent posts={posts} />
+            {posts.sharedPost.guestPoster && posts.sharedPost.guestPoster ? (
+              <PostShareContent
+                firstName={posts.sharedPost.guestPoster.firstName}
+                lastName={posts.sharedPost.guestPoster.lastName}
+                postUserId={posts.sharedPost.guestPoster.userId}
+                profilePicture={posts.sharedPost.guestPoster.profilePicture}
+                timestamp={posts.sharedPost.timestamp}
+                content={posts.sharedPost.content}
+              />
+            ) : (
+              <PostShareContent
+                firstName={posts.sharedPost.firstName}
+                lastName={posts.sharedPost.lastName}
+                postUserId={posts.sharedPost.userId}
+                profilePicture={posts.sharedPost.profilePicture}
+                timestamp={posts.sharedPost.timestamp}
+                content={posts.sharedPost.content}
+              />
+            )}
           </Card>
         )}
         <LikeCommentShareButton
@@ -203,7 +241,15 @@ const Posts = ({ posts }: PostProps) => {
             <ModalCloseButton />
           </ModalHeader>
           <ModalBody maxHeight="700px" overflowY="auto" id="scrollable-body">
-            <PostContent posts={posts} />
+            <PostContent
+              firstName={posts.firstName}
+              lastName={posts.lastName}
+              postUserId={posts.userId}
+              profilePicture={posts.profilePicture}
+              timestamp={posts.timestamp}
+              postId={posts.postId}
+              content={posts.content}
+            />
             <PostImages posts={posts} />
             <LikeCommentShareButton
               posts={posts}

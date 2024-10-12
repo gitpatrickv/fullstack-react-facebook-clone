@@ -70,6 +70,8 @@ const PostImagesModal = ({
       size={isSmallScreen ? "md" : "lg"}
       colorScheme="gray.500"
       bg="gray.500"
+      _hover={{ bg: "gray.600" }}
+      _active={{ bg: "gray.700" }}
       icon={
         direction === "left" ? (
           <FaChevronLeft size="25px" />
@@ -236,11 +238,45 @@ const PostImagesModal = ({
             <Divider />
             <Box>
               {posts.sharedPost ? (
-                <PostShareContent posts={posts} />
+                posts.sharedPost.guestPoster ? (
+                  <PostShareContent
+                    firstName={posts.sharedPost.guestPoster.firstName}
+                    lastName={posts.sharedPost.guestPoster.lastName}
+                    postUserId={posts.sharedPost.guestPoster.userId}
+                    profilePicture={posts.sharedPost.guestPoster.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                ) : (
+                  <PostShareContent
+                    firstName={posts.sharedPost.firstName}
+                    lastName={posts.sharedPost.lastName}
+                    postUserId={posts.sharedPost.userId}
+                    profilePicture={posts.sharedPost.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                )
+              ) : posts.guestPoster ? (
+                <PostContent
+                  firstName={posts.guestPoster.firstName}
+                  lastName={posts.guestPoster.lastName}
+                  postUserId={posts.guestPoster.userId}
+                  profilePicture={posts.guestPoster.profilePicture}
+                  timestamp={posts.timestamp}
+                  postId={posts.postId}
+                  content={posts.content}
+                />
               ) : (
-                <Box padding={3}>
-                  <PostContent posts={posts} />
-                </Box>
+                <PostContent
+                  firstName={posts.firstName}
+                  lastName={posts.lastName}
+                  postUserId={posts.userId}
+                  profilePicture={posts.profilePicture}
+                  timestamp={posts.timestamp}
+                  postId={posts.postId}
+                  content={posts.content}
+                />
               )}
               <PostImagesButtons
                 activeImage={activeImage}

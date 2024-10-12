@@ -9,7 +9,6 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
-import Post from "../../../entities/Post";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
@@ -19,24 +18,30 @@ import { useUserStore } from "../../../store/user-store";
 import UserProfileCardButton from "./UserProfileCardButton";
 
 export interface ProfileCardProps {
-  posts: Post;
+  firstName: string;
+  lastName: string;
+  postUserId: number;
+  profilePicture?: string;
   setIsHovered: (value: boolean) => void;
   handleNavigateClick: () => void;
 }
 
 const PostUserProfileCard = ({
-  posts,
+  firstName,
+  lastName,
+  postUserId,
+  profilePicture,
   setIsHovered,
   handleNavigateClick,
 }: ProfileCardProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { userId } = useUserStore();
   const { mutation, isLoading, setIsLoading } = useAddToFriend();
-  const { data: friendshipStatus } = useGetFriendshipStatus(posts.userId);
-  const { data: friendRequestStatus } = useGetFriendRequestStatus(posts.userId);
+  const { data: friendshipStatus } = useGetFriendshipStatus(postUserId);
+  const { data: friendRequestStatus } = useGetFriendRequestStatus(postUserId);
 
   const handleAddFriendClick = () => {
-    mutation.mutate(posts.userId);
+    mutation.mutate(postUserId);
     setIsLoading(true);
   };
 
@@ -47,7 +52,7 @@ const PostUserProfileCard = ({
   } = useUnfriend(userId ?? 0);
 
   const handleUnfriendClick = () => {
-    unfriend.mutate(posts.userId);
+    unfriend.mutate(postUserId);
     setUnfriendIsLoading(true);
   };
 
@@ -57,7 +62,7 @@ const PostUserProfileCard = ({
     setIsLoading: setAcceptRequestIsLoading,
   } = useAcceptFriendRequest();
   const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(posts.userId);
+    acceptRequest.mutate(postUserId);
     setAcceptRequestIsLoading(true);
   };
 
@@ -76,7 +81,7 @@ const PostUserProfileCard = ({
     >
       <Box display="flex">
         <Avatar
-          src={posts.profilePicture || pic}
+          src={profilePicture || pic}
           height={{ base: "75px", md: "100px" }}
           width={{ base: "75px", md: "100px" }}
           mr="10px"
@@ -91,10 +96,10 @@ const PostUserProfileCard = ({
             cursor="pointer"
             onClick={handleNavigateClick}
           >
-            {posts.firstName} {posts.lastName}
+            {firstName} {lastName}
           </Text>
           <Box display="flex" mt={{ base: "5px", md: "20px" }}>
-            {userId === posts.userId ? (
+            {userId === postUserId ? (
               <>
                 <Button
                   mr="7px"
