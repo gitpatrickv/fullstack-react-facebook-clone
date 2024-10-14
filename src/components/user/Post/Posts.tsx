@@ -266,6 +266,39 @@ const Posts = ({ posts }: PostProps) => {
               />
             )}
             {posts.postImages && <PostImages posts={posts} />}
+            {posts.sharedPost && (
+              <Card
+                border="1px solid"
+                borderColor="gray.500"
+                borderRadius="20px"
+              >
+                <Box overflow="hidden" borderTopRadius="20px">
+                  {posts.sharedPost.postImages && (
+                    <PostShareImages posts={posts} />
+                  )}
+                </Box>
+                {posts.sharedPost.guestPoster &&
+                posts.sharedPost.guestPoster ? (
+                  <PostShareContent
+                    firstName={posts.sharedPost.guestPoster.firstName}
+                    lastName={posts.sharedPost.guestPoster.lastName}
+                    postUserId={posts.sharedPost.guestPoster.userId}
+                    profilePicture={posts.sharedPost.guestPoster.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                ) : (
+                  <PostShareContent
+                    firstName={posts.sharedPost.firstName}
+                    lastName={posts.sharedPost.lastName}
+                    postUserId={posts.sharedPost.userId}
+                    profilePicture={posts.sharedPost.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                )}
+              </Card>
+            )}
             <LikeCommentShareButton
               posts={posts}
               onOpen={onOpen}

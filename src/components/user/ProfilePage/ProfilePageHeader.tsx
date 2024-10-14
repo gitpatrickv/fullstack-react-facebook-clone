@@ -45,6 +45,7 @@ import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
+import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
 
 const ProfilePageHeader = () => {
@@ -265,9 +266,6 @@ const ProfilePageHeader = () => {
                   {getUserProfile?.firstName} {getUserProfile?.lastName}
                 </Text>
               )}
-
-              {/* {currentUserId === userId && (
-                <> */}
               {isLoading ? (
                 <>
                   <SkeletonText />
@@ -302,8 +300,6 @@ const ProfilePageHeader = () => {
                   )}
                 </>
               )}
-              {/* </>
-              )} */}
             </Box>
             <Spacer />
             <Box
@@ -460,11 +456,9 @@ const ProfilePageHeader = () => {
               </Box>
             </Card>
           )}
-          <Divider position="relative" bottom="15px" />
-          <Box position="relative" bottom="7px">
-            <Button bg="none" height="50px">
-              POSTS
-            </Button>
+          <Divider />
+          <Box>
+            <ProfileTabList />
           </Box>
         </GridItem>
         <Show above="xl">

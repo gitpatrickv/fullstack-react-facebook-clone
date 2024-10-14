@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import Photos from "../../components/user/ProfilePage/Photos";
@@ -64,71 +64,101 @@ const ProfilePage = () => {
 
   const fetchedPostData =
     data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
+  const location = useLocation();
 
   return (
     <>
       <ProfilePageHeader />
-      <Grid
-        templateColumns={gridTemplateColumns}
-        templateAreas={gridTemplateAreas}
-        padding={{ base: 2, md: 7, lg: 2 }}
-      >
-        <Show above="xl">
-          <GridItem area="asideLeft" />
-        </Show>
-        <Show above="xl">
-          <GridItem area="asideRight" />
-        </Show>
-        <GridItem
-          area="section1"
-          mr={{ base: "0px", lg: "10px", xl: "5px" }}
-          mb={{ base: "10px", lg: "0px" }}
-        >
-          <Card padding={{ base: 2, xl: 4 }} mr={{ base: "0px", xl: "5px" }}>
-            <Box display="flex" alignItems="center" mb="10px">
-              <Text fontSize="xl" fontWeight="semibold">
-                Photos
-              </Text>
-              <Spacer />
-              <Text fontSize="lg" color="blue.500" cursor="pointer">
-                See all photos
-              </Text>
-            </Box>
-            <Box display="flex" flexWrap="wrap">
-              {array.map((index) => (
-                <Box
-                  key={index}
-                  mr={index % 3 === 0 ? "0px" : "5px"}
-                  flexBasis="calc(33.33% - 5px)"
-                  flexGrow={1}
-                  mb="5px"
-                >
-                  <Photos />
-                </Box>
-              ))}
-            </Box>
-          </Card>
-        </GridItem>
-        <GridItem area="section2">
-          <InfiniteScroll
-            dataLength={fetchedPostData}
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={<Spinner />}
+      {location.pathname === `/profile/${userId}` ? (
+        <>
+          <Grid
+            templateColumns={gridTemplateColumns}
+            templateAreas={gridTemplateAreas}
+            padding={3}
           >
-            {isLoading ? (
-              <Skeleton width="100%" height="100px" />
-            ) : (
-              <CreatePost />
-            )}
-            {data?.pages.map((page) =>
-              page.postList.map((posts) => (
-                <Posts key={posts.postId} posts={posts} />
-              ))
-            )}
-          </InfiniteScroll>
-        </GridItem>
-      </Grid>
+            <Show above="xl">
+              <GridItem area="asideLeft" />
+            </Show>
+            <Show above="xl">
+              <GridItem area="asideRight" />
+            </Show>
+            <GridItem
+              area="section1"
+              mr={{ base: "0px", lg: "10px", xl: "5px" }}
+              mb={{ base: "10px", lg: "0px" }}
+            >
+              <Card
+                padding={{ base: 2, xl: 4 }}
+                mr={{ base: "0px", xl: "5px" }}
+              >
+                <Box display="flex" alignItems="center" mb="10px">
+                  <Text fontSize="xl" fontWeight="semibold">
+                    Photos
+                  </Text>
+                  <Spacer />
+                  <Text fontSize="lg" color="blue.500" cursor="pointer">
+                    See all photos
+                  </Text>
+                </Box>
+                <Box display="flex" flexWrap="wrap">
+                  {array.map((index) => (
+                    <Box
+                      key={index}
+                      mr={index % 3 === 0 ? "0px" : "5px"}
+                      flexBasis="calc(33.33% - 5px)"
+                      flexGrow={1}
+                      mb="5px"
+                    >
+                      <Photos />
+                    </Box>
+                  ))}
+                </Box>
+              </Card>
+            </GridItem>
+            <GridItem area="section2">
+              <InfiniteScroll
+                dataLength={fetchedPostData}
+                next={fetchNextPage}
+                hasMore={!!hasNextPage}
+                loader={<Spinner />}
+              >
+                {isLoading ? (
+                  <Skeleton width="100%" height="100px" />
+                ) : (
+                  <CreatePost />
+                )}
+                {data?.pages.map((page) =>
+                  page.postList.map((posts) => (
+                    <Posts key={posts.postId} posts={posts} />
+                  ))
+                )}
+              </InfiniteScroll>
+            </GridItem>
+          </Grid>
+        </>
+      ) : (
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            lg: "0.2fr 1fr 0.2fr",
+            xl: "0.3fr 1fr 0.3fr",
+          }}
+          templateAreas={{ base: "'main'", lg: "'asideLeft main asideRight'" }}
+          padding={3}
+        >
+          <GridItem area="main">
+            <Card padding={{ base: 2, md: 5 }}>
+              <Outlet />
+            </Card>
+          </GridItem>
+          <Show above="lg">
+            <GridItem area="asideLeft" />
+          </Show>
+          <Show above="lg">
+            <GridItem area="asideRight" />
+          </Show>
+        </Grid>
+      )}
     </>
   );
 };

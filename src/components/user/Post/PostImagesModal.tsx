@@ -258,25 +258,29 @@ const PostImagesModal = ({
                   />
                 )
               ) : posts.guestPoster ? (
-                <PostContent
-                  firstName={posts.guestPoster.firstName}
-                  lastName={posts.guestPoster.lastName}
-                  postUserId={posts.guestPoster.userId}
-                  profilePicture={posts.guestPoster.profilePicture}
-                  timestamp={posts.timestamp}
-                  postId={posts.postId}
-                  content={posts.content}
-                />
+                <Box padding={3}>
+                  <PostContent
+                    firstName={posts.guestPoster.firstName}
+                    lastName={posts.guestPoster.lastName}
+                    postUserId={posts.guestPoster.userId}
+                    profilePicture={posts.guestPoster.profilePicture}
+                    timestamp={posts.timestamp}
+                    postId={posts.postId}
+                    content={posts.content}
+                  />
+                </Box>
               ) : (
-                <PostContent
-                  firstName={posts.firstName}
-                  lastName={posts.lastName}
-                  postUserId={posts.userId}
-                  profilePicture={posts.profilePicture}
-                  timestamp={posts.timestamp}
-                  postId={posts.postId}
-                  content={posts.content}
-                />
+                <Box padding={3}>
+                  <PostContent
+                    firstName={posts.firstName}
+                    lastName={posts.lastName}
+                    postUserId={posts.userId}
+                    profilePicture={posts.profilePicture}
+                    timestamp={posts.timestamp}
+                    postId={posts.postId}
+                    content={posts.content}
+                  />
+                </Box>
               )}
               <PostImagesButtons
                 activeImage={activeImage}

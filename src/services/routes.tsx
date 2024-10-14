@@ -10,7 +10,10 @@ import GamesPage from "../pages/user/GamesPage";
 import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
+import ProfileAboutPage from "../pages/user/ProfileAboutPage";
+import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
+import ProfilePhotosPage from "../pages/user/ProfilePhotosPage";
 import WatchPage from "../pages/user/WatchPage";
 
 const router = createBrowserRouter([
@@ -90,6 +93,20 @@ const router = createBrowserRouter([
             <ProfilePage />
           </UserRoute>
         ),
+        children: [
+          {
+            path: "friends",
+            element: <ProfileFriendListPage />,
+          },
+          {
+            path: "about",
+            element: <ProfileAboutPage />,
+          },
+          {
+            path: "photos",
+            element: <ProfilePhotosPage />,
+          },
+        ],
       },
     ],
   },
