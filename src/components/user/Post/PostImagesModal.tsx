@@ -213,7 +213,7 @@ const PostImagesModal = ({
                   overflow="hidden"
                   width="auto"
                   height={{ base: "200px", md: "400px", xl: "100vh" }}
-                  objectFit="cover"
+                  objectFit="contain"
                 />
               </Box>
 

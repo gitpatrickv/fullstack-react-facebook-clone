@@ -71,7 +71,6 @@ const PostImages = ({ posts }: PostProps) => {
           >
             <Image
               src={image.postImageUrl}
-              objectFit="cover"
               width="100%"
               minHeight="100%"
               height="auto"

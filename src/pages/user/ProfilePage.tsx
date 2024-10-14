@@ -140,7 +140,7 @@ const ProfilePage = () => {
         <Grid
           templateColumns={{
             base: "1fr",
-            lg: "0.2fr 1fr 0.2fr",
+            lg: "0.1fr 1fr 0.1fr",
             xl: "0.3fr 1fr 0.3fr",
           }}
           templateAreas={{ base: "'main'", lg: "'asideLeft main asideRight'" }}
