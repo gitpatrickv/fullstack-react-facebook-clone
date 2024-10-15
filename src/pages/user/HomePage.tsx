@@ -1,7 +1,16 @@
-import { Grid, GridItem, Show, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  Show,
+  Spinner,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
 import CreatePost from "../../components/user/Post/CreatePost";
+import Posts from "../../components/user/Post/Posts";
+import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
 
 const HomePage = () => {
   const gridTemplateColumns = useBreakpointValue({
@@ -15,6 +24,14 @@ const HomePage = () => {
     lg: `"section asideRight"`,
     xl: `"asideLeft left section right asideRight"`,
   });
+
+  const { data, fetchNextPage, hasNextPage } = useFetchAllPosts({
+    pageSize: 5,
+  });
+
+  const fetchedPostData =
+    data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
+
   return (
     <>
       <Grid
@@ -25,7 +42,18 @@ const HomePage = () => {
       >
         <GridItem area="section" as="section">
           <CreatePost />
-          {/* <Posts /> */}
+          <InfiniteScroll
+            dataLength={fetchedPostData}
+            next={fetchNextPage}
+            hasMore={!!hasNextPage}
+            loader={<Spinner />}
+          >
+            {data?.pages.map((page) =>
+              page.postList.map((posts) => (
+                <Posts key={posts.postId} posts={posts} />
+              ))
+            )}
+          </InfiniteScroll>
         </GridItem>
         <Show above="xl">
           <GridItem area="asideLeft" as="aside">

@@ -36,7 +36,7 @@ const ProfilePhotosPage = () => {
         hasMore={!!hasNextPage}
         loader={<Spinner />}
       >
-        <SimpleGrid columns={{ base: 2, md: 4, lg: 5, xl: 6 }} spacing={1}>
+        <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 6 }} spacing={1}>
           {fetchAllPhotos &&
             fetchAllPhotos.pages.map((page) =>
               page.postImageModels.map((image) => (
