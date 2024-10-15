@@ -4,6 +4,7 @@ import {
   Grid,
   GridItem,
   Show,
+  SimpleGrid,
   Skeleton,
   Spacer,
   Spinner,
@@ -12,17 +13,17 @@ import {
 } from "@chakra-ui/react";
 
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
-import Photos from "../../components/user/ProfilePage/Photos";
+import PhotoCard from "../../components/user/ProfilePage/PhotoCard";
 import ProfilePageHeader from "../../components/user/ProfilePage/ProfilePageHeader";
+import useFetchAllPhotos from "../../hooks/user/useFetchAllPhotos";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
 import useGetUserProfileInfo from "../../hooks/user/useGetUserProfileInfo";
 import ErrorPage from "./ErrorPage";
 
 const ProfilePage = () => {
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
   const { isLoading } = useGetUserProfileInfo(userId);
@@ -38,9 +39,13 @@ const ProfilePage = () => {
     pageSize: 5,
   });
 
+  const fetchedPostData =
+    data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
+  const location = useLocation();
+
   const gridTemplateColumns = useBreakpointValue({
     base: "1fr",
-    md: "0.1fr 1fr 0.1fr",
+    md: "0.2fr 1fr 0.2fr",
     lg: "0.4fr 0.6fr",
     xl: "0.3fr 0.4fr 0.6fr 0.3fr",
   });
@@ -62,9 +67,13 @@ const ProfilePage = () => {
          `,
   });
 
-  const fetchedPostData =
-    data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
-  const location = useLocation();
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const sliceLength = isSmallScreen ? 4 : 9;
+
+  const { data: fetchAllPhotos } = useFetchAllPhotos({
+    userId: userId,
+    pageSize: 9,
+  });
 
   return (
     <>
@@ -96,23 +105,30 @@ const ProfilePage = () => {
                     Photos
                   </Text>
                   <Spacer />
-                  <Text fontSize="lg" color="blue.500" cursor="pointer">
-                    See all photos
-                  </Text>
+                  <Link to={`/profile/${userId}/photos`}>
+                    <Text fontSize="lg" color="blue.500" cursor="pointer">
+                      See all photos
+                    </Text>
+                  </Link>
                 </Box>
-                <Box display="flex" flexWrap="wrap">
-                  {array.map((index) => (
-                    <Box
-                      key={index}
-                      mr={index % 3 === 0 ? "0px" : "5px"}
-                      flexBasis="calc(33.33% - 5px)"
-                      flexGrow={1}
-                      mb="5px"
-                    >
-                      <Photos />
-                    </Box>
-                  ))}
-                </Box>
+                <SimpleGrid columns={{ base: 2, md: 3 }} spacing={1}>
+                  {fetchAllPhotos &&
+                    fetchAllPhotos.pages.map((page, pageIndex) =>
+                      pageIndex === 0
+                        ? page.postImageModels
+                            .slice(0, sliceLength)
+                            .map((image, index) => (
+                              <Box
+                                key={image.postImageId}
+                                mr={index % 3 === 0 ? "0px" : "5px"}
+                                mb="5px"
+                              >
+                                <PhotoCard images={image} />
+                              </Box>
+                            ))
+                        : null
+                    )}
+                </SimpleGrid>
               </Card>
             </GridItem>
             <GridItem area="section2">
@@ -147,9 +163,7 @@ const ProfilePage = () => {
           padding={3}
         >
           <GridItem area="main">
-            <Card padding={{ base: 2, md: 5 }}>
-              <Outlet />
-            </Card>
+            <Outlet />
           </GridItem>
           <Show above="lg">
             <GridItem area="asideLeft" />

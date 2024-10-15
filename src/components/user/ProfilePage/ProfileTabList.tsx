@@ -48,10 +48,18 @@ const ProfileTabList = () => {
         onChange={handleTabsChange}
       >
         <TabList height="50px">
-          <Tab>Posts</Tab>
-          <Tab>About</Tab>
-          <Tab>Friends</Tab>
-          <Tab>Photos</Tab>
+          <Tab color={selectedIndex === 0 ? "blue.500" : "white.500"}>
+            Posts
+          </Tab>
+          <Tab color={selectedIndex === 1 ? "blue.500" : "white.500"}>
+            About
+          </Tab>
+          <Tab color={selectedIndex === 2 ? "blue.500" : "white.500"}>
+            Friends
+          </Tab>
+          <Tab color={selectedIndex === 3 ? "blue.500" : "white.500"}>
+            Photos
+          </Tab>
         </TabList>
         <TabIndicator
           mt="-1.5px"

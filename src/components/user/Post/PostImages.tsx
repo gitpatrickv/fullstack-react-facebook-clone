@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PostImage from "../../../entities/PostImage";
 import PostImagesModal from "./PostImagesModal";
 import { PostProps } from "./Posts";
+import { getFlexBasis } from "../../../utilities/flexBasis";
 
 const PostImages = ({ posts }: PostProps) => {
   if (!posts.postImages || posts.postImages.length === 0) {
@@ -42,17 +43,6 @@ const PostImages = ({ posts }: PostProps) => {
       const nextIndex = (currentIndex - 1 + images.length) % images.length;
       setActiveImage(images[nextIndex]);
     }
-  };
-
-  const getFlexBasis = (index: number, imageCount: number) => {
-    if (imageCount === 1) return "100%";
-    if (imageCount === 2) return "calc(50% - 5px)";
-    if (imageCount === 3) return index === 0 ? "100%" : "calc(50% - 5px)";
-    if (imageCount === 4) return "calc(50% - 5px)";
-    if (imageCount === 5)
-      return index < 3 ? "calc(33.33% - 5px)" : "calc(50% - 5px)";
-    if (imageCount === 6) return "calc(33.33% - 5px)";
-    return "calc(33.33% - 5px)";
   };
 
   const gap = posts.postImages.length + 1 - 6;

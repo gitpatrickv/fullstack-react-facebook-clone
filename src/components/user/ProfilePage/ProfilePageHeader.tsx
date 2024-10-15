@@ -266,44 +266,33 @@ const ProfilePageHeader = () => {
                   {getUserProfile?.firstName} {getUserProfile?.lastName}
                 </Text>
               )}
-              {isLoading ? (
-                <>
-                  <SkeletonText />
-                  <SkeletonCircle size="sm" />
-                </>
-              ) : (
-                <>
-                  {getFriendListCount && (
-                    <Text fontSize="md" fontWeight="semibold" mb="5px">
-                      {getFriendListCount.count}{" "}
-                      <Text as="span">
-                        {getFriendListCount.count > 1 ? "friends" : "friend"}
-                      </Text>
-                    </Text>
-                  )}
-                  {fetchAllFriends?.pages.map((page, pageIndex) =>
-                    pageIndex === 0
-                      ? page.userList.map((list, index) => (
-                          <Link
-                            to={`/profile/${list.userId}`}
-                            key={list.uniqueId}
-                          >
-                            <Avatar
-                              src={list.profilePicture || pic}
-                              height="40px"
-                              width="40px"
-                              ml={index === 0 ? 0 : "-10px"}
-                              zIndex={page.userList.length - index}
-                              borderWidth="2px"
-                              borderColor={
-                                colorMode === "dark" ? "gray.700" : "white"
-                              }
-                            />
-                          </Link>
-                        ))
-                      : null
-                  )}
-                </>
+
+              {getFriendListCount && (
+                <Text fontSize="md" fontWeight="semibold" mb="5px">
+                  {getFriendListCount.count}{" "}
+                  <Text as="span">
+                    {getFriendListCount.count > 1 ? "friends" : "friend"}
+                  </Text>
+                </Text>
+              )}
+              {fetchAllFriends?.pages.map((page, pageIndex) =>
+                pageIndex === 0
+                  ? page.userList.map((list, index) => (
+                      <Link to={`/profile/${list.userId}`} key={list.uniqueId}>
+                        <Avatar
+                          src={list.profilePicture || pic}
+                          height="40px"
+                          width="40px"
+                          ml={index === 0 ? 0 : "-10px"}
+                          zIndex={page.userList.length - index}
+                          borderWidth="2px"
+                          borderColor={
+                            colorMode === "dark" ? "gray.700" : "white"
+                          }
+                        />
+                      </Link>
+                    ))
+                  : null
               )}
             </Box>
             <Spacer />

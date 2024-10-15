@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { Box, Card, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
 import PhotoCard from "../../components/user/ProfilePage/PhotoCard";
@@ -23,7 +23,7 @@ const ProfilePhotosPage = () => {
       0
     ) || 0;
   return (
-    <>
+    <Card padding={{ base: 2, md: 5 }}>
       <Box display="flex" alignItems="center" mb="10px">
         <Text fontSize="xl" fontWeight="semibold">
           Photos
@@ -44,7 +44,7 @@ const ProfilePhotosPage = () => {
             )}
         </SimpleGrid>
       </InfiniteScroll>
-    </>
+    </Card>
   );
 };
 
