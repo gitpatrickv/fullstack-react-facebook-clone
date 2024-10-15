@@ -1,7 +1,7 @@
 import { Box, Card, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
-import PhotoCard from "../../components/user/ProfilePage/PhotoCard";
+import ImageCard from "../../components/user/ProfilePage/ImageCard";
 import useFetchAllPhotos from "../../hooks/user/useFetchAllPhotos";
 
 const ProfilePhotosPage = () => {
@@ -22,6 +22,7 @@ const ProfilePhotosPage = () => {
       (total, page) => total + page.postImageModels.length,
       0
     ) || 0;
+
   return (
     <Card padding={{ base: 2, md: 5 }}>
       <Box display="flex" alignItems="center" mb="10px">
@@ -39,7 +40,11 @@ const ProfilePhotosPage = () => {
           {fetchAllPhotos &&
             fetchAllPhotos.pages.map((page) =>
               page.postImageModels.map((image) => (
-                <PhotoCard key={image.postImageId} images={image} />
+                <ImageCard
+                  key={image.postImageId}
+                  images={image}
+                  imageList={page.postImageModels}
+                />
               ))
             )}
         </SimpleGrid>

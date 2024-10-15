@@ -16,7 +16,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
-import PhotoCard from "../../components/user/ProfilePage/PhotoCard";
+import ImageCard from "../../components/user/ProfilePage/ImageCard";
 import ProfilePageHeader from "../../components/user/ProfilePage/ProfilePageHeader";
 import useFetchAllPhotos from "../../hooks/user/useFetchAllPhotos";
 import useFetchAllUserPosts from "../../hooks/user/useFetchAllUserPosts";
@@ -117,13 +117,12 @@ const ProfilePage = () => {
                       pageIndex === 0
                         ? page.postImageModels
                             .slice(0, sliceLength)
-                            .map((image, index) => (
-                              <Box
-                                key={image.postImageId}
-                                mr={index % 3 === 0 ? "0px" : "5px"}
-                                mb="5px"
-                              >
-                                <PhotoCard images={image} />
+                            .map((image) => (
+                              <Box key={image.postImageId} mb="5px">
+                                <ImageCard
+                                  images={image}
+                                  imageList={page.postImageModels}
+                                />
                               </Box>
                             ))
                         : null

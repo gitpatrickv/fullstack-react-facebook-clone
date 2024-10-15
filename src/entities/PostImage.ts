@@ -6,7 +6,11 @@ export default interface PostImage {
   timestamp: string;
 }
 
+export interface Images extends PostImage {
+  postId: number;
+}
+
 export default interface PhotoListResponse {
-  postImageModels: PostImage[];
+  postImageModels: Images[];
   pageResponse: PageResponse;
 }
