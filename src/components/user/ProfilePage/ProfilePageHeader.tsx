@@ -106,16 +106,6 @@ const ProfilePageHeader = () => {
     onOpen();
   };
 
-  const gridTemplateColumns = useBreakpointValue({
-    base: "1fr",
-    xl: "0.2fr 1fr 0.2fr",
-  });
-
-  const gridTemplateAreas = useBreakpointValue({
-    base: `"header"`,
-    xl: `"asideLeft header asideRight"`,
-  });
-
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isMobileScreen = useBreakpointValue({ base: true, md: false });
 
@@ -134,8 +124,11 @@ const ProfilePageHeader = () => {
         imageType={imageType}
       />
       <Grid
-        templateColumns={gridTemplateColumns}
-        templateAreas={gridTemplateAreas}
+        templateColumns={{ base: "1fr", xl: "0.2fr 1fr 0.2fr" }}
+        templateAreas={{
+          base: `"header"`,
+          xl: `"asideLeft header asideRight"`,
+        }}
       >
         <GridItem area="header">
           {isLoading ? (

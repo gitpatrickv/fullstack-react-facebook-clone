@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   SimpleGrid,
+  Skeleton,
   Spacer,
   Spinner,
   Text,
@@ -22,6 +23,7 @@ const ProfileFriendListPage = () => {
     data: fetchAllFriends,
     fetchNextPage,
     hasNextPage,
+    isLoading,
   } = useFetchAllUserFriends({
     userId: userId,
     pageSize: 6,
@@ -32,7 +34,7 @@ const ProfileFriendListPage = () => {
       (total, page) => total + page.userList.length,
       0
     ) || 0;
-
+  const array = [1, 2, 3, 4, 5];
   return (
     <>
       <Card padding={{ base: 2, md: 5 }}>
@@ -76,12 +78,22 @@ const ProfileFriendListPage = () => {
           loader={<Spinner />}
         >
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={1}>
-            {fetchAllFriends &&
-              fetchAllFriends.pages.map((page) =>
-                page.userList.map((list) => (
-                  <FriendListCard key={list.uniqueId} friend={list} />
-                ))
-              )}
+            {isLoading ? (
+              <>
+                {array.map((skeleton) => (
+                  <Skeleton height="100px" key={skeleton} />
+                ))}
+              </>
+            ) : (
+              <>
+                {fetchAllFriends &&
+                  fetchAllFriends.pages.map((page) =>
+                    page.userList.map((list) => (
+                      <FriendListCard key={list.uniqueId} friend={list} />
+                    ))
+                  )}
+              </>
+            )}
           </SimpleGrid>
         </InfiniteScroll>
       </Card>
