@@ -42,3 +42,7 @@ export interface UserData {
   lastName: string;
   profilePicture?: string;
 }
+
+export interface UserDataModelList extends UserData {
+  uniqueId: number;
+}

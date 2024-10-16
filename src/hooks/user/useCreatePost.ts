@@ -12,7 +12,7 @@ interface CreatePostProps {
 
 const apiClient = axiosInstance;
 
-const useCreatePost = () => {
+const useCreatePost = (userId: number) => {
   const toast = useToast();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
@@ -25,7 +25,7 @@ const useCreatePost = () => {
 
   const mutation = useMutation(
     (formData: FormData) =>
-      apiClient.post("/post/save", formData, {
+      apiClient.post(`/post/save/${userId}`, formData, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "multipart/form-data",

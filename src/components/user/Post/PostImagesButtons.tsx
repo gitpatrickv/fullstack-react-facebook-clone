@@ -23,11 +23,11 @@ import useGetPostImageCommentCount from "../../../hooks/user/useGetPostImageComm
 import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
 import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCount";
 import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLikeUserList";
+import InfiniteScroll from "react-infinite-scroll-component";
+import useGetPostImageShareCount from "../../../hooks/user/useGetPostImageShareCount";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
 import useSharePostImage from "../../../hooks/user/useSharePostImage";
 import SharePostModal from "./SharePostModal";
-import useGetPostImageShareCount from "../../../hooks/user/useGetPostImageShareCount";
-import InfiniteScroll from "react-infinite-scroll-component";
 import UserListModel from "./UserListModel";
 
 export interface PostImageProps {

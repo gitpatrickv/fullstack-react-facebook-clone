@@ -21,7 +21,7 @@ const Layout = () => {
         <GridItem area="main" as="main">
           <Box>
             <Outlet />
-            <ScrollRestoration />
+            {/* <ScrollRestoration /> */}
           </Box>
         </GridItem>
       </Grid>

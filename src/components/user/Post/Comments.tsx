@@ -1,7 +1,8 @@
 import { Avatar, Box, Image, Text, useColorMode } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
-import { PostComment } from "../../../entities/PostComment";
 import pic from "../../../assets/profpic.jpeg";
+import { PostComment } from "../../../entities/PostComment";
 interface Props {
   comments: PostComment;
 }
@@ -14,7 +15,10 @@ const Comments = ({ comments }: Props) => {
     cursor: "pointer",
     _hover: { textDecoration: "underline" },
   };
-
+  const navigate = useNavigate();
+  const handleNavigateClick = () => {
+    navigate(`/profile/${comments.userId}`);
+  };
   // const commentBottom = useRef<HTMLDivElement>(null);
 
   // useEffect(() => {
@@ -27,7 +31,13 @@ const Comments = ({ comments }: Props) => {
     <>
       <Box mt="10px">
         <Box display="flex">
-          <Avatar src={comments.profilePicture || pic} size="sm" mr="5px" />
+          <Avatar
+            src={comments.profilePicture || pic}
+            size="sm"
+            mr="5px"
+            onClick={handleNavigateClick}
+            cursor="pointer"
+          />
           <Box
             bg={
               comments.comment
@@ -43,6 +53,8 @@ const Comments = ({ comments }: Props) => {
               fontSize="sm"
               fontWeight="semibold"
               textTransform="capitalize"
+              onClick={handleNavigateClick}
+              cursor="pointer"
             >
               {comments.firstName} {comments.lastName}
             </Text>
@@ -64,10 +76,10 @@ const Comments = ({ comments }: Props) => {
           <Text mr="20px" {...textStyles}>
             <ReactTimeAgo date={time} locale="en-US" />
           </Text>
-          <Text mr="20px" {...textStyles}>
+          {/* <Text mr="20px" {...textStyles}>
             Like
           </Text>
-          <Text {...textStyles}>Reply</Text>
+          <Text {...textStyles}>Reply</Text> */}
         </Box>
       </Box>
       {/* <Box ref={commentBottom}></Box> */}

@@ -47,19 +47,6 @@ const PostImagesModal = ({
   postImages,
   posts,
 }: ImageModalProps) => {
-  const gridTemplateColumns = useBreakpointValue({
-    base: "1fr",
-    lg: "60px 0.7fr 60px 0.3fr",
-    xl: "60px 0.8fr 60px 0.2fr",
-  });
-
-  const gridTemplateAreas = useBreakpointValue({
-    base: `"section1"
-           "section2"
-           `,
-    lg: `"leftButton section1 rightButton section2"`,
-    xl: `"leftButton section1 rightButton section2"`,
-  });
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
@@ -70,6 +57,8 @@ const PostImagesModal = ({
       size={isSmallScreen ? "md" : "lg"}
       colorScheme="gray.500"
       bg="gray.500"
+      _hover={{ bg: "gray.600" }}
+      _active={{ bg: "gray.700" }}
       icon={
         direction === "left" ? (
           <FaChevronLeft size="25px" />
@@ -182,8 +171,18 @@ const PostImagesModal = ({
         )}
 
         <Grid
-          templateColumns={gridTemplateColumns}
-          templateAreas={gridTemplateAreas}
+          templateColumns={{
+            base: "1fr",
+            lg: "60px 0.7fr 60px 0.3fr",
+            xl: "60px 0.8fr 60px 0.25fr",
+          }}
+          templateAreas={{
+            base: `"section1"
+            "section2"
+            `,
+            lg: `"leftButton section1 rightButton section2"`,
+            xl: `"leftButton section1 rightButton section2"`,
+          }}
         >
           <GridItem
             area="section1"
@@ -211,7 +210,7 @@ const PostImagesModal = ({
                   overflow="hidden"
                   width="auto"
                   height={{ base: "200px", md: "400px", xl: "100vh" }}
-                  objectFit="cover"
+                  objectFit="contain"
                 />
               </Box>
 
@@ -236,10 +235,48 @@ const PostImagesModal = ({
             <Divider />
             <Box>
               {posts.sharedPost ? (
-                <PostShareContent posts={posts} />
+                posts.sharedPost.guestPoster ? (
+                  <PostShareContent
+                    firstName={posts.sharedPost.guestPoster.firstName}
+                    lastName={posts.sharedPost.guestPoster.lastName}
+                    postUserId={posts.sharedPost.guestPoster.userId}
+                    profilePicture={posts.sharedPost.guestPoster.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                ) : (
+                  <PostShareContent
+                    firstName={posts.sharedPost.firstName}
+                    lastName={posts.sharedPost.lastName}
+                    postUserId={posts.sharedPost.userId}
+                    profilePicture={posts.sharedPost.profilePicture}
+                    timestamp={posts.sharedPost.timestamp}
+                    content={posts.sharedPost.content}
+                  />
+                )
+              ) : posts.guestPoster ? (
+                <Box padding={3}>
+                  <PostContent
+                    firstName={posts.guestPoster.firstName}
+                    lastName={posts.guestPoster.lastName}
+                    postUserId={posts.guestPoster.userId}
+                    profilePicture={posts.guestPoster.profilePicture}
+                    timestamp={posts.timestamp}
+                    postId={posts.postId}
+                    content={posts.content}
+                  />
+                </Box>
               ) : (
                 <Box padding={3}>
-                  <PostContent posts={posts} />
+                  <PostContent
+                    firstName={posts.firstName}
+                    lastName={posts.lastName}
+                    postUserId={posts.userId}
+                    profilePicture={posts.profilePicture}
+                    timestamp={posts.timestamp}
+                    postId={posts.postId}
+                    content={posts.content}
+                  />
                 </Box>
               )}
               <PostImagesButtons

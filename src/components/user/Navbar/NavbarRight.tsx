@@ -21,13 +21,14 @@ import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
 
 const NavbarRight = () => {
-  const { firstName, lastName, profilePicture, userId, resetUser } =
-    useUserStore();
+  const { resetUser } = useUserStore();
+  const { data: getUserInfo } = useGetCurrentUserInfo();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
   const navigate = useNavigate();
@@ -49,16 +50,20 @@ const NavbarRight = () => {
         <MenuButton
           as={IconButton}
           aria-label="Options"
-          icon={<Avatar src={profilePicture || pic} size="sm" />}
+          icon={<Avatar src={getUserInfo?.profilePicture || pic} size="sm" />}
           variant="none"
         />
 
         <MenuList>
-          <Link to={`/profile/${userId}`}>
+          <Link to={`/profile/${getUserInfo?.userId}`}>
             <MenuItem paddingBottom={3} paddingTop={3}>
-              <Avatar src={profilePicture || pic} size="xs" ml="3px" />
+              <Avatar
+                src={getUserInfo?.profilePicture || pic}
+                size="xs"
+                ml="3px"
+              />
               <Text ml="12px" textTransform="capitalize">
-                {firstName} {lastName}
+                {getUserInfo?.firstName} {getUserInfo?.lastName}
               </Text>
             </MenuItem>
           </Link>

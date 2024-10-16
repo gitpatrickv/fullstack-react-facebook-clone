@@ -17,20 +17,37 @@ import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useUserStore } from "../../../store/user-store";
-import { PostProps } from "./Posts";
 import PostUserProfileCard from "./PostUserProfileCard";
 
-const PostContent = ({ posts }: PostProps) => {
-  const time = new Date(posts.timestamp);
+interface PostContentProps {
+  firstName: string;
+  lastName: string;
+  postUserId: number;
+  profilePicture?: string;
+  timestamp: string;
+  postId: number;
+  content: string;
+}
+
+const PostContent = ({
+  firstName,
+  lastName,
+  postUserId,
+  profilePicture,
+  timestamp,
+  postId,
+  content,
+}: PostContentProps) => {
+  const time = new Date(timestamp);
   const { mutate: deletePost } = useDeletePost();
   const navigate = useNavigate();
 
   const handleNavigateClick = () => {
-    navigate(`/profile/${posts.userId}`);
+    navigate(`/profile/${postUserId}`);
   };
 
   const handleDeletePostClick = () => {
-    deletePost(posts.postId);
+    deletePost(postId);
   };
 
   const { userId } = useUserStore();
@@ -40,7 +57,10 @@ const PostContent = ({ posts }: PostProps) => {
     <>
       {isHovered && (
         <PostUserProfileCard
-          posts={posts}
+          firstName={firstName}
+          lastName={lastName}
+          postUserId={postUserId}
+          profilePicture={profilePicture}
           setIsHovered={setIsHovered}
           handleNavigateClick={handleNavigateClick}
         />
@@ -51,33 +71,31 @@ const PostContent = ({ posts }: PostProps) => {
           onMouseLeave={() => setIsHovered(false)}
         >
           <Avatar
-            src={posts.profilePicture || pic}
+            src={profilePicture || pic}
             size="sm"
             mr="10px"
             cursor="pointer"
             onClick={handleNavigateClick}
           />
         </Box>
-        <Box
-          flexDirection="column"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <Box flexDirection="column">
           <Text
             fontSize="sm"
             textTransform="capitalize"
             fontWeight="semibold"
             cursor="pointer"
             onClick={handleNavigateClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            {posts.firstName} {posts.lastName}
+            {firstName} {lastName}
           </Text>
           <Text fontSize="xs" color="gray.500" fontWeight="semibold">
             <ReactTimeAgo date={time} locale="en-US" />
           </Text>
         </Box>
         <Spacer />
-        {userId === posts.userId && (
+        {userId === postUserId && (
           <Box>
             <Menu>
               <MenuButton
@@ -100,7 +118,7 @@ const PostContent = ({ posts }: PostProps) => {
         )}
       </Box>
       <Text mt="5px" mb="5px">
-        {posts.content}
+        {content}
       </Text>
     </>
   );
