@@ -26,7 +26,7 @@ const ProfileFriendListPage = () => {
     isLoading,
   } = useFetchAllUserFriends({
     userId: userId,
-    pageSize: 6,
+    pageSize: 10,
   });
 
   const fetchFriendsData =

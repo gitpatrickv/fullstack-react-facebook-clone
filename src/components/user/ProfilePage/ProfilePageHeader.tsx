@@ -111,7 +111,7 @@ const ProfilePageHeader = () => {
 
   const { data: fetchAllFriends } = useFetchAllUserFriends({
     userId: userId,
-    pageSize: 6,
+    pageSize: 10,
   });
 
   const { data: getFriendListCount } = useGetUserFriendListCount(userId);

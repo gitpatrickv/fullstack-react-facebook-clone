@@ -23,7 +23,7 @@ const PeopleYouMayKnow = () => {
   const requestSize = requestList.length >= 1;
 
   return (
-    <>
+    <Box padding={{ base: 2, md: 5, lg: 7 }}>
       {requestSize && (
         <>
           <Box
@@ -32,11 +32,15 @@ const PeopleYouMayKnow = () => {
             alignItems="center"
             mb={{ base: "10px", md: "20px" }}
           >
-            <Text fontSize="2xl" fontWeight="bold">
+            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
               Friend Requests
             </Text>
             <Link to="/friends/requests">
-              <Text fontSize="lg" color="blue.500" cursor="pointer">
+              <Text
+                fontSize={{ base: "md", md: "lg" }}
+                color="blue.500"
+                cursor="pointer"
+              >
                 See all
               </Text>
             </Link>
@@ -70,14 +74,18 @@ const PeopleYouMayKnow = () => {
         alignItems="center"
         mb={{ base: "10px", md: "20px" }}
       >
-        <Text fontSize="2xl" fontWeight="bold">
+        <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
           People you may know
         </Text>
-        <Text fontSize="lg" color="blue.500" cursor="pointer">
+        <Text
+          fontSize={{ base: "md", md: "lg" }}
+          color="blue.500"
+          cursor="pointer"
+        >
           See all
         </Text>
       </Box>
-    </>
+    </Box>
   );
 };
 

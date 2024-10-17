@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Card,
   IconButton,
@@ -9,10 +10,11 @@ import {
   MenuList,
   Spacer,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FaUserXmark } from "react-icons/fa6";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useUnfriend from "../../../hooks/user/useUnfriend";
@@ -38,19 +40,37 @@ const FriendListCard = ({ friend }: Props) => {
   const handleNavigateClick = () => {
     navigate(`/profile/${friend.userId}`);
   };
+  const { colorMode } = useColorMode();
+  const location = useLocation();
+
   return (
     <>
-      <Card padding={4}>
+      <Card
+        padding={location.pathname === "/friends/list" ? 2 : 4}
+        _hover={{
+          bg: colorMode === "dark" ? "gray.800" : "gray.200",
+        }}
+      >
         <Box display="flex" alignItems="center">
-          <Image
-            src={friend.profilePicture || pic}
-            borderRadius="5px"
-            width="90px"
-            height="90px"
-            objectFit="cover"
-            onClick={handleNavigateClick}
-            cursor="pointer"
-          />
+          {location.pathname === "/friends/list" ? (
+            <Avatar
+              src={friend.profilePicture || pic}
+              onClick={handleNavigateClick}
+              cursor="pointer"
+              size="lg"
+            />
+          ) : (
+            <Image
+              src={friend.profilePicture || pic}
+              borderRadius="5px"
+              width="90px"
+              height="90px"
+              objectFit="cover"
+              onClick={handleNavigateClick}
+              cursor="pointer"
+            />
+          )}
+
           <Text
             ml="10px"
             isTruncated={true}
@@ -59,6 +79,7 @@ const FriendListCard = ({ friend }: Props) => {
             textTransform="capitalize"
             fontWeight="semibold"
             fontSize={{ base: "md", md: "lg" }}
+            maxWidth="150px"
           >
             {friend.firstName} {friend.lastName}
           </Text>
