@@ -49,16 +49,16 @@ const router = createBrowserRouter([
           {
             path: "suggestions",
             element: <FriendSuggestionPage />,
+          },
+          {
+            path: "list",
+            element: <FriendsListPage />,
             // children: [
             //   {
             //     path: "profile/:userId",
             //     element: <ProfilePage />,
             //   },
             // ],
-          },
-          {
-            path: "list",
-            element: <FriendsListPage />,
           },
         ],
       },

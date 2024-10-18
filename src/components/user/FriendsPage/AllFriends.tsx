@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import { useUserStore } from "../../../store/user-store";
-import FriendListCard from "../ProfilePage/FriendListCard";
+import FriendsList from "./FriendsList";
 const AllFriends = () => {
   const { userId } = useUserStore();
   const { data: getFriendListCount, isLoading: countIsLoading } =
@@ -46,7 +46,10 @@ const AllFriends = () => {
   const array = [1, 2, 3, 4, 5];
 
   return (
-    <Card borderRadius="none" height={{ base: "93vh", lg: "99vh", xl: "93vh" }}>
+    <Card
+      borderRadius="none"
+      height={{ base: "100vh", lg: "99vh", xl: "93vh" }}
+    >
       <Box
         padding={3}
         position="sticky"
@@ -130,7 +133,7 @@ const AllFriends = () => {
               {fetchAllFriends &&
                 fetchAllFriends.pages.map((page) =>
                   page.userList.map((list) => (
-                    <FriendListCard key={list.uniqueId} friend={list} />
+                    <FriendsList key={list.uniqueId} friend={list} />
                   ))
                 )}
             </>

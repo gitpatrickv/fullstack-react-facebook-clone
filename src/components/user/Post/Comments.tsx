@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { PostComment } from "../../../entities/PostComment";
+import { useProfileStore } from "../../../store/profile-store";
 interface Props {
   comments: PostComment;
 }
@@ -15,9 +16,13 @@ const Comments = ({ comments }: Props) => {
     cursor: "pointer",
     _hover: { textDecoration: "underline" },
   };
+
+  const { setIsProfile } = useProfileStore();
+
   const navigate = useNavigate();
   const handleNavigateClick = () => {
     navigate(`/profile/${comments.userId}`);
+    setIsProfile(true);
   };
   // const commentBottom = useRef<HTMLDivElement>(null);
 

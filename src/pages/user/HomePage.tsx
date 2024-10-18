@@ -4,13 +4,14 @@ import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
+import NoAvailablePost from "../../components/user/ProfilePage/NoAvailablePost";
 import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
 
 const HomePage = () => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchAllPosts({
     pageSize: 5,
   });
-
+  const postLength = data?.pages.flatMap((list) => list.postList).length || 0;
   const fetchedPostData =
     data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
   const array = [1, 2, 3];
@@ -45,6 +46,8 @@ const HomePage = () => {
                   <Skeleton height="300px" mt="10px" key={skeleton} />
                 ))}
               </>
+            ) : postLength < 1 ? (
+              <NoAvailablePost />
             ) : (
               <>
                 {data?.pages.map((page) =>

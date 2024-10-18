@@ -3,6 +3,7 @@ import { UserData } from "../../../entities/User";
 import { FaUserPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import { useProfileStore } from "../../../store/profile-store";
 
 interface Props {
   users: UserData;
@@ -10,9 +11,10 @@ interface Props {
 
 const UserListModel = ({ users }: Props) => {
   const navigate = useNavigate();
-
+  const { setIsProfile } = useProfileStore();
   const handleNavigateClick = () => {
     navigate(`/profile/${users.userId}`);
+    setIsProfile(true);
   };
 
   return (

@@ -16,9 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useRef } from "react";
 import { IoMdImages, IoMdPhotos } from "react-icons/io";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useCreatePost from "../../../hooks/user/useCreatePost";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 
 const CreatePost = () => {
@@ -59,6 +60,13 @@ const CreatePost = () => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     setImageFile(files ? files : null);
+  };
+
+  const { setIsProfile } = useProfileStore();
+  const navigate = useNavigate();
+  const handleNavigateProfileClick = () => {
+    navigate(`/profile/${currentUserId}`);
+    setIsProfile(true);
   };
 
   return (
@@ -106,14 +114,20 @@ const CreatePost = () => {
             <Divider />
             <Box padding={4}>
               <Box display="flex" alignItems="center" mb="10px">
-                <Link to="/profile">
-                  <Avatar
-                    src={profilePicture || pic}
-                    height="30px"
-                    width="30px"
-                  />
-                </Link>
-                <Text ml="10px" textTransform="capitalize">
+                <Avatar
+                  src={profilePicture || pic}
+                  height="30px"
+                  width="30px"
+                  onClick={handleNavigateProfileClick}
+                  cursor="pointer"
+                />
+
+                <Text
+                  ml="10px"
+                  textTransform="capitalize"
+                  onClick={handleNavigateProfileClick}
+                  cursor="pointer"
+                >
                   {firstName} {lastName}
                 </Text>
               </Box>

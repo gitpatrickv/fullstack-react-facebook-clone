@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import PostShareUserProfileCard from "./PostShareUserProfileCard";
+import { useProfileStore } from "../../../store/profile-store";
 
 interface PostContentProps {
   firstName: string;
@@ -24,9 +25,10 @@ const PostShareContent = ({
 }: PostContentProps) => {
   const navigate = useNavigate();
   const time = new Date(timestamp ?? new Date().toISOString());
-
+  const { setIsProfile } = useProfileStore();
   const handleNavigateClick = () => {
     navigate(`/profile/${postUserId}`);
+    setIsProfile(true);
   };
 
   const [isHovered, setIsHovered] = useState<boolean>(false);

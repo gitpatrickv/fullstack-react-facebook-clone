@@ -18,6 +18,7 @@ import pic from "../../../assets/profpic.jpeg";
 import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useUserStore } from "../../../store/user-store";
 import PostUserProfileCard from "./PostUserProfileCard";
+import { useProfileStore } from "../../../store/profile-store";
 
 interface PostContentProps {
   firstName: string;
@@ -42,8 +43,11 @@ const PostContent = ({
   const { mutate: deletePost } = useDeletePost();
   const navigate = useNavigate();
 
+  const { setIsProfile } = useProfileStore();
+
   const handleNavigateClick = () => {
     navigate(`/profile/${postUserId}`);
+    setIsProfile(true);
   };
 
   const handleDeletePostClick = () => {

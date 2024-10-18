@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useBreakpointValue } from "@chakra-ui/react";
 
 import { Outlet, useLocation } from "react-router-dom";
 import AllFriends from "../../components/user/FriendsPage/AllFriends";
@@ -7,7 +7,7 @@ import PeopleYouMayKnow from "../../components/user/FriendsPage/PeopleYouMayKnow
 
 const FriendsPage = () => {
   const location = useLocation();
-
+  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   return (
     <>
       <Grid
@@ -32,7 +32,11 @@ const FriendsPage = () => {
           )}
         </GridItem>
         <GridItem area="section2" mt={{ lg: "40px", xl: "0" }}>
-          {location.pathname === "/friends" ? <PeopleYouMayKnow /> : <Outlet />}
+          {location.pathname === "/friends" ? (
+            <PeopleYouMayKnow />
+          ) : !isSmallScreen ? (
+            <Outlet />
+          ) : null}
         </GridItem>
       </Grid>
     </>

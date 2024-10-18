@@ -14,6 +14,7 @@ import FriendListCard from "../../components/user/ProfilePage/FriendListCard";
 import useFetchAllUserFriends from "../../hooks/user/useFetchAllUserFriends";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProfilePhotosPage from "./ProfilePhotosPage";
+import NoAvailableFriends from "../../components/user/ProfilePage/NoAvailableFriends";
 
 const ProfileFriendListPage = () => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
@@ -34,7 +35,12 @@ const ProfileFriendListPage = () => {
       (total, page) => total + page.userList.length,
       0
     ) || 0;
+
+  const friendsLength =
+    fetchAllFriends?.pages.flatMap((list) => list.userList).length || 0;
+
   const array = [1, 2, 3, 4, 5];
+
   return (
     <>
       <Card padding={{ base: 2, md: 5 }}>
@@ -71,31 +77,35 @@ const ProfileFriendListPage = () => {
             </>
           )}
         </Box>
-        <InfiniteScroll
-          dataLength={fetchFriendsData}
-          next={fetchNextPage}
-          hasMore={!!hasNextPage}
-          loader={<Spinner />}
-        >
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={1}>
-            {isLoading ? (
-              <>
-                {array.map((skeleton) => (
-                  <Skeleton height="100px" key={skeleton} />
-                ))}
-              </>
-            ) : (
-              <>
-                {fetchAllFriends &&
-                  fetchAllFriends.pages.map((page) =>
-                    page.userList.map((list) => (
-                      <FriendListCard key={list.uniqueId} friend={list} />
-                    ))
-                  )}
-              </>
-            )}
-          </SimpleGrid>
-        </InfiniteScroll>
+        {friendsLength < 1 ? (
+          <NoAvailableFriends />
+        ) : (
+          <InfiniteScroll
+            dataLength={fetchFriendsData}
+            next={fetchNextPage}
+            hasMore={!!hasNextPage}
+            loader={<Spinner />}
+          >
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={1}>
+              {isLoading ? (
+                <>
+                  {array.map((skeleton) => (
+                    <Skeleton height="100px" key={skeleton} />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {fetchAllFriends &&
+                    fetchAllFriends.pages.map((page) =>
+                      page.userList.map((list) => (
+                        <FriendListCard key={list.uniqueId} friend={list} />
+                      ))
+                    )}
+                </>
+              )}
+            </SimpleGrid>
+          </InfiniteScroll>
+        )}
       </Card>
       <Box mt="12px">
         <ProfilePhotosPage />

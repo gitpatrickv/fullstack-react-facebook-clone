@@ -32,7 +32,7 @@ import {
 import { FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useAddToFriend from "../../../hooks/user/useAddToFriend";
@@ -43,6 +43,7 @@ import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import useUnfriend from "../../../hooks/user/useUnfriend";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
@@ -115,6 +116,13 @@ const ProfilePageHeader = () => {
   });
 
   const { data: getFriendListCount } = useGetUserFriendListCount(userId);
+
+  const { setIsProfile } = useProfileStore();
+  const navigate = useNavigate();
+  const handleNavigateProfileClick = (userId: number) => {
+    navigate(`/profile/${userId}`);
+    setIsProfile(true);
+  };
 
   return (
     <Card>
@@ -271,19 +279,20 @@ const ProfilePageHeader = () => {
               {fetchAllFriends?.pages.map((page, pageIndex) =>
                 pageIndex === 0
                   ? page.userList.map((list, index) => (
-                      <Link to={`/profile/${list.userId}`} key={list.uniqueId}>
-                        <Avatar
-                          src={list.profilePicture || pic}
-                          height="40px"
-                          width="40px"
-                          ml={index === 0 ? 0 : "-10px"}
-                          zIndex={page.userList.length - index}
-                          borderWidth="2px"
-                          borderColor={
-                            colorMode === "dark" ? "gray.700" : "white"
-                          }
-                        />
-                      </Link>
+                      <Avatar
+                        key={list.uniqueId}
+                        src={list.profilePicture || pic}
+                        height="40px"
+                        width="40px"
+                        ml={index === 0 ? 0 : "-10px"}
+                        zIndex={page.userList.length - index}
+                        borderWidth="2px"
+                        borderColor={
+                          colorMode === "dark" ? "gray.700" : "white"
+                        }
+                        onClick={() => handleNavigateProfileClick(list.userId)}
+                        cursor="pointer"
+                      />
                     ))
                   : null
               )}

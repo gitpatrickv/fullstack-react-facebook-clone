@@ -1,8 +1,8 @@
 import {
+  Avatar,
   Box,
   Card,
   IconButton,
-  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -17,14 +17,13 @@ import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useUnfriend from "../../../hooks/user/useUnfriend";
-import { useUserStore } from "../../../store/user-store";
 import { useProfileStore } from "../../../store/profile-store";
-
+import { useUserStore } from "../../../store/user-store";
 interface Props {
   friend: UserDataModelList;
 }
 
-const FriendListCard = ({ friend }: Props) => {
+const FriendsList = ({ friend }: Props) => {
   const { userId } = useUserStore();
   const {
     mutation: unfriend,
@@ -36,37 +35,36 @@ const FriendListCard = ({ friend }: Props) => {
     setUnfriendIsLoading(true);
     unfriend.mutate(friend.userId);
   };
-  const { setIsProfile } = useProfileStore();
   const navigate = useNavigate();
-  const handleNavigateClick = () => {
-    navigate(`/profile/${friend.userId}`);
-    setIsProfile(true);
-  };
+
   const { colorMode } = useColorMode();
+
+  const { setIsProfile } = useProfileStore();
+  const handleNavigateProfileClick = () => {
+    navigate(`/profile/${friend.userId}`);
+    setIsProfile(false);
+  };
 
   return (
     <>
       <Card
-        padding={4}
+        padding={2}
         _hover={{
           bg: colorMode === "dark" ? "gray.800" : "gray.200",
         }}
       >
         <Box display="flex" alignItems="center">
-          <Image
+          <Avatar
             src={friend.profilePicture || pic}
-            borderRadius="5px"
-            width="90px"
-            height="90px"
-            objectFit="cover"
-            onClick={handleNavigateClick}
+            onClick={handleNavigateProfileClick}
             cursor="pointer"
+            size="lg"
           />
 
           <Text
             ml="10px"
             isTruncated={true}
-            onClick={handleNavigateClick}
+            onClick={handleNavigateProfileClick}
             cursor="pointer"
             textTransform="capitalize"
             fontWeight="semibold"
@@ -105,4 +103,4 @@ const FriendListCard = ({ friend }: Props) => {
   );
 };
 
-export default FriendListCard;
+export default FriendsList;

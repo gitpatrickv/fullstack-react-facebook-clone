@@ -25,13 +25,21 @@ import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
+import { useProfileStore } from "../../../store/profile-store";
 
 const NavbarRight = () => {
   const { resetUser } = useUserStore();
   const { data: getUserInfo } = useGetCurrentUserInfo();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
+
+  const { setIsProfile } = useProfileStore();
   const navigate = useNavigate();
+  const handleNavigateProfileClick = () => {
+    navigate(`/profile/${getUserInfo?.userId}`);
+    setIsProfile(true);
+  };
+
   const handleLogout = () => {
     logout(navigate);
     queryClient.setQueryData(["user"], null);
@@ -55,18 +63,21 @@ const NavbarRight = () => {
         />
 
         <MenuList>
-          <Link to={`/profile/${getUserInfo?.userId}`}>
-            <MenuItem paddingBottom={3} paddingTop={3}>
-              <Avatar
-                src={getUserInfo?.profilePicture || pic}
-                size="xs"
-                ml="3px"
-              />
-              <Text ml="12px" textTransform="capitalize">
-                {getUserInfo?.firstName} {getUserInfo?.lastName}
-              </Text>
-            </MenuItem>
-          </Link>
+          <MenuItem
+            paddingBottom={3}
+            paddingTop={3}
+            onClick={handleNavigateProfileClick}
+          >
+            <Avatar
+              src={getUserInfo?.profilePicture || pic}
+              size="xs"
+              ml="3px"
+            />
+            <Text ml="12px" textTransform="capitalize">
+              {getUserInfo?.firstName} {getUserInfo?.lastName}
+            </Text>
+          </MenuItem>
+
           <Link to="/home">
             <MenuItem>
               <RiNewsFill size="30px" />
