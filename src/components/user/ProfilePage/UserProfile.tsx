@@ -3,6 +3,7 @@ import {
   Card,
   Grid,
   GridItem,
+  Image,
   Show,
   SimpleGrid,
   Skeleton,
@@ -13,7 +14,13 @@ import {
 } from "@chakra-ui/react";
 
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import useFetchAllPhotos from "../../../hooks/user/useFetchAllPhotos";
 import useFetchAllUserPosts from "../../../hooks/user/useFetchAllUserPosts";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
@@ -25,7 +32,9 @@ import ImageCard from "./ImageCard";
 import NoAvailablePhotos from "./NoAvailablePhotos";
 import NoAvailablePost from "./NoAvailablePost";
 import ProfilePageHeader from "./ProfilePageHeader";
-
+import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
+import NoAvailableFriends from "./NoAvailableFriends";
+import pic from "../../../assets/profpic.jpeg";
 const UserProfile = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
@@ -62,6 +71,21 @@ const UserProfile = () => {
   const { isProfile } = useProfileStore();
   const photosLength =
     fetchAllPhotos?.pages.flatMap((list) => list.postImageModels).length || 0;
+
+  const { data: fetchAllFriends, isLoading: isFriendsLoading } =
+    useFetchAllUserFriends({
+      userId: userId,
+      pageSize: 9,
+    });
+  const friendsLength =
+    fetchAllFriends?.pages.flatMap((list) => list.userList).length || 0;
+
+  const { setIsProfile } = useProfileStore();
+  const navigate = useNavigate();
+  const handleNavigateProfileClick = (userId: number) => {
+    navigate(`/profile/${userId}`);
+    setIsProfile(true);
+  };
 
   return (
     <>
@@ -106,6 +130,7 @@ const UserProfile = () => {
               mr={{ base: "0px", lg: "10px", xl: "5px" }}
               mb={{ base: "10px", lg: "0px" }}
             >
+              {/* <Box position="sticky" top="-100px"> */}
               {isPhotosLoading ? (
                 <Skeleton height="300px" />
               ) : (
@@ -147,6 +172,78 @@ const UserProfile = () => {
                   )}
                 </Card>
               )}
+
+              {isFriendsLoading ? (
+                <Skeleton height="300px" />
+              ) : (
+                <Card
+                  padding={{ base: 2, xl: 4 }}
+                  mr={{ base: "0px", xl: "5px" }}
+                  mt="10px"
+                >
+                  <Box display="flex" alignItems="center" mb="10px">
+                    <Text fontSize="xl" fontWeight="semibold">
+                      Friends
+                    </Text>
+                    <Spacer />
+                    {friendsLength < 1 ? (
+                      <Link to={`/friends/suggestions`}>
+                        <Text fontSize="lg" color="blue.500" cursor="pointer">
+                          Find friends
+                        </Text>
+                      </Link>
+                    ) : (
+                      <Link to={`/profile/${userId}/friends`}>
+                        <Text fontSize="lg" color="blue.500" cursor="pointer">
+                          See all friends
+                        </Text>
+                      </Link>
+                    )}
+                  </Box>
+                  {friendsLength < 1 ? (
+                    <NoAvailableFriends />
+                  ) : (
+                    <SimpleGrid columns={{ base: 2, md: 3 }} spacing={1}>
+                      {fetchAllFriends &&
+                        fetchAllFriends.pages.map((page, pageIndex) =>
+                          pageIndex === 0
+                            ? page.userList
+                                .slice(0, sliceLength)
+                                .map((list) => (
+                                  <Box key={list.uniqueId}>
+                                    <Image
+                                      src={list.profilePicture || pic}
+                                      height="130px"
+                                      width="100%"
+                                      borderRadius="10px"
+                                      cursor="pointer"
+                                      onClick={() =>
+                                        handleNavigateProfileClick(list.userId)
+                                      }
+                                    />
+                                    <Text
+                                      textTransform="capitalize"
+                                      mb="10px"
+                                      fontWeight="semibold"
+                                      onClick={() =>
+                                        handleNavigateProfileClick(list.userId)
+                                      }
+                                      cursor="pointer"
+                                      userSelect="none"
+                                      isTruncated={true}
+                                      fontSize="sm"
+                                    >
+                                      {list.firstName} {list.lastName}
+                                    </Text>
+                                  </Box>
+                                ))
+                            : null
+                        )}
+                    </SimpleGrid>
+                  )}
+                </Card>
+              )}
+              {/* </Box> */}
             </GridItem>
             <GridItem area="section2">
               {isUserInfoLoading ? <Skeleton height="100px" /> : <CreatePost />}

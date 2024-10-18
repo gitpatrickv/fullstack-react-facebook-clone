@@ -40,7 +40,7 @@ const Navbar = () => {
       position="fixed"
       top="0"
       width="100%"
-      zIndex={10}
+      zIndex={100}
       as="header"
       padding={2}
     >
