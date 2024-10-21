@@ -1,21 +1,9 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Text,
-} from "@chakra-ui/react";
-import { useRef } from "react";
-import { BsSearch } from "react-icons/bs";
+import { Box, Divider, Flex, IconButton, Text } from "@chakra-ui/react";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useFriendStore } from "../../../store/friend-store";
 
 const SidebarHeader = () => {
-  const ref = useRef<HTMLInputElement>(null);
   const {
     setIsAllFriends,
     setIsSuggestions,
@@ -66,27 +54,30 @@ const SidebarHeader = () => {
           </Text>
         </Box>
       </Flex>
-      <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
-        <Input
-          ref={ref}
-          borderRadius={20}
-          placeholder="Search Facebook"
-          variant="filled"
-          textAlign={{ base: "center", md: "left" }}
-          fontSize={["sm", "md", "lg"]}
-          width="100%"
-        />
-        <InputLeftElement>
-          <IconButton
-            aria-label="Search"
-            icon={<BsSearch />}
-            type="submit"
-            bg="transparent"
-            _hover={{ bg: "transparent" }}
+      {/* {isAllFriends && (
+        <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
+          <Input
+            ref={ref}
+            borderRadius={20}
+            placeholder="Search friends"
+            variant="filled"
+            textAlign={{ base: "center", md: "left" }}
+            fontSize={["sm", "md", "lg"]}
+            width="100%"
           />
-        </InputLeftElement>
-      </InputGroup>
-      <Divider mt="15px" mb="15px" />
+          <InputLeftElement>
+            <IconButton
+              aria-label="Search"
+              icon={<BsSearch />}
+              type="submit"
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+            />
+          </InputLeftElement>
+        </InputGroup>
+      )} */}
+
+      <Divider mb="15px" />
     </>
   );
 };
