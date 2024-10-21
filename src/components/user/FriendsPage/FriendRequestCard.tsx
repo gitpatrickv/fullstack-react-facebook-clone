@@ -7,18 +7,23 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { FaUserPlus } from "react-icons/fa";
+import { FaUserXmark } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import { useNavigate } from "react-router-dom";
+import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
+import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
 
 interface Props {
   request: UserDataModelList;
+  isFriendRequest: boolean;
 }
 
-const FriendRequestCard = ({ request }: Props) => {
+const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { mutation, isLoading, setIsLoading } = useAcceptFriendRequest();
   const navigate = useNavigate();
@@ -42,6 +47,19 @@ const FriendRequestCard = ({ request }: Props) => {
   const handleNavigateClick = () => {
     navigate(`/profile/${request.userId}`);
   };
+
+  const {
+    mutation: addFriend,
+    isLoading: addFriendIsLoading,
+    setIsLoading: setAddFriendIsLoading,
+  } = useAddToFriend();
+
+  const handleAddFriendClick = () => {
+    addFriend.mutate(request.userId);
+    setAddFriendIsLoading(true);
+  };
+
+  const { data: friendshipStatus } = useGetFriendshipStatus(request.userId);
 
   return (
     <Card overflow="hidden">
@@ -84,21 +102,51 @@ const FriendRequestCard = ({ request }: Props) => {
             flexDirection={isSmallScreen ? "row" : "column"}
             mt="5px"
           >
-            <Button
-              colorScheme="blue"
-              mb={{ base: "0px", md: "10px" }}
-              mr={{ base: "10px", md: "0" }}
-              onClick={handleAcceptFriendRequestClick}
-              isLoading={isLoading}
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={handleDeleteFriendRequestClick}
-              isLoading={deleteRequestIsLoading}
-            >
-              Delete
-            </Button>
+            {isFriendRequest ? (
+              <Button
+                colorScheme="blue"
+                mb={{ base: "0px", md: "10px" }}
+                mr={{ base: "10px", md: "0" }}
+                onClick={handleAcceptFriendRequestClick}
+                isLoading={isLoading}
+              >
+                Confirm
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handleAddFriendClick}
+                  isLoading={addFriendIsLoading}
+                  colorScheme={
+                    friendshipStatus && friendshipStatus?.status === "PENDING"
+                      ? "red"
+                      : "blue"
+                  }
+                >
+                  {friendshipStatus &&
+                  friendshipStatus?.status === "PENDING" ? (
+                    <>
+                      <FaUserXmark size="20px" />
+                      <Text ml="10px">Cancel request</Text>
+                    </>
+                  ) : (
+                    <>
+                      <FaUserPlus size="20px" />
+                      <Text ml="10px">Add friend</Text>
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
+
+            {isFriendRequest && (
+              <Button
+                onClick={handleDeleteFriendRequestClick}
+                isLoading={deleteRequestIsLoading}
+              >
+                Delete
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>

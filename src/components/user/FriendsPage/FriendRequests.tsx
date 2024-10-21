@@ -1,40 +1,29 @@
-import {
-  Box,
-  Card,
-  Skeleton,
-  SkeletonText,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Card, Skeleton, Spinner, Text } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
-import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
+import useFetchAllFriendRequest from "../../../hooks/user/useFetchAllFriendRequest";
 import { useUserStore } from "../../../store/user-store";
 import FriendsList from "./FriendsList";
 import SidebarHeader from "./SidebarHeader";
-const AllFriends = () => {
-  const { userId } = useUserStore();
-  const { data: getFriendListCount, isLoading: countIsLoading } =
-    useGetUserFriendListCount(userId ?? 0);
 
+const FriendRequests = () => {
+  const { userId } = useUserStore();
   const {
-    data: fetchAllFriends,
-    fetchNextPage,
+    data: fetchAllRequest,
     hasNextPage,
+    fetchNextPage,
     isLoading,
-  } = useFetchAllUserFriends({
+  } = useFetchAllFriendRequest({
     userId: userId,
     pageSize: 10,
   });
 
-  const fetchFriendsData =
-    fetchAllFriends?.pages.reduce(
+  const fetchFriendRequestsData =
+    fetchAllRequest?.pages.reduce(
       (total, page) => total + page.userList.length,
       0
     ) || 0;
 
   const array = [1, 2, 3, 4, 5];
-
   return (
     <Card
       borderRadius="none"
@@ -50,16 +39,12 @@ const AllFriends = () => {
         id="scrollable-box"
       >
         <SidebarHeader />
-        {countIsLoading ? (
-          <SkeletonText />
-        ) : (
-          <Text fontSize="lg" fontWeight="semibold">
-            {getFriendListCount?.count} friends
-          </Text>
-        )}
+        <Text fontSize="lg" fontWeight="semibold">
+          Friend Requests
+        </Text>
 
         <InfiniteScroll
-          dataLength={fetchFriendsData}
+          dataLength={fetchFriendRequestsData}
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={<Spinner />}
@@ -73,8 +58,8 @@ const AllFriends = () => {
             </>
           ) : (
             <>
-              {fetchAllFriends &&
-                fetchAllFriends.pages.map((page) =>
+              {fetchAllRequest &&
+                fetchAllRequest.pages.map((page) =>
                   page.userList.map((list) => (
                     <FriendsList key={list.uniqueId} friend={list} />
                   ))
@@ -87,4 +72,4 @@ const AllFriends = () => {
   );
 };
 
-export default AllFriends;
+export default FriendRequests;

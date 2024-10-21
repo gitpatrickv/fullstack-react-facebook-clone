@@ -1,7 +1,16 @@
-import { Box, Button, Divider, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Divider,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { FaCaretDown } from "react-icons/fa";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import useFetchAllFriendRequest from "../../../hooks/user/useFetchAllFriendRequest";
+import useFetchAllFriendSuggestions from "../../../hooks/user/useFetchAllFriendSuggestions";
 import { useUserStore } from "../../../store/user-store";
 import FriendRequestCard from "./FriendRequestCard";
 
@@ -21,6 +30,21 @@ const PeopleYouMayKnow = () => {
     fetchAllRequest?.pages.flatMap((page) => page.userList) || [];
   const requestListSize = requestList.length > 10;
   const requestSize = requestList.length >= 1;
+
+  const {
+    data: fetchFriendSuggestions,
+    fetchNextPage: fetchNextPageSuggestions,
+    hasNextPage: hasNextPageSuggestions,
+  } = useFetchAllFriendSuggestions({
+    userId: userId,
+    pageSize: 20,
+  });
+
+  const fetchFriendSuggestionsData =
+    fetchFriendSuggestions?.pages.reduce(
+      (total, page) => total + page.userList.length,
+      0
+    ) || 0;
 
   return (
     <Box padding={{ base: 2, md: 5, lg: 7 }}>
@@ -48,7 +72,11 @@ const PeopleYouMayKnow = () => {
           <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 7 }} spacing={2}>
             {fetchAllRequest?.pages.map((page) =>
               page.userList.map((request) => (
-                <FriendRequestCard key={request.uniqueId} request={request} />
+                <FriendRequestCard
+                  key={request.uniqueId}
+                  request={request}
+                  isFriendRequest={true}
+                />
               ))
             )}
           </SimpleGrid>
@@ -85,6 +113,25 @@ const PeopleYouMayKnow = () => {
           See all
         </Text>
       </Box>
+      <InfiniteScroll
+        dataLength={fetchFriendSuggestionsData}
+        next={fetchNextPageSuggestions}
+        hasMore={!!hasNextPageSuggestions}
+        loader={<Spinner />}
+        scrollableTarget="scrollable-box"
+      >
+        <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 7 }} spacing={2}>
+          {fetchFriendSuggestions?.pages.map((page) =>
+            page.userList.map((request) => (
+              <FriendRequestCard
+                key={request.uniqueId}
+                request={request}
+                isFriendRequest={false}
+              />
+            ))
+          )}
+        </SimpleGrid>
+      </InfiniteScroll>
     </Box>
   );
 };

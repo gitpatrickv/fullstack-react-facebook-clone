@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserXmark } from "react-icons/fa6";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useUnfriend from "../../../hooks/user/useUnfriend";
@@ -25,6 +25,8 @@ interface Props {
 }
 
 const FriendListCard = ({ friend }: Props) => {
+  const params = useParams<{ userId: string }>();
+  const paramsUserId = Number(params.userId);
   const { userId } = useUserStore();
   const {
     mutation: unfriend,
@@ -76,29 +78,31 @@ const FriendListCard = ({ friend }: Props) => {
             {friend.firstName} {friend.lastName}
           </Text>
           <Spacer />
-          <Box>
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={<HiOutlineDotsHorizontal size="25px" />}
-                variant="ghost"
-                borderRadius="full"
-                aria-label="menu"
-              />
-              <MenuList>
-                <MenuItem
-                  padding={2}
-                  onClick={handleUnfriendClick}
-                  isDisabled={unfriendIsLoading}
-                >
-                  <FaUserXmark size="25px" />
-                  <Text ml="10px" fontSize="lg" fontWeight="semibold">
-                    Unfriend
-                  </Text>
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Box>
+          {userId === paramsUserId && (
+            <Box>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  icon={<HiOutlineDotsHorizontal size="25px" />}
+                  variant="ghost"
+                  borderRadius="full"
+                  aria-label="menu"
+                />
+                <MenuList>
+                  <MenuItem
+                    padding={2}
+                    onClick={handleUnfriendClick}
+                    isDisabled={unfriendIsLoading}
+                  >
+                    <FaUserXmark size="25px" />
+                    <Text ml="10px" fontSize="lg" fontWeight="semibold">
+                      Unfriend
+                    </Text>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+          )}
         </Box>
       </Card>
     </>

@@ -1,34 +1,25 @@
-import {
-  Box,
-  Card,
-  Skeleton,
-  SkeletonText,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Card, Skeleton, Spinner, Text } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
-import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
+import useFetchAllFriendSuggestions from "../../../hooks/user/useFetchAllFriendSuggestions";
 import { useUserStore } from "../../../store/user-store";
 import FriendsList from "./FriendsList";
 import SidebarHeader from "./SidebarHeader";
-const AllFriends = () => {
+
+const FriendSuggestions = () => {
   const { userId } = useUserStore();
-  const { data: getFriendListCount, isLoading: countIsLoading } =
-    useGetUserFriendListCount(userId ?? 0);
 
   const {
-    data: fetchAllFriends,
+    data: fetchFriendSuggestions,
     fetchNextPage,
     hasNextPage,
     isLoading,
-  } = useFetchAllUserFriends({
+  } = useFetchAllFriendSuggestions({
     userId: userId,
-    pageSize: 10,
+    pageSize: 20,
   });
 
-  const fetchFriendsData =
-    fetchAllFriends?.pages.reduce(
+  const fetchFriendSuggestionsData =
+    fetchFriendSuggestions?.pages.reduce(
       (total, page) => total + page.userList.length,
       0
     ) || 0;
@@ -50,16 +41,12 @@ const AllFriends = () => {
         id="scrollable-box"
       >
         <SidebarHeader />
-        {countIsLoading ? (
-          <SkeletonText />
-        ) : (
-          <Text fontSize="lg" fontWeight="semibold">
-            {getFriendListCount?.count} friends
-          </Text>
-        )}
+        <Text fontSize="lg" fontWeight="semibold">
+          People you may know
+        </Text>
 
         <InfiniteScroll
-          dataLength={fetchFriendsData}
+          dataLength={fetchFriendSuggestionsData}
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={<Spinner />}
@@ -73,8 +60,8 @@ const AllFriends = () => {
             </>
           ) : (
             <>
-              {fetchAllFriends &&
-                fetchAllFriends.pages.map((page) =>
+              {fetchFriendSuggestions &&
+                fetchFriendSuggestions.pages.map((page) =>
                   page.userList.map((list) => (
                     <FriendsList key={list.uniqueId} friend={list} />
                   ))
@@ -87,4 +74,4 @@ const AllFriends = () => {
   );
 };
 
-export default AllFriends;
+export default FriendSuggestions;

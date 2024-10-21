@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import pic from "../../../assets/profpic.jpeg";
 import { Images } from "../../../entities/PostImage";
 import ProfileImagesModal from "./ProfileImagesModal";
+import { useLocation, useParams } from "react-router-dom";
 
 interface Props {
   images: Images;
@@ -10,6 +11,9 @@ interface Props {
 }
 
 const ImageCard = ({ images, imageList }: Props) => {
+  const location = useLocation();
+  const params = useParams<{ userId: string }>();
+  const userId = Number(params.userId);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [photos, setPhotos] = useState<Images[]>(imageList);
   const [activeImage, setActiveImage] = useState<Images | null>(null);
@@ -46,7 +50,7 @@ const ImageCard = ({ images, imageList }: Props) => {
     <>
       <Image
         src={images.postImageUrl || pic}
-        height="130px"
+        height={location.pathname === `/profile/${userId}` ? "130px" : "180px"}
         width="100%"
         borderRadius="10px"
         cursor="pointer"

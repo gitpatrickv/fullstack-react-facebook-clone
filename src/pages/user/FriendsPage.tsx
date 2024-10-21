@@ -4,6 +4,8 @@ import { Outlet, useLocation } from "react-router-dom";
 import AllFriends from "../../components/user/FriendsPage/AllFriends";
 import FriendsPageSideBar from "../../components/user/FriendsPage/FriendsPageSidebar";
 import PeopleYouMayKnow from "../../components/user/FriendsPage/PeopleYouMayKnow";
+import FriendSuggestions from "../../components/user/FriendsPage/FriendSuggestions";
+import FriendRequests from "../../components/user/FriendsPage/FriendRequests";
 
 const FriendsPage = () => {
   const location = useLocation();
@@ -22,14 +24,13 @@ const FriendsPage = () => {
           `,
         }}
       >
-        <GridItem area="section1" bg="blue">
-          {location.pathname === "/friends" ? (
-            <FriendsPageSideBar />
-          ) : location.pathname === "/friends/list" ? (
-            <AllFriends />
-          ) : (
-            <FriendsPageSideBar />
+        <GridItem area="section1">
+          {location.pathname === "/friends" && <FriendsPageSideBar />}
+          {location.pathname === "/friends/list" && <AllFriends />}
+          {location.pathname === "/friends/suggestions" && (
+            <FriendSuggestions />
           )}
+          {location.pathname === "/friends/requests" && <FriendRequests />}
         </GridItem>
         <GridItem area="section2" mt={{ lg: "40px", xl: "0" }}>
           {location.pathname === "/friends" ? (
