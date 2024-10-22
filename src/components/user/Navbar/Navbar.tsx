@@ -60,33 +60,33 @@ const Navbar = () => {
             alignItems="center"
           >
             <Link to="/home">
-              <Box color={selectedPage === "/home" ? "blue.500" : "white.500"}>
+              <Box color={selectedPage === "/home" ? "#1877F2" : "white.500"}>
                 <FaHome size="35px" />
               </Box>
             </Link>
             <Link to="/friends">
               <Box
-                color={selectedPage === "/friends" ? "blue.500" : "white.500"}
+                color={selectedPage === "/friends" ? "#1877F2" : "white.500"}
               >
                 <FaUserFriends size="35px" />
               </Box>
             </Link>
             <Link to="/watch">
-              <Box color={selectedPage === "/watch" ? "blue.500" : "white.500"}>
+              <Box color={selectedPage === "/watch" ? "#1877F2" : "white.500"}>
                 <MdOndemandVideo size="35px" />
               </Box>
             </Link>
             <Link to="/marketplace">
               <Box
                 color={
-                  selectedPage === "/marketplace" ? "blue.500" : "white.500"
+                  selectedPage === "/marketplace" ? "#1877F2" : "white.500"
                 }
               >
                 <IoStorefrontSharp size="35px" />
               </Box>
             </Link>
             <Link to="/games">
-              <Box color={selectedPage === "/games" ? "blue.500" : "white.500"}>
+              <Box color={selectedPage === "/games" ? "#1877F2" : "white.500"}>
                 <IoLogoGameControllerA size="35px" />
               </Box>
             </Link>
@@ -101,7 +101,7 @@ const Navbar = () => {
         >
           <Link to="/home">
             <Box
-              color="blue.500"
+              color="#1877F2"
               mb="5px"
               cursor="pointer"
               mr={{ base: "5px", md: "10px" }}

@@ -105,13 +105,15 @@ const PeopleYouMayKnow = () => {
         <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
           People you may know
         </Text>
-        <Text
-          fontSize={{ base: "md", md: "lg" }}
-          color="blue.500"
-          cursor="pointer"
-        >
-          See all
-        </Text>
+        <Link to="/friends/suggestions">
+          <Text
+            fontSize={{ base: "md", md: "lg" }}
+            color="blue.500"
+            cursor="pointer"
+          >
+            See all
+          </Text>
+        </Link>
       </Box>
       <InfiniteScroll
         dataLength={fetchFriendSuggestionsData}

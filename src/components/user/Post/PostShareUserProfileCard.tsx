@@ -97,9 +97,8 @@ const PostShareUserProfileCard = ({
               <>
                 <Button
                   mr="7px"
-                  bg="blue.500"
-                  _hover={{ bg: "blue.600" }}
-                  _active={{ bg: "blue.700" }}
+                  bg="#1877F2"
+                  _hover={{ bg: "#165BB7" }}
                   ml={{ base: "10px", md: "0px" }}
                 >
                   <FaPlus size="15px" />

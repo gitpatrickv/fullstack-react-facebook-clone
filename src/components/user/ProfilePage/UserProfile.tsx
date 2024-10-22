@@ -144,7 +144,7 @@ const UserProfile = () => {
                     </Text>
                     <Spacer />
                     <Link to={`/profile/${userId}/photos`}>
-                      <Text fontSize="lg" color="blue.500" cursor="pointer">
+                      <Text fontSize="lg" color="#1877F2" cursor="pointer">
                         See all photos
                       </Text>
                     </Link>
@@ -188,13 +188,13 @@ const UserProfile = () => {
                     <Spacer />
                     {friendsLength < 1 ? (
                       <Link to={`/friends/suggestions`}>
-                        <Text fontSize="lg" color="blue.500" cursor="pointer">
+                        <Text fontSize="lg" color="#1877F2" cursor="pointer">
                           Find friends
                         </Text>
                       </Link>
                     ) : (
                       <Link to={`/profile/${userId}/friends`}>
-                        <Text fontSize="lg" color="blue.500" cursor="pointer">
+                        <Text fontSize="lg" color="#1877F2" cursor="pointer">
                           See all friends
                         </Text>
                       </Link>

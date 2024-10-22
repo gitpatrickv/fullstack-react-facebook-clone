@@ -117,7 +117,8 @@ const FriendsList = ({ friend }: Props) => {
                 <Button
                   width="100%"
                   mr="5px"
-                  colorScheme="blue"
+                  bg="#1877F2"
+                  _hover={{ bg: "#165BB7" }}
                   isLoading={isLoading}
                   onClick={handleAcceptFriendRequestClick}
                   height="35px"
@@ -140,17 +141,14 @@ const FriendsList = ({ friend }: Props) => {
                 mt="5px"
                 width="150px"
                 mr="5px"
-                colorScheme={
-                  friendshipStatus && friendshipStatus?.status === "PENDING"
-                    ? "red"
-                    : "blue"
-                }
+                bg="#1877F2"
+                _hover={{ bg: "#165BB7" }}
                 height="35px"
                 onClick={handleAddFriendClick}
                 isLoading={addFriendIsLoading}
               >
                 {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
-                  <Text>Cancel Request</Text>
+                  <Text>Cancel</Text>
                 ) : (
                   <Text>Add friend</Text>
                 )}

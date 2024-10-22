@@ -8,7 +8,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaUserPlus } from "react-icons/fa";
-import { FaUserXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
@@ -104,7 +103,8 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
           >
             {isFriendRequest ? (
               <Button
-                colorScheme="blue"
+                bg="#1877F2"
+                _hover={{ bg: "#165BB7" }}
                 mb={{ base: "0px", md: "10px" }}
                 mr={{ base: "10px", md: "0" }}
                 onClick={handleAcceptFriendRequestClick}
@@ -117,17 +117,13 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
                 <Button
                   onClick={handleAddFriendClick}
                   isLoading={addFriendIsLoading}
-                  colorScheme={
-                    friendshipStatus && friendshipStatus?.status === "PENDING"
-                      ? "red"
-                      : "blue"
-                  }
+                  bg="#1877F2"
+                  _hover={{ bg: "#165BB7" }}
                 >
                   {friendshipStatus &&
                   friendshipStatus?.status === "PENDING" ? (
                     <>
-                      <FaUserXmark size="20px" />
-                      <Text ml="10px">Cancel request</Text>
+                      <Text>Cancel</Text>
                     </>
                   ) : (
                     <>

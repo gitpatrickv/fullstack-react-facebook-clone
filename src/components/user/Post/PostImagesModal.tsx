@@ -160,7 +160,7 @@ const PostImagesModal = ({
           _hover={{ bg: "gray.700" }}
         />
         <Link to="/home">
-          <Box position="absolute" top="2" left="50px" color="blue.500">
+          <Box position="absolute" top="2" left="50px" color="#1877F2">
             <FaFacebook size="40px" />
           </Box>
         </Link>

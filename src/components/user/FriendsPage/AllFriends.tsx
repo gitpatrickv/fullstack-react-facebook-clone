@@ -1,17 +1,26 @@
 import {
   Box,
   Card,
+  Divider,
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Skeleton,
   SkeletonText,
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import { BsSearch } from "react-icons/bs";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
+import { useFriendStore } from "../../../store/friend-store";
 import { useUserStore } from "../../../store/user-store";
 import FriendsList from "./FriendsList";
-import SidebarHeader from "./SidebarHeader";
 const AllFriends = () => {
   const { userId } = useUserStore();
   const { data: getFriendListCount, isLoading: countIsLoading } =
@@ -35,6 +44,16 @@ const AllFriends = () => {
 
   const array = [1, 2, 3, 4, 5];
 
+  const { setIsAllFriends, setIsSuggestions, setIsFriendsRequest } =
+    useFriendStore();
+  const navigate = useNavigate();
+  const handleNavigateClick = () => {
+    navigate("/friends");
+    setIsAllFriends(false);
+    setIsSuggestions(false);
+    setIsFriendsRequest(false);
+  };
+
   return (
     <Card
       borderRadius="none"
@@ -49,7 +68,52 @@ const AllFriends = () => {
         overflowY="auto"
         id="scrollable-box"
       >
-        <SidebarHeader />
+        <Flex alignItems="center">
+          <IconButton
+            icon={<IoMdArrowRoundBack size="25px" />}
+            aria-label="Back"
+            variant="ghost"
+            size="md"
+            isRound
+            mr="10px"
+            mb="15px"
+            onClick={handleNavigateClick}
+          />
+          <Box>
+            <Text
+              _hover={{ textDecoration: "underline" }}
+              fontSize="sm"
+              cursor="pointer"
+              onClick={handleNavigateClick}
+            >
+              Friends
+            </Text>
+
+            <Text fontSize="2xl" fontWeight="bold" mb="10px">
+              All Friends
+            </Text>
+          </Box>
+        </Flex>
+        <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
+          <Input
+            borderRadius={20}
+            placeholder="Search friends"
+            variant="filled"
+            textAlign={{ base: "center", md: "left" }}
+            fontSize={["sm", "md", "lg"]}
+            width="100%"
+          />
+          <InputLeftElement>
+            <IconButton
+              aria-label="Search"
+              icon={<BsSearch />}
+              type="submit"
+              bg="transparent"
+              _hover={{ bg: "transparent" }}
+            />
+          </InputLeftElement>
+        </InputGroup>
+        <Divider mb="15px" mt="15px" />
         {countIsLoading ? (
           <SkeletonText />
         ) : (
