@@ -138,7 +138,7 @@ const ProfilePageHeader = () => {
           xl: `"asideLeft header asideRight"`,
         }}
       >
-        <GridItem area="header">
+        <GridItem area="header" as="nav">
           {isLoading ? (
             <ProfilePageHeaderSkeleton />
           ) : (
@@ -451,10 +451,10 @@ const ProfilePageHeader = () => {
           </Box>
         </GridItem>
         <Show above="xl">
-          <GridItem area="asideLeft" />
+          <GridItem area="asideLeft" as="aside" />
         </Show>
         <Show above="xl">
-          <GridItem area="asideRight" />
+          <GridItem area="asideRight" as="aside" />
         </Show>
       </Grid>
     </Card>

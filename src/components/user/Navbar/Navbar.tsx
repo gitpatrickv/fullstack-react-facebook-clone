@@ -17,10 +17,11 @@ import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoClose, IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavbarRight from "./NavbarRight";
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   const ref = useRef<HTMLInputElement>(null);
@@ -33,6 +34,12 @@ const Navbar = () => {
   useEffect(() => {
     setSelectedPage(location.pathname);
   }, [location.pathname]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = ref.current?.value || "";
+    navigate(`/search?keyword=${encodeURIComponent(text)}`);
+  };
 
   return (
     <Card
@@ -122,26 +129,28 @@ const Navbar = () => {
               onClick={() => setShowInput(!showInput)}
             />
           ) : (
-            <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
-              <Input
-                ref={ref}
-                borderRadius={20}
-                placeholder="Search Facebook"
-                variant="filled"
-                textAlign={{ base: "center", md: "left" }}
-                fontSize={["sm", "md", "lg"]}
-                w={{ base: "50%", md: "100%", lg: "100%", xl: "50%" }}
-              />
-              <InputLeftElement>
-                <IconButton
-                  aria-label="Search"
-                  icon={<BsSearch />}
-                  type="submit"
-                  bg="transparent"
-                  _hover={{ bg: "transparent" }}
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
+                <Input
+                  ref={ref}
+                  borderRadius={20}
+                  placeholder="Search Facebook"
+                  variant="filled"
+                  textAlign={{ base: "center", md: "left" }}
+                  fontSize={{ base: "sm", lg: "lg" }}
+                  w={{ base: "100%", md: "90%", lg: "80%", xl: "50%" }}
                 />
-              </InputLeftElement>
-            </InputGroup>
+                <InputLeftElement>
+                  <IconButton
+                    aria-label="Search"
+                    icon={<BsSearch />}
+                    type="submit"
+                    bg="transparent"
+                    _hover={{ bg: "transparent" }}
+                  />
+                </InputLeftElement>
+              </InputGroup>
+            </form>
           )}
           {isSmallScreen && showInput && (
             <Card
@@ -163,25 +172,26 @@ const Navbar = () => {
                 >
                   <IoClose size="20px" />
                 </Box>
-                <InputGroup>
-                  <Input
-                    ref={ref}
-                    borderRadius={20}
-                    placeholder="Search Facebook"
-                    variant="filled"
-                    fontSize={["sm", "md"]}
-                    w="100%"
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label="Search"
-                      icon={<BsSearch />}
-                      type="submit"
-                      bg="transparent"
-                      _hover={{ bg: "transparent" }}
+                <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+                  <InputGroup>
+                    <Input
+                      ref={ref}
+                      borderRadius={20}
+                      placeholder="Search Facebook"
+                      variant="filled"
+                      fontSize={{ base: "sm", md: "md" }}
                     />
-                  </InputRightElement>
-                </InputGroup>
+                    <InputRightElement>
+                      <IconButton
+                        aria-label="Search"
+                        icon={<BsSearch />}
+                        type="submit"
+                        bg="transparent"
+                        _hover={{ bg: "transparent" }}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </form>
               </Box>
             </Card>
           )}

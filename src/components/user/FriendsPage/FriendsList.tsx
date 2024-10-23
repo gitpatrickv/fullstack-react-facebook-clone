@@ -9,6 +9,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Portal,
   Spacer,
   Text,
   useColorMode,
@@ -166,18 +167,20 @@ const FriendsList = ({ friend }: Props) => {
                   borderRadius="full"
                   aria-label="menu"
                 />
-                <MenuList>
-                  <MenuItem
-                    padding={2}
-                    onClick={handleUnfriendClick}
-                    isDisabled={unfriendIsLoading}
-                  >
-                    <FaUserXmark size="25px" />
-                    <Text ml="10px" fontSize="lg" fontWeight="semibold">
-                      Unfriend
-                    </Text>
-                  </MenuItem>
-                </MenuList>
+                <Portal>
+                  <MenuList>
+                    <MenuItem
+                      padding={2}
+                      onClick={handleUnfriendClick}
+                      isDisabled={unfriendIsLoading}
+                    >
+                      <FaUserXmark size="25px" />
+                      <Text ml="10px" fontSize="lg" fontWeight="semibold">
+                        Unfriend
+                      </Text>
+                    </MenuItem>
+                  </MenuList>
+                </Portal>
               </Menu>
             </Box>
           )}

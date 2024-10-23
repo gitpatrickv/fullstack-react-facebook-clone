@@ -30,6 +30,7 @@ const HomePage = () => {
         }}
         mt={{ base: "55px", md: "35px", lg: "55px", xl: "5px" }}
         padding={{ base: 2, md: 7, lg: 2 }}
+        as="main"
       >
         <GridItem area="section" as="section">
           {isLoading ? <Skeleton height="100px" /> : <CreatePost />}

@@ -18,7 +18,8 @@ const ProfilePage = () => {
           templateColumns={{
             xl: "0.3fr 1.3fr ",
           }}
-          templateAreas={{ base: "'main'", lg: "'asideLeft main asideRight'" }}
+          templateAreas={{ base: "'main'", lg: "'asideLeft main '" }}
+          as="main"
         >
           <GridItem area="main">
             <UserProfile />
@@ -28,6 +29,7 @@ const ProfilePage = () => {
               area="asideLeft"
               position="fixed"
               width="calc(0.2 * 100vw)"
+              as="aside"
             >
               {isAllFriends ? (
                 <AllFriends />

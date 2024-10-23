@@ -129,6 +129,7 @@ const UserProfile = () => {
               area="section1"
               mr={{ base: "0px", lg: "10px", xl: "5px" }}
               mb={{ base: "10px", lg: "0px" }}
+              as="section"
             >
               {/* <Box position="sticky" top="-100px"> */}
               {isPhotosLoading ? (
@@ -245,7 +246,7 @@ const UserProfile = () => {
               )}
               {/* </Box> */}
             </GridItem>
-            <GridItem area="section2">
+            <GridItem area="section2" as="section">
               {isUserInfoLoading ? <Skeleton height="100px" /> : <CreatePost />}
 
               <InfiniteScroll

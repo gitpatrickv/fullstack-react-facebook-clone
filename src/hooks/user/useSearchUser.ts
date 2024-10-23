@@ -3,26 +3,28 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { UserListResponseProps } from "./useGetPostLikeUserList";
 
-const apiClient = axiosInstance;
-
-interface PaginateProps {
-  userId: number | null;
+interface SearchProps {
+  keyword: string;
   pageSize: number;
 }
 
-const useFetchAllFriendSuggestions = ({ userId, pageSize }: PaginateProps) => {
+const apiClient = axiosInstance;
+
+const useSearchUser = ({ keyword, pageSize }: SearchProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
+
   return useInfiniteQuery<UserListResponseProps, Error>({
-    queryKey: ["friendSuggestionsList", userId],
+    queryKey: ["searchList", keyword],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<UserListResponseProps>(
-        `/friends/suggestions/${userId}`,
+        `/user/search`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
           params: {
+            keyword: keyword,
             pageNo: pageParam,
             pageSize: pageSize,
           },
@@ -36,8 +38,8 @@ const useFetchAllFriendSuggestions = ({ userId, pageSize }: PaginateProps) => {
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken && !!userId,
+    enabled: !!jwtToken,
   });
 };
 
-export default useFetchAllFriendSuggestions;
+export default useSearchUser;
