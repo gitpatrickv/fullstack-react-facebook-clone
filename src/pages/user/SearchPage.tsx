@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   Grid,
   GridItem,
@@ -60,31 +61,39 @@ const SearchPage = () => {
       as="main"
     >
       <GridItem area="section" as="section">
-        <Card padding={2}>
-          <Text fontSize="xl" fontWeight="bold" ml="10px">
-            People
-          </Text>
-          <InfiniteScroll
-            dataLength={searchUserData}
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={<Spinner />}
-          >
-            {isLoading ? (
-              <>
-                {array.map((skeleton) => (
-                  <Skeleton height="100px" mt="10px" key={skeleton} />
-                ))}
-              </>
-            ) : (
-              <>
-                {searchResults.map((user) => (
-                  <SearchList key={user.uniqueId} user={user} />
-                ))}
-              </>
-            )}
-          </InfiniteScroll>
-        </Card>
+        {searchResults?.length === 0 ? (
+          <Box display="flex" justifyContent="center" mt="100px">
+            <Text fontSize="40px" fontWeight="semibold">
+              Oops! We couldn't find anyone matching your search.
+            </Text>
+          </Box>
+        ) : (
+          <Card padding={2}>
+            <Text fontSize="xl" fontWeight="bold" ml="10px">
+              People
+            </Text>
+            <InfiniteScroll
+              dataLength={searchUserData}
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={<Spinner />}
+            >
+              {isLoading ? (
+                <>
+                  {array.map((skeleton) => (
+                    <Skeleton height="100px" mt="10px" key={skeleton} />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {searchResults.map((user) => (
+                    <SearchList key={user.uniqueId} user={user} />
+                  ))}
+                </>
+              )}
+            </InfiniteScroll>
+          </Card>
+        )}
       </GridItem>
     </Grid>
   );

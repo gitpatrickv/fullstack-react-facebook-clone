@@ -96,7 +96,7 @@ const FriendsPageSideBar = () => {
         ) : (
           <>
             <Link to="/friends">
-              <Box {...boxStyles} cursor="pointer">
+              <Box {...boxStyles} cursor="pointer" color="#1877F2">
                 <FaUserFriends size="30px" />
                 <Text
                   ml="10px"

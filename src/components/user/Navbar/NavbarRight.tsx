@@ -12,20 +12,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
-import {
-  IoLogOutSharp,
-  IoNotificationsCircle,
-  IoStorefrontSharp,
-} from "react-icons/io5";
+import { IoLogOutSharp, IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
-import { useProfileStore } from "../../../store/profile-store";
+import Notifications from "./Notifications";
 
 const NavbarRight = () => {
   const { resetUser } = useUserStore();
@@ -52,7 +49,7 @@ const NavbarRight = () => {
         <BiLogoMessenger size="43px" />
       </Box>
       <Box mr="5px">
-        <IoNotificationsCircle size="38px" />
+        <Notifications />
       </Box>
       <Menu>
         <MenuButton

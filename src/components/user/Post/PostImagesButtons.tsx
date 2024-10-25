@@ -124,8 +124,8 @@ const PostImagesButtons = ({
               display="flex"
               justifyContent="center"
               alignItems="center"
-              borderColor="blue.500"
-              bg="blue.500"
+              borderColor="#1877F2"
+              bg="#1877F2"
               mr="5px"
               cursor="pointer"
               onMouseEnter={() => setIsHovered(true)}
@@ -196,18 +196,24 @@ const PostImagesButtons = ({
         <Box
           {...boxStyles}
           onClick={handleLikePostImageClick}
-          color={postImageLike?.liked ? "blue.500" : "white.500"}
+          color={postImageLike?.liked ? "#1877F2" : "white.500"}
         >
           {postImageLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
-          <Text ml="5px">Like</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Like
+          </Text>
         </Box>
         <Box {...boxStyles} onClick={focusInputClick}>
           <FaComment size="20px" />
-          <Text ml="5px">Comment</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Comment
+          </Text>
         </Box>
         <Box {...boxStyles} onClick={onOpenShareModal}>
           <IoIosShareAlt size="25px" />
-          <Text ml="5px">Share</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Share
+          </Text>
         </Box>
         <SharePostModal
           isOpen={isOpenShareModal}

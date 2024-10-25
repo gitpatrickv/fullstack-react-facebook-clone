@@ -55,9 +55,13 @@ const Navbar = () => {
         templateColumns="0.5fr 0.5fr 0.5fr"
         templateAreas={`"asideLeft content1 asideRight"`}
         alignItems="center"
-        gridGap="25px"
         mt="5px"
       >
+        {isSmallScreen && (
+          <GridItem area="content1">
+            <Box w="35px"></Box>
+          </GridItem>
+        )}
         <Show above="md">
           <GridItem
             area="content1"
@@ -109,7 +113,6 @@ const Navbar = () => {
           <Link to="/home">
             <Box
               color="#1877F2"
-              mb="5px"
               cursor="pointer"
               mr={{ base: "5px", md: "10px" }}
             >

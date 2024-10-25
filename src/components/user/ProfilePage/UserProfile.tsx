@@ -21,7 +21,9 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import pic from "../../../assets/profpic.jpeg";
 import useFetchAllPhotos from "../../../hooks/user/useFetchAllPhotos";
+import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useFetchAllUserPosts from "../../../hooks/user/useFetchAllUserPosts";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import ErrorPage from "../../../pages/user/ErrorPage";
@@ -29,12 +31,10 @@ import { useProfileStore } from "../../../store/profile-store";
 import CreatePost from "../Post/CreatePost";
 import Posts from "../Post/Posts";
 import ImageCard from "./ImageCard";
+import NoAvailableFriends from "./NoAvailableFriends";
 import NoAvailablePhotos from "./NoAvailablePhotos";
 import NoAvailablePost from "./NoAvailablePost";
 import ProfilePageHeader from "./ProfilePageHeader";
-import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
-import NoAvailableFriends from "./NoAvailableFriends";
-import pic from "../../../assets/profpic.jpeg";
 const UserProfile = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
@@ -233,6 +233,7 @@ const UserProfile = () => {
                                       userSelect="none"
                                       isTruncated={true}
                                       fontSize="sm"
+                                      _hover={{ textDecor: "underline" }}
                                     >
                                       {list.firstName} {list.lastName}
                                     </Text>
