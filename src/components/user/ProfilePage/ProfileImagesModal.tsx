@@ -19,7 +19,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import { Images } from "../../../entities/PostImage";
 import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostImageComments";
-import useGetPostById from "../../../hooks/user/useGetPostById";
+import useGetPostCreatorById from "../../../hooks/user/useGetPostCreatorById";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import NavbarRight from "../Navbar/NavbarRight";
 import Comments from "../Post/Comments";
@@ -44,7 +44,7 @@ const ProfileImagesModal = ({
   nextLeftImage,
   imageList,
 }: Props) => {
-  const { data: getPost } = useGetPostById(activeImage?.postId ?? 0);
+  const { data: getPost } = useGetPostCreatorById(activeImage?.postId ?? 0);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 

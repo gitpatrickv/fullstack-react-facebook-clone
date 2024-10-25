@@ -8,6 +8,7 @@ import { FaCheck } from "react-icons/fa6";
 import ReactTimeAgo from "react-time-ago";
 import { NotificationModel } from "../../../entities/Notification";
 import useMarkAsRead from "../../../hooks/user/useMarkAsRead";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   notification: NotificationModel;
@@ -17,6 +18,7 @@ const NotificationCard = ({ notification }: Props) => {
   const time = new Date(notification.timestamp);
   const { colorMode } = useColorMode();
   const [isHover, setIsHover] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -29,8 +31,13 @@ const NotificationCard = ({ notification }: Props) => {
     markAsRead(notification.notificationId);
   };
 
+  const handleNavigateClick = () => {
+    navigate(`/post/${notification.postId}`);
+    markAsRead(notification.notificationId);
+  };
+
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" onClick={handleNavigateClick}>
       <Box
         display="flex"
         alignItems="center"
