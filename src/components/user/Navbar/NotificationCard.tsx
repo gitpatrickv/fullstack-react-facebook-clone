@@ -7,6 +7,7 @@ import { BiSolidLike } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 import ReactTimeAgo from "react-time-ago";
 import { NotificationModel } from "../../../entities/Notification";
+import useMarkAsRead from "../../../hooks/user/useMarkAsRead";
 
 interface Props {
   notification: NotificationModel;
@@ -20,6 +21,12 @@ const NotificationCard = ({ notification }: Props) => {
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setIsHover(!isHover);
+  };
+
+  const { mutate: markAsRead } = useMarkAsRead();
+
+  const handleMarkAsReadClick = () => {
+    markAsRead(notification.notificationId);
   };
 
   return (
@@ -56,7 +63,11 @@ const NotificationCard = ({ notification }: Props) => {
         </Box>
       </Box>
 
-      <Box ml="15px" width="200px">
+      <Box
+        ml="15px"
+        width="200px"
+        color={notification.read ? "gray.500" : "white.500"}
+      >
         <Text fontSize="sm">
           <Text as="span" fontWeight="semibold" textTransform="capitalize">
             {notification.sender.firstName} {notification.sender.lastName}{" "}
@@ -67,44 +78,54 @@ const NotificationCard = ({ notification }: Props) => {
         <Text fontSize="sm" isTruncated={true}>
           {notification?.content}
         </Text>
-        <Text fontSize="sm" color="#1877F2" fontWeight="semibold">
+        <Text
+          fontSize="sm"
+          color={notification.read ? "gray.500" : "#1877F2"}
+          fontWeight="semibold"
+        >
           <ReactTimeAgo date={time} locale="en-US" />
         </Text>
       </Box>
-      <Box
-        onClick={handleButtonClick}
-        onMouseLeave={() => setIsHover(false)}
-        position="relative"
-        mr="15px"
-        ml="15px"
-      >
-        <HiOutlineDotsHorizontal size="25px" />
-        {isHover && (
-          <Card
-            position="absolute"
-            right="0px"
-            top="20px"
-            padding={2}
-            zIndex={100}
-            onClick={handleButtonClick}
-          >
-            <Flex
-              _hover={{
-                bg: colorMode === "dark" ? "gray.600" : "gray.200",
-              }}
-              minWidth="200px"
+      {!notification.read && (
+        <Box
+          onClick={handleButtonClick}
+          onMouseLeave={() => setIsHover(false)}
+          position="relative"
+          mr="15px"
+          ml="15px"
+        >
+          <HiOutlineDotsHorizontal size="25px" />
+          {isHover && (
+            <Card
+              position="absolute"
+              right="0px"
+              top="20px"
               padding={2}
-              alignItems="center"
+              zIndex={100}
+              onClick={handleButtonClick}
             >
-              <Box mr="10px">
-                <FaCheck size="20px" />
-              </Box>
-              <Text fontWeight="semibold">Mark as read</Text>
-            </Flex>
-          </Card>
-        )}
-      </Box>
-      <Box h="10px" w="10px" bg="#1877F2" borderRadius="full" />
+              <Flex
+                _hover={{
+                  bg: colorMode === "dark" ? "gray.600" : "gray.200",
+                }}
+                minWidth="200px"
+                padding={2}
+                alignItems="center"
+                onClick={handleMarkAsReadClick}
+              >
+                <Box mr="10px">
+                  <FaCheck size="20px" />
+                </Box>
+                <Text fontWeight="semibold">Mark as read</Text>
+              </Flex>
+            </Card>
+          )}
+        </Box>
+      )}
+
+      {!notification.read && (
+        <Box h="10px" w="10px" bg="#1877F2" borderRadius="full" />
+      )}
     </Flex>
   );
 };

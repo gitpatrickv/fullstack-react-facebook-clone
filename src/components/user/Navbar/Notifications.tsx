@@ -73,7 +73,11 @@ const Notifications = ({ userId }: Props) => {
                 </Flex>
               </Box>
             ) : (
-              <Box height="400px" overflowY="auto" id="scrollable-notification">
+              <Box
+                maxHeight="400px"
+                overflowY="auto"
+                id="scrollable-notification"
+              >
                 <InfiniteScroll
                   dataLength={fetchNotificationsData}
                   next={fetchNextPage}
