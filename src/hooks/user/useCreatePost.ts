@@ -36,6 +36,7 @@ const useCreatePost = (userId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["allPostList"]);
         setLoading(false);
         reset();
         setPost("");

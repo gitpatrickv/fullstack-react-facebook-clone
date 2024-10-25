@@ -100,24 +100,26 @@ const Notifications = ({ userId }: Props) => {
             )}
           </MenuList>
         </Menu>
-        <Box
-          h="22px"
-          w="22px"
-          bg="red"
-          borderRadius="full"
-          position="absolute"
-          top="7px"
-          right="57px"
-        >
-          <Text
-            textAlign="center"
-            color="white.500"
-            fontSize="sm"
-            fontWeight="semibold"
+        {getNotificationCount && getNotificationCount.count >= 1 && (
+          <Box
+            h="22px"
+            w="22px"
+            bg="red"
+            borderRadius="full"
+            position="absolute"
+            top="7px"
+            right="57px"
           >
-            {getNotificationCount?.count}
-          </Text>
-        </Box>
+            <Text
+              textAlign="center"
+              color="white.500"
+              fontSize="sm"
+              fontWeight="semibold"
+            >
+              {getNotificationCount?.count}
+            </Text>
+          </Box>
+        )}
       </Flex>
     </>
   );

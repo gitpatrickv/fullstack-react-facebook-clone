@@ -23,6 +23,7 @@ const useMarkAsRead = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["notificationList"]);
+        queryClient.invalidateQueries(["postNotificationCount"]);
       },
     }
   );
