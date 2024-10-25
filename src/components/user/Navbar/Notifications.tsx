@@ -14,12 +14,15 @@ import { IoNotificationsCircle } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
 import NotificationCard from "./NotificationCard";
+import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
 
 interface Props {
   userId: number;
 }
 
 const Notifications = ({ userId }: Props) => {
+  const { data: getNotificationCount } = useGetNotificationCount(userId);
+
   const {
     data: fetchAllNotifications,
     fetchNextPage,
@@ -112,7 +115,7 @@ const Notifications = ({ userId }: Props) => {
             fontSize="sm"
             fontWeight="semibold"
           >
-            1
+            {getNotificationCount?.count}
           </Text>
         </Box>
       </Flex>
