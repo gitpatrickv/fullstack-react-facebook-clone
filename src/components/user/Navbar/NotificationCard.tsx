@@ -5,14 +5,22 @@ import pic from "../../../assets/profpic.jpeg";
 import { useState } from "react";
 import { BiSolidLike } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
+import ReactTimeAgo from "react-time-ago";
+import { NotificationModel } from "../../../entities/Notification";
 
-const NotificationCard = () => {
+interface Props {
+  notification: NotificationModel;
+}
+
+const NotificationCard = ({ notification }: Props) => {
+  const time = new Date(notification.timestamp);
+  const { colorMode } = useColorMode();
+  const [isHover, setIsHover] = useState<boolean>(false);
+
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setIsHover(!isHover);
   };
-  const { colorMode } = useColorMode();
-  const [isHover, setIsHover] = useState<boolean>(false);
 
   return (
     <Flex alignItems="center">
@@ -22,7 +30,12 @@ const NotificationCard = () => {
         justifyContent="center"
         position="relative"
       >
-        <Avatar src={pic} cursor="pointer" height="55px" width="55px" />
+        <Avatar
+          src={notification.sender.profilePicture || pic}
+          cursor="pointer"
+          height="55px"
+          width="55px"
+        />
         <Box
           border="1px solid"
           borderRadius="full"
@@ -42,15 +55,21 @@ const NotificationCard = () => {
           <BiSolidLike size="20px" />
         </Box>
       </Box>
-      <Box ml="15px">
+
+      <Box ml="15px" width="200px">
         <Text fontSize="sm">
           <Text as="span" fontWeight="semibold" textTransform="capitalize">
-            Patrick pogi{" "}
+            {notification.sender.firstName} {notification.sender.lastName}{" "}
           </Text>
-          likes your post:
+          {notification.message}
+          {notification.content ? ":" : null}
         </Text>
-        <Text fontSize="sm">post content</Text>
-        <Text fontSize="sm">1hr ago</Text>
+        <Text fontSize="sm" isTruncated={true}>
+          {notification?.content}
+        </Text>
+        <Text fontSize="sm" color="#1877F2" fontWeight="semibold">
+          <ReactTimeAgo date={time} locale="en-US" />
+        </Text>
       </Box>
       <Box
         onClick={handleButtonClick}

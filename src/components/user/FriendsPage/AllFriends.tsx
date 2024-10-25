@@ -66,7 +66,7 @@ const AllFriends = () => {
         mt={{ base: "50px", xl: "0" }}
         height="100%"
         overflowY="auto"
-        id="scrollable-box"
+        id="scrollable-all"
       >
         <Flex alignItems="center">
           <IconButton
@@ -127,7 +127,7 @@ const AllFriends = () => {
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={<Spinner />}
-          scrollableTarget="scrollable-box"
+          scrollableTarget="scrollable-all"
         >
           {isLoading ? (
             <>

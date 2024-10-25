@@ -56,7 +56,7 @@ const FriendRequests = () => {
         mt={{ base: "50px", xl: "0" }}
         height="100%"
         overflowY="auto"
-        id="scrollable-box"
+        id="scrollable-friend"
       >
         <Flex alignItems="center">
           <IconButton
@@ -95,7 +95,7 @@ const FriendRequests = () => {
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={<Spinner />}
-          scrollableTarget="scrollable-box"
+          scrollableTarget="scrollable-friend"
         >
           {isLoading ? (
             <>

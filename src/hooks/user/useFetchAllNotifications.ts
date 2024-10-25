@@ -1,23 +1,19 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import NotificationResponse from "../../entities/Notification";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
-import { UserListResponseProps } from "./useGetPostLikeUserList";
+import { PaginateProps } from "./useFetchAllFriendSuggestions";
 
 const apiClient = axiosInstance;
 
-export interface PaginateProps {
-  userId: number | null;
-  pageSize: number;
-}
-
-const useFetchAllFriendSuggestions = ({ userId, pageSize }: PaginateProps) => {
+const useFetchAllNotifications = ({ userId, pageSize }: PaginateProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
-  return useInfiniteQuery<UserListResponseProps, Error>({
-    queryKey: ["friendSuggestionsList", userId],
+  return useInfiniteQuery<NotificationResponse, Error>({
+    queryKey: ["notificationList", userId],
     queryFn: async ({ pageParam = 0 }) => {
-      const { data } = await apiClient.get<UserListResponseProps>(
-        `/friends/suggestions/${userId}`,
+      const { data } = await apiClient.get<NotificationResponse>(
+        `/notifications/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -36,8 +32,8 @@ const useFetchAllFriendSuggestions = ({ userId, pageSize }: PaginateProps) => {
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken && !!userId,
+    enabled: !!jwtToken,
   });
 };
 
-export default useFetchAllFriendSuggestions;
+export default useFetchAllNotifications;
