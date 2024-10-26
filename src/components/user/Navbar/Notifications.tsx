@@ -9,24 +9,37 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { IoMdNotificationsOff } from "react-icons/io";
 import { IoNotificationsCircle } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
-import NotificationCard from "./NotificationCard";
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
+import { useNotificationStore } from "../../../store/notification-store";
+import NotificationCard from "./NotificationCard";
 
 interface Props {
   userId: number;
+  email: string;
 }
 
-const Notifications = ({ userId }: Props) => {
-  const { data: getNotificationCount } = useGetNotificationCount(userId);
+const Notifications = ({ userId, email }: Props) => {
+  const { data: getNotificationCount, refetch: refetchNotificationCount } =
+    useGetNotificationCount(userId);
+  const {
+    addNotification,
+    stompClientRef,
+    setNotificationModels,
+    notificationModels,
+  } = useNotificationStore();
 
   const {
     data: fetchAllNotifications,
     fetchNextPage,
     hasNextPage,
+    refetch: refetchNotifications,
   } = useFetchAllNotifications({
     userId: userId,
     pageSize: 6,
@@ -38,10 +51,41 @@ const Notifications = ({ userId }: Props) => {
       0
     ) || 0;
 
-  const notificationsLength =
-    fetchAllNotifications?.pages?.flatMap(
-      (page) => page.notificationModels || []
-    ).length || 0;
+  useEffect(() => {
+    if (fetchAllNotifications) {
+      const allNotifications = fetchAllNotifications.pages.flatMap(
+        (page) => page.notificationModels
+      );
+      setNotificationModels(allNotifications);
+    }
+  }, [fetchAllNotifications, setNotificationModels]);
+
+  useEffect(() => {
+    const socket = new SockJS("http://localhost:8080/ws");
+    const client = Stomp.over(socket);
+
+    client.connect(
+      {},
+      () => {
+        stompClientRef.current = client;
+
+        console.log(`Connected to WebSocket for user email: ${email}`);
+
+        client.subscribe(`/user/${email}/notifications`, (message) => {
+          const notification = JSON.parse(message.body);
+          addNotification(notification);
+        });
+      },
+      (error) => {
+        console.error("WebSocket connection error:", error);
+      }
+    );
+  }, [email, addNotification, stompClientRef]);
+
+  useEffect(() => {
+    refetchNotificationCount();
+    refetchNotifications();
+  }, [notificationModels]);
 
   return (
     <>
@@ -60,7 +104,7 @@ const Notifications = ({ userId }: Props) => {
                 Notifications
               </Text>
             </Box>
-            {notificationsLength < 1 ? (
+            {notificationModels.length === 0 ? (
               <Box
                 height="150px"
                 display="flex"
@@ -88,13 +132,18 @@ const Notifications = ({ userId }: Props) => {
                   loader={<Spinner />}
                   scrollableTarget="scrollable-notification"
                 >
-                  {fetchAllNotifications?.pages.map((page) =>
-                    page.notificationModels.map((list) => (
-                      <MenuItem key={list.notificationId}>
-                        <NotificationCard notification={list} />
-                      </MenuItem>
-                    ))
-                  )}
+                  {/* {fetchAllNotifications?.pages.map((page) =>
+                  page.notificationModels.map((list) => (
+                    <MenuItem key={list.notificationId}>
+                      <NotificationCard notification={list} />
+                    </MenuItem>
+                  ))
+                )} */}
+                  {notificationModels.map((notification) => (
+                    <MenuItem key={notification.notificationId}>
+                      <NotificationCard notification={notification} />
+                    </MenuItem>
+                  ))}
                 </InfiniteScroll>
               </Box>
             )}

@@ -49,7 +49,10 @@ const NavbarRight = () => {
         <BiLogoMessenger size="43px" />
       </Box>
       <Box mr="5px">
-        <Notifications userId={getUserInfo?.userId ?? 0} />
+        <Notifications
+          userId={getUserInfo?.userId ?? 0}
+          email={getUserInfo?.email || ""}
+        />
       </Box>
       <Menu>
         <MenuButton

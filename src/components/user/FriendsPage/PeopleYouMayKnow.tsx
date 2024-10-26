@@ -23,12 +23,12 @@ const PeopleYouMayKnow = () => {
     isFetchingNextPage,
   } = useFetchAllFriendRequest({
     userId: userId,
-    pageSize: 10,
+    pageSize: 7,
   });
 
   const requestList =
     fetchAllRequest?.pages.flatMap((page) => page.userList) || [];
-  const requestListSize = requestList.length > 10;
+  const requestListSize = requestList.length >= 7;
   const requestSize = requestList.length >= 1;
 
   const {

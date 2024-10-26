@@ -1,5 +1,5 @@
 import PageResponse from "./PageResponse";
-import { UserData } from "./User";
+import { UserDataModelList } from "./User";
 
 export enum NotificationType {
   FRIEND_REQUEST = "FRIEND_REQUEST",
@@ -13,7 +13,8 @@ export interface NotificationModel {
   message: string;
   timestamp: string;
   notificationType: NotificationType;
-  sender: UserData;
+  receiverId: number;
+  sender: UserDataModelList;
   postId: number;
   read: boolean;
   content?: string;
