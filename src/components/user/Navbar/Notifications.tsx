@@ -80,6 +80,13 @@ const Notifications = ({ userId, email }: Props) => {
         console.error("WebSocket connection error:", error);
       }
     );
+    return () => {
+      if (stompClientRef.current) {
+        stompClientRef.current.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+        });
+      }
+    };
   }, [email, addNotification, stompClientRef]);
 
   useEffect(() => {

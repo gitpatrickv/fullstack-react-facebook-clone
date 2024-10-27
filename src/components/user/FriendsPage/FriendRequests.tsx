@@ -25,7 +25,7 @@ const FriendRequests = () => {
     isLoading,
   } = useFetchAllFriendRequest({
     userId: userId,
-    pageSize: 10,
+    pageSize: 14,
   });
 
   const fetchFriendRequestsData =
