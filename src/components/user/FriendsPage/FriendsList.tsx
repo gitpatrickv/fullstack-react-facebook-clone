@@ -19,13 +19,13 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useFriendStore } from "../../../store/friend-store";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 interface Props {
   friend: UserDataModelList;
@@ -52,13 +52,6 @@ const FriendsList = ({ friend }: Props) => {
   const handleNavigateProfileClick = () => {
     navigate(`/profile/${friend.userId}`);
     setIsProfile(false);
-  };
-
-  const { mutation, isLoading, setIsLoading } = useAcceptFriendRequest();
-
-  const handleAcceptFriendRequestClick = () => {
-    mutation.mutate(friend.userId);
-    setIsLoading(true);
   };
 
   const {
@@ -104,17 +97,14 @@ const FriendsList = ({ friend }: Props) => {
             </Text>
             {isFriendRequest && (
               <Flex ml="10px" mt="5px">
-                <Button
+                <AcceptFriendRequestButton
+                  userId={friend.userId}
                   width="100%"
                   mr="5px"
-                  bg="#1877F2"
-                  _hover={{ bg: "#165BB7" }}
-                  isLoading={isLoading}
-                  onClick={handleAcceptFriendRequestClick}
                   height="35px"
                 >
-                  Confirm
-                </Button>
+                  <Text>Confirm</Text>
+                </AcceptFriendRequestButton>
                 <Button
                   width="100%"
                   onClick={handleDeleteFriendRequestClick}

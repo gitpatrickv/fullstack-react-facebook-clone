@@ -34,7 +34,6 @@ import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
@@ -44,6 +43,7 @@ import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
@@ -69,17 +69,6 @@ const ProfilePageHeader = () => {
   const handleUnfriendClick = () => {
     unfriend.mutate(userId);
     setDeleteIsLoading(true);
-  };
-
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(userId);
-    setAcceptRequestIsLoading(true);
   };
 
   const {
@@ -346,14 +335,10 @@ const ProfilePageHeader = () => {
                       ) : friendRequestStatus &&
                         friendRequestStatus?.status === "PENDING" ? (
                         <>
-                          <Button
-                            mr="7px"
-                            onClick={handleAcceptFriendRequestClick}
-                            isLoading={acceptRequestIsLoading}
-                          >
+                          <AcceptFriendRequestButton userId={userId}>
                             <FaUserPlus size="20px" />
                             <Text ml="10px">Respond</Text>
-                          </Button>
+                          </AcceptFriendRequestButton>
                         </>
                       ) : (
                         <AddFriendButton
@@ -411,18 +396,12 @@ const ProfilePageHeader = () => {
                   sent you a friend request
                 </Text>
                 <Spacer />
-                <Button
-                  mr="7px"
-                  bg="#1877F2"
-                  _hover={{ bg: "#165BB7" }}
-                  onClick={handleAcceptFriendRequestClick}
-                  isLoading={acceptRequestIsLoading}
-                >
+                <AcceptFriendRequestButton userId={userId} mr="7px">
                   <FaUserPlus size="20px" />
                   {isMobileScreen ? null : (
                     <Text ml="10px">Confirm Request</Text>
                   )}
-                </Button>
+                </AcceptFriendRequestButton>
                 <Button
                   onClick={handleDeleteFriendRequestClick}
                   isLoading={deleteRequestIsLoading}

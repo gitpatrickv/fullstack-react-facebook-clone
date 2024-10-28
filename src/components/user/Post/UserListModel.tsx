@@ -14,11 +14,11 @@ import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
@@ -31,16 +31,6 @@ const UserListModel = ({ users }: Props) => {
   const { setIsProfile } = useProfileStore();
   const { data: friendshipStatus } = useGetFriendshipStatus(users.userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(users.userId);
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(users.userId);
-    setAcceptRequestIsLoading(true);
-  };
 
   const handleNavigateClick = () => {
     navigate(`/profile/${users.userId}`);
@@ -63,28 +53,41 @@ const UserListModel = ({ users }: Props) => {
         textTransform="capitalize"
         fontWeight="semibold"
         onClick={handleNavigateClick}
+        isTruncated={true}
       >
         {users.firstName} {users.lastName}
       </Text>
       <Spacer />
       {users.userId === userId ? (
         <Button onClick={handleNavigateClick}>
-          <CgProfile size="20px" />
-          {isSmallScreen ? null : <Text ml="5px">My Profile</Text>}
+          {isSmallScreen ? null : <CgProfile size="20px" />}
+          <Text
+            ml={{ base: "0", md: "5px" }}
+            fontSize={{ base: "sm", md: "md" }}
+          >
+            My Profile
+          </Text>
         </Button>
       ) : friendshipStatus?.status === "FRIENDS" ? (
         <Button color="#1877F2">
-          <FaFacebookMessenger size="20px" />
-          {isSmallScreen ? null : <Text ml="5px">Message</Text>}
+          {isSmallScreen ? null : <FaFacebookMessenger size="20px" />}
+          <Text
+            ml={{ base: "0", md: "5px" }}
+            fontSize={{ base: "sm", md: "md" }}
+          >
+            Message
+          </Text>
         </Button>
       ) : friendRequestStatus?.status === "PENDING" ? (
-        <Button
-          onClick={handleAcceptFriendRequestClick}
-          isLoading={acceptRequestIsLoading}
-        >
-          <IoPersonAddSharp size="20px" />
-          {isSmallScreen ? null : <Text ml="10px">Accept Friend Request</Text>}
-        </Button>
+        <AcceptFriendRequestButton userId={users.userId}>
+          {isSmallScreen ? null : <IoPersonAddSharp size="20px" />}
+          <Text
+            ml={{ base: "0", md: "5px" }}
+            fontSize={{ base: "sm", md: "md" }}
+          >
+            Confirm {!isSmallScreen && <Text as="span"> request</Text>}
+          </Text>
+        </AcceptFriendRequestButton>
       ) : (
         <AddFriendButton
           userId={users.userId}
@@ -92,13 +95,23 @@ const UserListModel = ({ users }: Props) => {
         >
           {friendshipStatus?.status === "PENDING" ? (
             <>
-              <FaUserXmark size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Cancel request</Text>}
+              {isSmallScreen ? null : <FaUserXmark size="20px" />}
+              <Text
+                ml={{ base: "0", md: "5px" }}
+                fontSize={{ base: "sm", md: "md" }}
+              >
+                Cancel {!isSmallScreen && <Text as="span">request</Text>}
+              </Text>
             </>
           ) : (
             <>
-              <FaUserPlus size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Add friend</Text>}
+              {isSmallScreen ? null : <FaUserPlus size="20px" />}
+              <Text
+                ml={{ base: "0", md: "5px" }}
+                fontSize={{ base: "sm", md: "md" }}
+              >
+                Add friend
+              </Text>
             </>
           )}
         </AddFriendButton>

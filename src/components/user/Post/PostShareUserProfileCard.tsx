@@ -9,7 +9,6 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useUnfriend from "../../../hooks/user/useUnfriend";
@@ -41,16 +40,6 @@ const PostShareUserProfileCard = ({
   const handleUnfriendClick = () => {
     unfriend.mutate(postUserId);
     setUnfriendIsLoading(true);
-  };
-
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(postUserId);
-    setAcceptRequestIsLoading(true);
   };
 
   return (
@@ -109,8 +98,6 @@ const PostShareUserProfileCard = ({
                 handleUnfriendClick={handleUnfriendClick}
                 unfriendIsLoading={unfriendIsLoading}
                 friendRequestStatus={friendRequestStatus}
-                handleAcceptFriendRequestClick={handleAcceptFriendRequestClick}
-                acceptRequestIsLoading={acceptRequestIsLoading}
               />
             )}
           </Box>

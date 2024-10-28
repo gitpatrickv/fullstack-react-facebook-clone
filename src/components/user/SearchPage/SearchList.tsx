@@ -6,15 +6,17 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { CgProfile } from "react-icons/cg";
 import { FaUserCheck } from "react-icons/fa";
 import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
+import { IoPersonAddSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
@@ -31,17 +33,6 @@ const SearchList = ({ user }: Props) => {
 
   const { data: friendshipStatus } = useGetFriendshipStatus(user.userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(user.userId);
-
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(user.userId);
-    setAcceptRequestIsLoading(true);
-  };
 
   return (
     <Flex justifyContent="space-between" alignItems="center" padding={2}>
@@ -69,42 +60,41 @@ const SearchList = ({ user }: Props) => {
         </Text>
       </Flex>
       {currentUserId === user.userId ? (
-        <Button
-          onClick={handleNavigateClick}
-          bg="#1877F2"
-          _hover={{ bg: "#165BB7" }}
-        >
-          <Text fontSize={{ base: "sm", md: "md" }}>View Profile</Text>
+        <Button onClick={handleNavigateClick}>
+          {isSmallScreen ? null : <CgProfile size="20px" />}
+          <Text
+            fontSize={{ base: "sm", md: "md" }}
+            ml={{ base: "0", md: "5px" }}
+          >
+            My Profile
+          </Text>
         </Button>
       ) : (
         <>
           {friendshipStatus && friendshipStatus?.status === "FRIENDS" ? (
-            <Button bg="#1877F2" _hover={{ bg: "#165BB7" }}>
+            <Button>
               <Box display="flex">
-                {!isSmallScreen && (
-                  <Box mr="10px">
-                    <FaUserCheck size="20px" />
-                  </Box>
-                )}
-                <Text fontSize={{ base: "sm", md: "md" }}>Friends</Text>
+                {!isSmallScreen && <FaUserCheck size="20px" />}
+                <Text
+                  fontSize={{ base: "sm", md: "md" }}
+                  ml={{ base: "0", md: "5px" }}
+                >
+                  Friends
+                </Text>
               </Box>
             </Button>
           ) : friendRequestStatus &&
             friendRequestStatus?.status === "PENDING" ? (
             <>
-              <Button
-                onClick={handleAcceptFriendRequestClick}
-                isLoading={acceptRequestIsLoading}
-                bg="#1877F2"
-                _hover={{ bg: "#165BB7" }}
-              >
-                {!isSmallScreen && (
-                  <Box mr="10px">
-                    <FaUserPlus size="20px" />
-                  </Box>
-                )}
-                <Text fontSize={{ base: "sm", md: "md" }}>Accept</Text>
-              </Button>
+              <AcceptFriendRequestButton userId={user.userId}>
+                {isSmallScreen ? null : <IoPersonAddSharp size="20px" />}
+                <Text
+                  ml={{ base: "0", md: "5px" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                >
+                  Confirm {!isSmallScreen && <Text as="span"> request</Text>}
+                </Text>
+              </AcceptFriendRequestButton>
             </>
           ) : (
             <AddFriendButton
@@ -113,11 +103,14 @@ const SearchList = ({ user }: Props) => {
             >
               {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
                 <>
-                  <Box mr="10px">
-                    <FaUserXmark size="20px" />
-                  </Box>
+                  {isSmallScreen ? null : <FaUserXmark size="20px" />}
 
-                  <Text fontSize={{ base: "sm", md: "md" }}>Cancel</Text>
+                  <Text
+                    fontSize={{ base: "sm", md: "md" }}
+                    ml={{ base: "0", md: "5px" }}
+                  >
+                    Cancel {!isSmallScreen && <Text as="span"> request</Text>}
+                  </Text>
                 </>
               ) : (
                 <>

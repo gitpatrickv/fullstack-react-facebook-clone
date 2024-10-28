@@ -11,17 +11,15 @@ import {
 import { FaFacebookMessenger, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FaUserXmark } from "react-icons/fa6";
 import { FriendshipStatusProps } from "../../../hooks/user/useGetFriendshipStatus";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
   friendshipStatus?: FriendshipStatusProps;
   postUserId: number;
   handleUnfriendClick: () => void;
-
   unfriendIsLoading: boolean;
   friendRequestStatus?: FriendshipStatusProps;
-  handleAcceptFriendRequestClick: () => void;
-  acceptRequestIsLoading: boolean;
 }
 
 const UserProfileCardButton = ({
@@ -30,8 +28,6 @@ const UserProfileCardButton = ({
   handleUnfriendClick,
   unfriendIsLoading,
   friendRequestStatus,
-  handleAcceptFriendRequestClick,
-  acceptRequestIsLoading,
 }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
@@ -55,14 +51,10 @@ const UserProfileCardButton = ({
         </Menu>
       ) : friendRequestStatus && friendRequestStatus?.status === "PENDING" ? (
         <>
-          <Button
-            mr="7px"
-            onClick={handleAcceptFriendRequestClick}
-            isLoading={acceptRequestIsLoading}
-          >
+          <AcceptFriendRequestButton userId={postUserId} mr="7px">
             <FaUserPlus size="20px" />
             {isSmallScreen ? null : <Text ml="10px">Respond</Text>}
-          </Button>
+          </AcceptFriendRequestButton>
         </>
       ) : (
         <Box mr="7px">

@@ -11,10 +11,10 @@ import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
@@ -24,12 +24,8 @@ interface Props {
 
 const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
-  const { mutation, isLoading, setIsLoading } = useAcceptFriendRequest();
   const navigate = useNavigate();
-  const handleAcceptFriendRequestClick = () => {
-    mutation.mutate(request.userId);
-    setIsLoading(true);
-  };
+
   const { userId } = useUserStore();
 
   const {
@@ -91,16 +87,14 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
             mt="5px"
           >
             {isFriendRequest ? (
-              <Button
-                bg="#1877F2"
-                _hover={{ bg: "#165BB7" }}
+              <AcceptFriendRequestButton
+                userId={request.userId}
                 mb={{ base: "0px", md: "10px" }}
                 mr={{ base: "10px", md: "0" }}
-                onClick={handleAcceptFriendRequestClick}
-                isLoading={isLoading}
+                width="100%"
               >
-                Confirm
-              </Button>
+                <Text>Confirm</Text>
+              </AcceptFriendRequestButton>
             ) : (
               <>
                 <AddFriendButton
