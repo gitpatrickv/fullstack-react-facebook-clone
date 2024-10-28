@@ -10,7 +10,6 @@ import { FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useUnfriend from "../../../hooks/user/useUnfriend";
@@ -36,14 +35,8 @@ const PostUserProfileCard = ({
 }: ProfileCardProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { userId } = useUserStore();
-  const { mutation, isLoading, setIsLoading } = useAddToFriend();
   const { data: friendshipStatus } = useGetFriendshipStatus(postUserId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(postUserId);
-
-  const handleAddFriendClick = () => {
-    mutation.mutate(postUserId);
-    setIsLoading(true);
-  };
 
   const {
     mutation: unfriend,
@@ -118,9 +111,8 @@ const PostUserProfileCard = ({
             ) : (
               <UserProfileCardButton
                 friendshipStatus={friendshipStatus}
-                handleAddFriendClick={handleAddFriendClick}
+                postUserId={postUserId}
                 handleUnfriendClick={handleUnfriendClick}
-                isLoading={isLoading}
                 unfriendIsLoading={unfriendIsLoading}
                 friendRequestStatus={friendRequestStatus}
                 handleAcceptFriendRequestClick={handleAcceptFriendRequestClick}

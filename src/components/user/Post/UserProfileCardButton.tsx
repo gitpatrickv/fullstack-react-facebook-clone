@@ -11,12 +11,13 @@ import {
 import { FaFacebookMessenger, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FaUserXmark } from "react-icons/fa6";
 import { FriendshipStatusProps } from "../../../hooks/user/useGetFriendshipStatus";
+import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
   friendshipStatus?: FriendshipStatusProps;
-  handleAddFriendClick: () => void;
+  postUserId: number;
   handleUnfriendClick: () => void;
-  isLoading: boolean;
+
   unfriendIsLoading: boolean;
   friendRequestStatus?: FriendshipStatusProps;
   handleAcceptFriendRequestClick: () => void;
@@ -25,9 +26,8 @@ interface Props {
 
 const UserProfileCardButton = ({
   friendshipStatus,
-  handleAddFriendClick,
+  postUserId,
   handleUnfriendClick,
-  isLoading,
   unfriendIsLoading,
   friendRequestStatus,
   handleAcceptFriendRequestClick,
@@ -65,21 +65,26 @@ const UserProfileCardButton = ({
           </Button>
         </>
       ) : (
-        <Button mr="7px" onClick={handleAddFriendClick} isLoading={isLoading}>
-          {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
-            <>
-              <FaUserXmark size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Cancel request</Text>}
-            </>
-          ) : (
-            <>
-              <FaUserPlus size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Add friend</Text>}
-            </>
-          )}
-        </Button>
+        <Box mr="7px">
+          <AddFriendButton
+            userId={postUserId}
+            friendshipStatus={friendshipStatus?.status}
+          >
+            {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
+              <>
+                <FaUserXmark size="20px" />
+                {isSmallScreen ? null : <Text ml="10px">Cancel request</Text>}
+              </>
+            ) : (
+              <>
+                <FaUserPlus size="20px" />
+                {isSmallScreen ? null : <Text ml="10px">Add friend</Text>}
+              </>
+            )}
+          </AddFriendButton>
+        </Box>
       )}
-      <Button mr="7px" bg="#1877F2" _hover={{ bg: "#165BB7" }}>
+      <Button mr="7px" color="#1877F2">
         <FaFacebookMessenger size="20px" />
         {isSmallScreen ? null : <Text ml="5px">Message</Text>}
       </Button>

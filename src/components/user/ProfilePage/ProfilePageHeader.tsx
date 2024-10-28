@@ -35,7 +35,6 @@ import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
@@ -45,6 +44,7 @@ import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AddFriendButton from "../Buttons/AddFriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
@@ -59,21 +59,12 @@ const ProfilePageHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
-  const {
-    mutation,
-    isLoading: addFriendIsLoading,
-    setIsLoading: setAddFriendIsLoading,
-  } = useAddToFriend();
+
   const {
     mutation: unfriend,
     isLoading: deleteIsLoading,
     setIsLoading: setDeleteIsLoading,
   } = useUnfriend(currentUserId ?? 0);
-
-  const handleAddFriendClick = () => {
-    mutation.mutate(userId);
-    setAddFriendIsLoading(true);
-  };
 
   const handleUnfriendClick = () => {
     unfriend.mutate(userId);
@@ -365,10 +356,9 @@ const ProfilePageHeader = () => {
                           </Button>
                         </>
                       ) : (
-                        <Button
-                          mr="7px"
-                          onClick={handleAddFriendClick}
-                          isLoading={addFriendIsLoading}
+                        <AddFriendButton
+                          userId={userId}
+                          friendshipStatus={friendshipStatus?.status}
                         >
                           {friendshipStatus &&
                           friendshipStatus?.status === "PENDING" ? (
@@ -382,10 +372,10 @@ const ProfilePageHeader = () => {
                               <Text ml="10px">Add friend</Text>
                             </>
                           )}
-                        </Button>
+                        </AddFriendButton>
                       )}
 
-                      <Button mr="7px" bg="#1877F2" _hover={{ bg: "#165BB7" }}>
+                      <Button mr="7px" color="#1877F2" ml="7px">
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
                       </Button>

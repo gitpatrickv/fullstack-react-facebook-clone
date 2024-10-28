@@ -12,10 +12,10 @@ import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
+import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
   user: UserDataModelList;
@@ -27,17 +27,6 @@ const SearchList = ({ user }: Props) => {
   const { userId: currentUserId } = useUserStore();
   const handleNavigateClick = () => {
     navigate(`/profile/${user.userId}`);
-  };
-
-  const {
-    mutation: addFriend,
-    isLoading: addFriendIsLoading,
-    setIsLoading: setAddFriendIsLoading,
-  } = useAddToFriend();
-
-  const handleAddFriendClick = () => {
-    addFriend.mutate(user.userId);
-    setAddFriendIsLoading(true);
   };
 
   const { data: friendshipStatus } = useGetFriendshipStatus(user.userId);
@@ -118,26 +107,16 @@ const SearchList = ({ user }: Props) => {
               </Button>
             </>
           ) : (
-            <Button
-              onClick={handleAddFriendClick}
-              isLoading={addFriendIsLoading}
-              bg={
-                friendshipStatus?.status === "PENDING" ? "gray.500" : "#1877F2"
-              }
-              _hover={{
-                bg:
-                  friendshipStatus?.status === "PENDING"
-                    ? "gray.600"
-                    : "#165BB7",
-              }}
+            <AddFriendButton
+              userId={user.userId}
+              friendshipStatus={friendshipStatus?.status}
             >
               {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
                 <>
-                  {!isSmallScreen && (
-                    <Box mr="10px">
-                      <FaUserXmark size="20px" />
-                    </Box>
-                  )}
+                  <Box mr="10px">
+                    <FaUserXmark size="20px" />
+                  </Box>
+
                   <Text fontSize={{ base: "sm", md: "md" }}>Cancel</Text>
                 </>
               ) : (
@@ -150,7 +129,7 @@ const SearchList = ({ user }: Props) => {
                   <Text fontSize={{ base: "sm", md: "md" }}>Add Friend</Text>
                 </>
               )}
-            </Button>
+            </AddFriendButton>
           )}
         </>
       )}

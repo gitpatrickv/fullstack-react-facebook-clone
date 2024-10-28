@@ -7,15 +7,15 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
+import AddFriendButton from "../Buttons/AddFriendButton";
 
 interface Props {
   request: UserDataModelList;
@@ -45,17 +45,6 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
 
   const handleNavigateClick = () => {
     navigate(`/profile/${request.userId}`);
-  };
-
-  const {
-    mutation: addFriend,
-    isLoading: addFriendIsLoading,
-    setIsLoading: setAddFriendIsLoading,
-  } = useAddToFriend();
-
-  const handleAddFriendClick = () => {
-    addFriend.mutate(request.userId);
-    setAddFriendIsLoading(true);
   };
 
   const { data: friendshipStatus } = useGetFriendshipStatus(request.userId);
@@ -114,16 +103,15 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
               </Button>
             ) : (
               <>
-                <Button
-                  onClick={handleAddFriendClick}
-                  isLoading={addFriendIsLoading}
-                  bg="#1877F2"
-                  _hover={{ bg: "#165BB7" }}
+                <AddFriendButton
+                  userId={request.userId}
+                  friendshipStatus={friendshipStatus?.status}
                 >
                   {friendshipStatus &&
                   friendshipStatus?.status === "PENDING" ? (
                     <>
-                      <Text>Cancel</Text>
+                      <FaUserXmark size="20px" />
+                      <Text ml="10px">Cancel request</Text>
                     </>
                   ) : (
                     <>
@@ -131,7 +119,7 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
                       <Text ml="10px">Add friend</Text>
                     </>
                   )}
-                </Button>
+                </AddFriendButton>
               </>
             )}
 

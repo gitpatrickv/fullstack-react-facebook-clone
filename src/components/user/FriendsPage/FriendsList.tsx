@@ -14,19 +14,19 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { FaUserXmark } from "react-icons/fa6";
+import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useFriendStore } from "../../../store/friend-store";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AddFriendButton from "../Buttons/AddFriendButton";
 interface Props {
   friend: UserDataModelList;
 }
@@ -70,17 +70,6 @@ const FriendsList = ({ friend }: Props) => {
   const handleDeleteFriendRequestClick = () => {
     deleteRequest.mutate(friend.userId);
     setDeleteRequestIsLoading(true);
-  };
-
-  const {
-    mutation: addFriend,
-    isLoading: addFriendIsLoading,
-    setIsLoading: setAddFriendIsLoading,
-  } = useAddToFriend();
-
-  const handleAddFriendClick = () => {
-    addFriend.mutate(friend.userId);
-    setAddFriendIsLoading(true);
   };
 
   const { data: friendshipStatus } = useGetFriendshipStatus(friend.userId);
@@ -137,23 +126,25 @@ const FriendsList = ({ friend }: Props) => {
               </Flex>
             )}
             {isSuggestions && (
-              <Button
-                ml="10px"
-                mt="5px"
-                width="150px"
-                mr="5px"
-                bg="#1877F2"
-                _hover={{ bg: "#165BB7" }}
-                height="35px"
-                onClick={handleAddFriendClick}
-                isLoading={addFriendIsLoading}
-              >
-                {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
-                  <Text>Cancel</Text>
-                ) : (
-                  <Text>Add friend</Text>
-                )}
-              </Button>
+              <Box ml="10px" mt="5px">
+                <AddFriendButton
+                  userId={friend.userId}
+                  friendshipStatus={friendshipStatus?.status}
+                >
+                  {friendshipStatus &&
+                  friendshipStatus?.status === "PENDING" ? (
+                    <>
+                      <FaUserXmark size="20px" />
+                      <Text ml="10px">Cancel request</Text>
+                    </>
+                  ) : (
+                    <>
+                      <FaUserPlus size="20px" />
+                      <Text ml="10px">Add friend</Text>
+                    </>
+                  )}
+                </AddFriendButton>
+              </Box>
             )}
           </Box>
           <Spacer />
