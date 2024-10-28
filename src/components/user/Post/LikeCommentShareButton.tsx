@@ -32,7 +32,6 @@ import useSharePost from "../../../hooks/user/useSharePost";
 
 import SharePostModal from "./SharePostModal";
 import UserListModel from "./UserListModel";
-import { useNotificationStore } from "../../../store/notification-store";
 
 interface Props {
   posts: Post;
@@ -50,16 +49,9 @@ const LikeCommentShareButton = ({
   const { data: postCommentCount } = useGetPostCommentCount(posts.postId);
   const { data: postShareCount } = useGetPostShareCount(posts.postId);
   const { mutate: likePost } = useLikePost();
-  const { stompClientRef } = useNotificationStore();
 
   const handleLikePostClick = () => {
     likePost(posts.postId);
-    const stompClient = stompClientRef.current;
-    if (stompClient && stompClient.connected) {
-      stompClient.send(`/app/notifications`, {}); //authorization here maybe try it later
-    } else {
-      console.error("STOMP client is not connected");
-    }
   };
 
   const { colorMode } = useColorMode();
