@@ -24,6 +24,7 @@ const useDeleteFriendRequest = (userId: number) => {
         queryClient.invalidateQueries(["friendRequestList"]);
         queryClient.invalidateQueries(["friendRequestStatus", strangerId]);
         queryClient.invalidateQueries(["friendshipStatus", strangerId]);
+        queryClient.invalidateQueries(["notificationList", userId]);
       },
     }
   );

@@ -139,13 +139,6 @@ const Notifications = ({ userId, email }: Props) => {
                   loader={<Spinner />}
                   scrollableTarget="scrollable-notification"
                 >
-                  {/* {fetchAllNotifications?.pages.map((page) =>
-                  page.notificationModels.map((list) => (
-                    <MenuItem key={list.notificationId}>
-                      <NotificationCard notification={list} />
-                    </MenuItem>
-                  ))
-                )} */}
                   {notificationModels.map((notification) => (
                     <MenuItem key={notification.notificationId}>
                       <NotificationCard notification={notification} />

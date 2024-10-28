@@ -14,6 +14,8 @@ import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useDeleteNotificationById from "../../../hooks/user/useDeleteNotificationById";
 import useMarkAsRead from "../../../hooks/user/useMarkAsRead";
 import { useUserStore } from "../../../store/user-store";
+import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
+import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 
 interface Props {
   notification: NotificationModel;
@@ -25,12 +27,21 @@ const NotificationCard = ({ notification }: Props) => {
   const [isHover, setIsHover] = useState<boolean>(false);
   const navigate = useNavigate();
   const { userId } = useUserStore();
+  const deleteNotification = useDeleteNotificationById();
+  const { mutate: markAsRead } = useMarkAsRead();
+  const { mutation: deleteRequest } = useDeleteFriendRequest(userId ?? 0);
+  const { mutation } = useAcceptFriendRequest();
+  const { refetch: refetchFriendshipStatus } = useGetFriendshipStatus(
+    notification.sender.userId
+  );
+  const { refetch: refetchPendingStatus } = useGetFriendRequestStatus(
+    notification.sender.userId
+  );
+
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setIsHover(!isHover);
   };
-
-  const { mutate: markAsRead } = useMarkAsRead();
 
   const handleMarkAsReadClick = () => {
     markAsRead(notification.notificationId);
@@ -41,42 +52,31 @@ const NotificationCard = ({ notification }: Props) => {
       navigate(`/post/${notification.postId}`);
     } else {
       navigate(`/profile/${notification.sender.userId}`);
+      refetchPendingStatus();
+      refetchFriendshipStatus();
     }
     markAsRead(notification.notificationId);
   };
-
-  const { mutation } = useAcceptFriendRequest();
 
   const handleAcceptFriendRequestClick = (
     event: React.MouseEvent<HTMLDivElement>
   ) => {
     event.stopPropagation();
-    mutation.mutate(notification.sender.userId, {
-      onSuccess: () => {
-        markAsRead(notification.notificationId);
-      },
-    });
-  };
-
-  const { mutation: deleteRequest } = useDeleteFriendRequest(userId ?? 0);
-  const deleteNotification = useDeleteNotificationById();
-
-  const handleDeleteNotificationClick = (
-    event: React.MouseEvent<HTMLDivElement>
-  ) => {
-    event.stopPropagation();
-    deleteNotification.mutate(notification.notificationId);
+    mutation.mutate(notification.sender.userId);
   };
 
   const handleDeleteFriendRequestClick = (
     event: React.MouseEvent<HTMLDivElement>
   ) => {
     event.stopPropagation();
-    deleteRequest.mutate(notification.sender.userId, {
-      onSuccess: () => {
-        deleteNotification.mutate(notification.notificationId);
-      },
-    });
+    deleteRequest.mutate(notification.sender.userId);
+  };
+
+  const handleDeleteNotificationClick = (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    event.stopPropagation();
+    deleteNotification.mutate(notification.notificationId);
   };
 
   const buttonStyle = {
@@ -90,7 +90,7 @@ const NotificationCard = ({ notification }: Props) => {
   };
 
   return (
-    <Box>
+    <Box position="relative" mb="5px" mt="5px">
       <Flex alignItems="center" onClick={handleNavigateClick}>
         <Box
           display="flex"
@@ -154,8 +154,8 @@ const NotificationCard = ({ notification }: Props) => {
 
         <Box
           onClick={handleButtonClick}
-          onMouseLeave={() => setIsHover(false)}
-          position="relative"
+          // onMouseLeave={() => setIsHover(false)}
+          // position="relative"
           mr="15px"
           ml="15px"
         >
@@ -163,8 +163,8 @@ const NotificationCard = ({ notification }: Props) => {
           {isHover && (
             <Card
               position="absolute"
-              right="0px"
-              top="20px"
+              right="50px"
+              top="-9px"
               padding={2}
               zIndex={100}
               onClick={handleButtonClick}
@@ -175,7 +175,7 @@ const NotificationCard = ({ notification }: Props) => {
                     bg: colorMode === "dark" ? "gray.600" : "gray.200",
                   }}
                   minWidth="200px"
-                  padding={2}
+                  padding={1}
                   alignItems="center"
                   onClick={handleMarkAsReadClick}
                 >
@@ -190,7 +190,7 @@ const NotificationCard = ({ notification }: Props) => {
                   bg: colorMode === "dark" ? "gray.600" : "gray.200",
                 }}
                 minWidth="200px"
-                padding={2}
+                padding={1}
                 alignItems="center"
                 onClick={handleDeleteNotificationClick}
               >
