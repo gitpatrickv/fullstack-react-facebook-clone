@@ -6,8 +6,6 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuItem,
-  MenuList,
   Portal,
   Spacer,
   Text,
@@ -19,30 +17,19 @@ import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
-import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useFriendStore } from "../../../store/friend-store";
 import { useProfileStore } from "../../../store/profile-store";
-import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
+import UnfriendButton from "../Buttons/UnfriendButton";
 interface Props {
   friend: UserDataModelList;
 }
 
 const FriendsList = ({ friend }: Props) => {
-  const { userId } = useUserStore();
   const { isAllFriends, isFriendRequest, isSuggestions } = useFriendStore();
-  const {
-    mutation: unfriend,
-    isLoading: unfriendIsLoading,
-    setIsLoading: setUnfriendIsLoading,
-  } = useUnfriend(userId ?? 0);
 
-  const handleUnfriendClick = () => {
-    setUnfriendIsLoading(true);
-    unfriend.mutate(friend.userId);
-  };
   const navigate = useNavigate();
 
   const { colorMode } = useColorMode();
@@ -136,18 +123,7 @@ const FriendsList = ({ friend }: Props) => {
                   aria-label="menu"
                 />
                 <Portal>
-                  <MenuList>
-                    <MenuItem
-                      padding={2}
-                      onClick={handleUnfriendClick}
-                      isDisabled={unfriendIsLoading}
-                    >
-                      <FaUserXmark size="25px" />
-                      <Text ml="10px" fontSize="lg" fontWeight="semibold">
-                        Unfriend
-                      </Text>
-                    </MenuItem>
-                  </MenuList>
+                  <UnfriendButton strangerUserId={friend.userId} />
                 </Portal>
               </Menu>
             </Box>

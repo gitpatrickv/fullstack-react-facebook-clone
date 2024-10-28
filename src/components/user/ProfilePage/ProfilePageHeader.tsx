@@ -9,8 +9,6 @@ import {
   Image,
   Menu,
   MenuButton,
-  MenuItem,
-  MenuList,
   Show,
   Skeleton,
   SkeletonCircle,
@@ -39,12 +37,12 @@ import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestSt
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
-import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
+import UnfriendButton from "../Buttons/UnfriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
@@ -59,17 +57,6 @@ const ProfilePageHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
-
-  const {
-    mutation: unfriend,
-    isLoading: deleteIsLoading,
-    setIsLoading: setDeleteIsLoading,
-  } = useUnfriend(currentUserId ?? 0);
-
-  const handleUnfriendClick = () => {
-    unfriend.mutate(userId);
-    setDeleteIsLoading(true);
-  };
 
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
@@ -303,23 +290,13 @@ const ProfilePageHeader = () => {
                       {friendshipStatus &&
                       friendshipStatus?.status === "FRIENDS" ? (
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            mr="7px"
-                            isLoading={deleteIsLoading}
-                          >
+                          <MenuButton as={Button}>
                             <Box display="flex">
                               <FaUserCheck size="20px" />
                               <Text ml="10px">Friends</Text>
                             </Box>
                           </MenuButton>
-
-                          <MenuList>
-                            <MenuItem onClick={handleUnfriendClick}>
-                              <FaUserXmark size="20px" />
-                              <Text ml="10px">Unfriend</Text>
-                            </MenuItem>
-                          </MenuList>
+                          <UnfriendButton strangerUserId={userId} />
                         </Menu>
                       ) : friendRequestStatus &&
                         friendRequestStatus?.status === "PENDING" ? (

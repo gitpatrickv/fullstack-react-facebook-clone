@@ -11,7 +11,6 @@ import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
-import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import UserProfileCardButton from "./UserProfileCardButton";
 
@@ -36,17 +35,6 @@ const PostUserProfileCard = ({
   const { userId } = useUserStore();
   const { data: friendshipStatus } = useGetFriendshipStatus(postUserId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(postUserId);
-
-  const {
-    mutation: unfriend,
-    isLoading: unfriendIsLoading,
-    setIsLoading: setUnfriendIsLoading,
-  } = useUnfriend(userId ?? 0);
-
-  const handleUnfriendClick = () => {
-    unfriend.mutate(postUserId);
-    setUnfriendIsLoading(true);
-  };
 
   return (
     <Card
@@ -101,8 +89,6 @@ const PostUserProfileCard = ({
               <UserProfileCardButton
                 friendshipStatus={friendshipStatus}
                 postUserId={postUserId}
-                handleUnfriendClick={handleUnfriendClick}
-                unfriendIsLoading={unfriendIsLoading}
                 friendRequestStatus={friendRequestStatus}
               />
             )}
