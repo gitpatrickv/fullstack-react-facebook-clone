@@ -34,7 +34,6 @@ import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
@@ -45,6 +44,7 @@ import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
+import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
@@ -69,17 +69,6 @@ const ProfilePageHeader = () => {
   const handleUnfriendClick = () => {
     unfriend.mutate(userId);
     setDeleteIsLoading(true);
-  };
-
-  const {
-    mutation: deleteRequest,
-    isLoading: deleteRequestIsLoading,
-    setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest(currentUserId ?? 0);
-
-  const handleDeleteFriendRequestClick = () => {
-    deleteRequest.mutate(userId);
-    setDeleteRequestIsLoading(true);
   };
 
   const handleOpenModalClick = (image: string) => {
@@ -402,15 +391,12 @@ const ProfilePageHeader = () => {
                     <Text ml="10px">Confirm Request</Text>
                   )}
                 </AcceptFriendRequestButton>
-                <Button
-                  onClick={handleDeleteFriendRequestClick}
-                  isLoading={deleteRequestIsLoading}
-                >
-                  <IoTrashOutline size="20px" />{" "}
+                <DeleteFriendRequestButton strangerUserId={userId}>
+                  <IoTrashOutline size="20px" />
                   {isMobileScreen ? null : (
                     <Text ml="10px">Delete Request</Text>
                   )}
-                </Button>
+                </DeleteFriendRequestButton>
               </Box>
             </Card>
           )}

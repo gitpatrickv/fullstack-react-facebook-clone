@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Image,
   Text,
@@ -11,11 +10,10 @@ import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
-import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
-import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
+import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
 
 interface Props {
   request: UserDataModelList;
@@ -25,19 +23,6 @@ interface Props {
 const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const navigate = useNavigate();
-
-  const { userId } = useUserStore();
-
-  const {
-    mutation: deleteRequest,
-    isLoading: deleteRequestIsLoading,
-    setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest(userId ?? 0);
-
-  const handleDeleteFriendRequestClick = () => {
-    deleteRequest.mutate(request.userId);
-    setDeleteRequestIsLoading(true);
-  };
 
   const handleNavigateClick = () => {
     navigate(`/profile/${request.userId}`);
@@ -118,12 +103,12 @@ const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
             )}
 
             {isFriendRequest && (
-              <Button
-                onClick={handleDeleteFriendRequestClick}
-                isLoading={deleteRequestIsLoading}
+              <DeleteFriendRequestButton
+                strangerUserId={request.userId}
+                width="100%"
               >
                 Delete
-              </Button>
+              </DeleteFriendRequestButton>
             )}
           </Box>
         </Box>

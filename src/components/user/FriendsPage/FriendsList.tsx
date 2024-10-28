@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Flex,
   IconButton,
@@ -19,7 +18,6 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { UserDataModelList } from "../../../entities/User";
-import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useFriendStore } from "../../../store/friend-store";
@@ -27,6 +25,7 @@ import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
+import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
 interface Props {
   friend: UserDataModelList;
 }
@@ -52,17 +51,6 @@ const FriendsList = ({ friend }: Props) => {
   const handleNavigateProfileClick = () => {
     navigate(`/profile/${friend.userId}`);
     setIsProfile(false);
-  };
-
-  const {
-    mutation: deleteRequest,
-    isLoading: deleteRequestIsLoading,
-    setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest(userId ?? 0);
-
-  const handleDeleteFriendRequestClick = () => {
-    deleteRequest.mutate(friend.userId);
-    setDeleteRequestIsLoading(true);
   };
 
   const { data: friendshipStatus } = useGetFriendshipStatus(friend.userId);
@@ -105,14 +93,13 @@ const FriendsList = ({ friend }: Props) => {
                 >
                   <Text>Confirm</Text>
                 </AcceptFriendRequestButton>
-                <Button
+                <DeleteFriendRequestButton
+                  strangerUserId={friend.userId}
                   width="100%"
-                  onClick={handleDeleteFriendRequestClick}
-                  isLoading={deleteRequestIsLoading}
                   height="35px"
                 >
                   Delete
-                </Button>
+                </DeleteFriendRequestButton>
               </Flex>
             )}
             {isSuggestions && (
