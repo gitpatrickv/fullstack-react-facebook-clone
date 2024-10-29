@@ -9,7 +9,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoLogOutSharp, IoStorefrontSharp } from "react-icons/io5";
@@ -22,6 +21,7 @@ import { useAuthQueryStore } from "../../../store/auth-store";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
+import Messenger from "./Messenger";
 import Notifications from "./Notifications";
 
 const NavbarRight = () => {
@@ -46,7 +46,7 @@ const NavbarRight = () => {
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
       <ColorModeSwitch />
       <Box mr="5px">
-        <BiLogoMessenger size="43px" />
+        <Messenger />
       </Box>
       <Box mr="5px">
         <Notifications

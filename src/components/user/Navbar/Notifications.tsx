@@ -61,32 +61,35 @@ const Notifications = ({ userId, email }: Props) => {
   }, [fetchAllNotifications, setNotificationModels]);
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
-    const client = Stomp.over(socket);
+    if (email && stompClientRef.current === null) {
+      const socket = new SockJS("http://localhost:8080/ws");
+      const client = Stomp.over(socket);
 
-    client.connect(
-      {},
-      () => {
-        stompClientRef.current = client;
+      client.connect(
+        {},
+        () => {
+          stompClientRef.current = client;
 
-        console.log(`Connected to WebSocket for user email: ${email}`);
+          console.log(`Connected to WebSocket for user email: ${email}`);
 
-        client.subscribe(`/user/${email}/notifications`, (message) => {
-          const notification = JSON.parse(message.body);
-          addNotification(notification);
-        });
-      },
-      (error) => {
-        console.error("WebSocket connection error:", error);
-      }
-    );
-    return () => {
-      if (stompClientRef.current) {
-        stompClientRef.current.disconnect(() => {
-          console.log("Disconnected from WebSocket");
-        });
-      }
-    };
+          client.subscribe(`/user/${email}/notifications`, (message) => {
+            const notification = JSON.parse(message.body);
+            addNotification(notification);
+          });
+        },
+        (error) => {
+          console.error("WebSocket connection error:", error);
+        }
+      );
+      return () => {
+        if (stompClientRef.current) {
+          stompClientRef.current.disconnect(() => {
+            console.log("Disconnected from WebSocket");
+            stompClientRef.current = null;
+          });
+        }
+      };
+    }
   }, [email, addNotification, stompClientRef]);
 
   useEffect(() => {
@@ -161,7 +164,7 @@ const Notifications = ({ userId, email }: Props) => {
           >
             <Text
               textAlign="center"
-              color="white.500"
+              color="white"
               fontSize="sm"
               fontWeight="semibold"
             >

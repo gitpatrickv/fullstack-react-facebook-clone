@@ -61,12 +61,12 @@ const HomePage = () => {
           </InfiniteScroll>
         </GridItem>
         <Show above="xl">
-          <GridItem area="asideLeft" as="aside">
+          <GridItem area="asideLeft" as="aside" position="fixed">
             <Sidebar />
           </GridItem>
         </Show>
         <Show above="lg">
-          <GridItem area="asideRight" as="aside">
+          <GridItem area="asideRight" as="aside" position="fixed" right="5">
             <Contacts />
           </GridItem>
         </Show>

@@ -12,10 +12,10 @@ import { NotificationModel } from "../../../entities/Notification";
 import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
 import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useDeleteNotificationById from "../../../hooks/user/useDeleteNotificationById";
+import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
+import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useMarkAsRead from "../../../hooks/user/useMarkAsRead";
 import { useUserStore } from "../../../store/user-store";
-import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
-import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 
 interface Props {
   notification: NotificationModel;
@@ -24,7 +24,7 @@ interface Props {
 const NotificationCard = ({ notification }: Props) => {
   const time = new Date(notification.timestamp);
   const { colorMode } = useColorMode();
-  const [isHover, setIsHover] = useState<boolean>(false);
+  const [isClick, setIsClick] = useState<boolean>(false);
   const navigate = useNavigate();
   const { userId } = useUserStore();
   const deleteNotification = useDeleteNotificationById();
@@ -40,7 +40,7 @@ const NotificationCard = ({ notification }: Props) => {
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    setIsHover(!isHover);
+    setIsClick(!isClick);
   };
 
   const handleMarkAsReadClick = () => {
@@ -158,9 +158,19 @@ const NotificationCard = ({ notification }: Props) => {
           // position="relative"
           mr="15px"
           ml="15px"
+          height="30px"
+          width="30px"
+          borderRadius="full"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          bg="transparent"
+          _hover={{ bg: colorMode === "dark" ? "gray.600" : "gray.300" }}
+          _active={{ bg: colorMode === "dark" ? "gray.600" : "gray.300" }}
+          _focus={{ boxShadow: "outline" }}
         >
           <HiOutlineDotsHorizontal size="25px" />
-          {isHover && (
+          {isClick && (
             <Card
               position="absolute"
               right="50px"
