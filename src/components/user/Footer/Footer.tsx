@@ -17,7 +17,7 @@ const Footer = () => {
             Built using:
           </Text>
           <Text>Backend: Spring Boot, Java 17, MySQL</Text>
-          <Text>DevOps: Docker, GitHub Actions (CI/CD)</Text>
+          <Text textAlign="center">DevOps: Docker, GitHub Actions (CI/CD)</Text>
           <Text textAlign="center">
             Frontend: React, Typescript, Chakra UI, React Query, Zustand
           </Text>

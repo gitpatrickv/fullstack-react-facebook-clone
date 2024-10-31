@@ -1,5 +1,6 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import ChatCard from "../../components/user/Chat/ChatCard";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
 import { useAuthQueryStore } from "../../store/auth-store";
@@ -25,6 +26,9 @@ const Layout = () => {
           </Box>
         </GridItem>
       </Grid>
+      <Box position="fixed" bottom="0" right="20px" zIndex={10}>
+        <ChatCard />
+      </Box>
       {location.pathname === "/" ? <Footer /> : ""}
     </>
   );

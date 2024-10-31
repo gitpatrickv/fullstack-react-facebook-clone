@@ -151,7 +151,11 @@ const Posts = ({ posts }: PostProps) => {
         )}
         {posts.postImages && <PostImages posts={posts} />}
         {posts.sharedPost && (
-          <Card border="1px solid" borderColor="gray.500" borderRadius="20px">
+          <Card
+            border="1px solid"
+            borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
+            borderRadius="20px"
+          >
             <Box overflow="hidden" borderTopRadius="20px">
               {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
             </Box>
@@ -269,7 +273,7 @@ const Posts = ({ posts }: PostProps) => {
             {posts.sharedPost && (
               <Card
                 border="1px solid"
-                borderColor="gray.500"
+                borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
                 borderRadius="20px"
               >
                 <Box overflow="hidden" borderTopRadius="20px">
