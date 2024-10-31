@@ -4,12 +4,13 @@ import ChatCard from "../../components/user/Chat/ChatCard";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
 import { useAuthQueryStore } from "../../store/auth-store";
+import { useChatStore } from "../../store/chat-store";
 
 const Layout = () => {
   const location = useLocation();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
-
+  const { isChatMinimized } = useChatStore();
   return (
     <>
       {jwtToken && <Navbar />}
@@ -26,9 +27,11 @@ const Layout = () => {
           </Box>
         </GridItem>
       </Grid>
-      <Box position="fixed" bottom="0" right="20px" zIndex={10}>
-        <ChatCard />
-      </Box>
+      {isChatMinimized && (
+        <Box position="fixed" bottom="0" right="90px" zIndex={10}>
+          <ChatCard />
+        </Box>
+      )}
       {location.pathname === "/" ? <Footer /> : ""}
     </>
   );

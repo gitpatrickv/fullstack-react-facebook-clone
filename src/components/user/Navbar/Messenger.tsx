@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { BiLogoMessenger } from "react-icons/bi";
 import MessengerChatList from "../Chat/MessengerChatList";
+import { useChatStore } from "../../../store/chat-store";
 
 const Messenger = () => {
   const array = [1, 2, 3, 4, 5];
+  const { maximizeChat } = useChatStore();
 
   return (
     <>
@@ -32,7 +34,7 @@ const Messenger = () => {
             </Box>
             <Box maxHeight="400px" overflowY="visible" id="scrollable-chat">
               {array.map((chat) => (
-                <MenuItem key={chat}>
+                <MenuItem key={chat} onClick={maximizeChat}>
                   <MessengerChatList />
                 </MenuItem>
               ))}

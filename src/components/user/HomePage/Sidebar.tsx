@@ -30,7 +30,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Box>
+    <Box width="300px">
       <Box {...boxStyles} cursor="pointer" onClick={handleNavigateClick}>
         <Avatar src={profilePicture || pic} height="30px" width="30px" />
         <Text ml="10px" textTransform="capitalize">
