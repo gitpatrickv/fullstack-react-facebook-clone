@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Flex,
   IconButton,
@@ -12,21 +13,22 @@ import {
 import { BiLogoMessenger } from "react-icons/bi";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
-import { useChatStore } from "../../../store/chat-store";
+
 import MessengerChatList from "./MessengerChatList";
+import ChatCard from "./ChatCard";
+import { useState } from "react";
 
 interface Props {
   userId: number;
 }
 
+interface ArrayItem {
+  chatId: number;
+  index: number;
+  isMaximized: boolean;
+}
+
 const Messenger = ({ userId }: Props) => {
-  const { maximizeChat, addToQueue } = useChatStore();
-
-  const handleAddToChatArray = (index: number) => {
-    addToQueue(index);
-    maximizeChat();
-  };
-
   const {
     data: fetchAllChat,
     fetchNextPage,
@@ -41,6 +43,36 @@ const Messenger = ({ userId }: Props) => {
       (total, page) => total + page.chatModels.length,
       0
     ) || 0;
+
+  const [chatArray, setChatArray] = useState<ArrayItem[]>([]);
+  const [isMaximized, setIsMaximized] = useState<boolean>();
+
+  const handleAddToChatArray = (chatId: number) => {
+    if (chatArray.some((arr) => arr.chatId === chatId)) {
+      console.log(`Chat ID ${chatId} is already in the array`);
+      return;
+    }
+
+    const newArrayItem: ArrayItem = {
+      chatId,
+      index: chatArray.length,
+      isMaximized: true,
+    };
+
+    let newArray = [...chatArray, newArrayItem];
+
+    if (newArray.length > 3) {
+      newArray.shift();
+    }
+
+    newArray = newArray.map((item, index) => ({
+      ...item,
+      index,
+    }));
+
+    setChatArray(newArray);
+    console.log(newArray);
+  };
 
   return (
     <>
@@ -67,10 +99,10 @@ const Messenger = ({ userId }: Props) => {
                 scrollableTarget="scrollable-chat"
               >
                 {fetchAllChat?.pages.map((page) =>
-                  page.chatModels.map((chat, index) => (
+                  page.chatModels.map((chat) => (
                     <MenuItem
                       key={chat.chatId}
-                      onClick={() => handleAddToChatArray(index)}
+                      onClick={() => handleAddToChatArray(chat.chatId)}
                     >
                       <MessengerChatList chat={chat} />
                     </MenuItem>
@@ -99,11 +131,22 @@ const Messenger = ({ userId }: Props) => {
           </Text>
         </Box>
       </Flex>
+      <Box position="fixed" bottom="0" right="80px" zIndex={10} display="flex">
+        {chatArray.map((chat) => (
+          <ChatCard
+            key={chat.chatId}
+            chatId={chat.chatId}
+            index={chat.index}
+            userId={userId}
+          />
+        ))}
+      </Box>
     </>
   );
 };
 
 export default Messenger;
+
 {
   /* <Box
               height="150px"
