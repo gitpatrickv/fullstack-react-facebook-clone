@@ -6,15 +6,41 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { BiLogoMessenger } from "react-icons/bi";
-import MessengerChatList from "../Chat/MessengerChatList";
+import InfiniteScroll from "react-infinite-scroll-component";
+import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
 import { useChatStore } from "../../../store/chat-store";
+import MessengerChatList from "./MessengerChatList";
 
-const Messenger = () => {
-  const array = [1, 2, 3, 4, 5];
-  const { maximizeChat } = useChatStore();
+interface Props {
+  userId: number;
+}
+
+const Messenger = ({ userId }: Props) => {
+  const { maximizeChat, addToQueue } = useChatStore();
+
+  const handleAddToChatArray = (index: number) => {
+    addToQueue(index);
+    maximizeChat();
+  };
+
+  const {
+    data: fetchAllChat,
+    fetchNextPage,
+    hasNextPage,
+  } = useFetchAllUserChats({
+    userId: userId,
+    pageSize: 6,
+  });
+
+  const fetchChatData =
+    fetchAllChat?.pages.reduce(
+      (total, page) => total + page.chatModels.length,
+      0
+    ) || 0;
 
   return (
     <>
@@ -32,12 +58,25 @@ const Messenger = () => {
                 Chats
               </Text>
             </Box>
-            <Box maxHeight="400px" overflowY="visible" id="scrollable-chat">
-              {array.map((chat) => (
-                <MenuItem key={chat} onClick={maximizeChat}>
-                  <MessengerChatList />
-                </MenuItem>
-              ))}
+            <Box maxHeight="400px" overflowY="auto" id="scrollable-chat">
+              <InfiniteScroll
+                dataLength={fetchChatData}
+                next={fetchNextPage}
+                hasMore={!!hasNextPage}
+                loader={<Spinner />}
+                scrollableTarget="scrollable-chat"
+              >
+                {fetchAllChat?.pages.map((page) =>
+                  page.chatModels.map((chat, index) => (
+                    <MenuItem
+                      key={chat.chatId}
+                      onClick={() => handleAddToChatArray(index)}
+                    >
+                      <MessengerChatList chat={chat} />
+                    </MenuItem>
+                  ))
+                )}
+              </InfiniteScroll>
             </Box>
           </MenuList>
         </Menu>

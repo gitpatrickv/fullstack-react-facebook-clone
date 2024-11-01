@@ -21,8 +21,9 @@ import { useAuthQueryStore } from "../../../store/auth-store";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
-import Messenger from "./Messenger";
+
 import Notifications from "./Notifications";
+import Messenger from "../Chat/Messenger";
 
 const NavbarRight = () => {
   const { resetUser } = useUserStore();
@@ -46,7 +47,7 @@ const NavbarRight = () => {
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
       <ColorModeSwitch />
       <Box mr="5px">
-        <Messenger />
+        <Messenger userId={getUserInfo?.userId ?? 0} />
       </Box>
       <Box mr="5px">
         <Notifications

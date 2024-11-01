@@ -4,8 +4,13 @@ import { FaCheck } from "react-icons/fa6";
 import { GoTrash } from "react-icons/go";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import pic from "../../../assets/profpic.jpeg";
+import { ChatModel } from "../../../entities/Chat";
 
-const MessengerChatList = () => {
+interface ChatProps {
+  chat: ChatModel;
+}
+
+const MessengerChatList = ({ chat }: ChatProps) => {
   const { colorMode } = useColorMode();
   const [isClick, setIsClick] = useState<boolean>(false);
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -21,11 +26,28 @@ const MessengerChatList = () => {
           justifyContent="center"
           position="relative"
         >
-          <Avatar src={pic} cursor="pointer" height="55px" width="55px" />
+          <Avatar
+            src={
+              chat.chatType === "PRIVATE_CHAT"
+                ? chat.privateChatUser?.profilePicture
+                : chat.chatType === "GROUP_CHAT"
+                ? chat.groupChatImage
+                : pic
+            }
+            cursor="pointer"
+            height="55px"
+            width="55px"
+          />
         </Box>
 
         <Box ml="15px" maxWidth="200px">
-          <Text fontSize="sm">Name here</Text>
+          <Text fontSize="md" textTransform="capitalize" fontWeight="bold">
+            {chat.chatType === "PRIVATE_CHAT"
+              ? `${chat.privateChatUser?.firstName}` +
+                " " +
+                `${chat.privateChatUser?.lastName}`
+              : chat.groupChatName}
+          </Text>
           <Box display="flex">
             <Text fontSize="sm" isTruncated={true}>
               last message here asdf asdf asdf asd f

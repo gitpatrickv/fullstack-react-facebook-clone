@@ -1,29 +1,27 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import NotificationResponse from "../../entities/Notification";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { PaginateProps } from "./useFetchAllFriendSuggestions";
 
 const apiClient = axiosInstance;
 
-const useFetchAllNotifications = ({ userId, pageSize }: PaginateProps) => {
+import ChatResponse from "../../entities/Chat";
+
+const useFetchAllUserChats = ({ userId, pageSize }: PaginateProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
-  return useInfiniteQuery<NotificationResponse, Error>({
-    queryKey: ["notificationList", userId],
+  return useInfiniteQuery<ChatResponse, Error>({
+    queryKey: ["userChatList", userId],
     queryFn: async ({ pageParam = 0 }) => {
-      const { data } = await apiClient.get<NotificationResponse>(
-        `/notifications/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            pageNo: pageParam,
-            pageSize: pageSize,
-          },
-        }
-      );
+      const { data } = await apiClient.get<ChatResponse>(`/chat/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          pageNo: pageParam,
+          pageSize: pageSize,
+        },
+      });
       return data;
     },
     getNextPageParam: (lastPage) => {
@@ -36,4 +34,4 @@ const useFetchAllNotifications = ({ userId, pageSize }: PaginateProps) => {
   });
 };
 
-export default useFetchAllNotifications;
+export default useFetchAllUserChats;
