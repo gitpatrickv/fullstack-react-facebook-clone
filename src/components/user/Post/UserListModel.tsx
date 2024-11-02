@@ -20,6 +20,7 @@ import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
+import MessageButton from "../Buttons/MessageButton";
 
 interface Props {
   users: UserData;
@@ -69,7 +70,7 @@ const UserListModel = ({ users }: Props) => {
           </Text>
         </Button>
       ) : friendshipStatus?.status === "FRIENDS" ? (
-        <Button color="#1877F2">
+        <MessageButton friendId={users.userId}>
           {isSmallScreen ? null : <FaFacebookMessenger size="20px" />}
           <Text
             ml={{ base: "0", md: "5px" }}
@@ -77,7 +78,7 @@ const UserListModel = ({ users }: Props) => {
           >
             Message
           </Text>
-        </Button>
+        </MessageButton>
       ) : friendRequestStatus?.status === "PENDING" ? (
         <AcceptFriendRequestButton userId={users.userId}>
           {isSmallScreen ? null : <IoPersonAddSharp size="20px" />}

@@ -9,13 +9,13 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { VscChromeMinimize } from "react-icons/vsc";
 import pic from "../../../assets/profpic.jpeg";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
-import { useState } from "react";
 
 interface Props {
   chatId: number;
@@ -62,7 +62,6 @@ const ChatCard = ({
               ? "765px"
               : undefined
           }
-          zIndex={100}
           display="flex"
         >
           <Card width="330px" height="450px" borderRadius="6px 6px 0 0">
@@ -146,7 +145,7 @@ const ChatCard = ({
             right="-85px"
             display="flex"
             flexDirection="column"
-            mt="10px"
+            mt="12px"
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
           >
@@ -154,16 +153,16 @@ const ChatCard = ({
               <>
                 <Box
                   position="absolute"
-                  right="-12px"
+                  right="-13px"
                   bottom="32px"
-                  zIndex={100}
+                  zIndex={10}
                 >
                   <IconButton
                     aria-label="close"
                     icon={<IoClose size="20px" />}
                     bg={colorMode === "dark" ? "#303030" : "gray.200"}
                     _hover={{
-                      bg: colorMode === "dark" ? "#383838" : "gray.300",
+                      bg: colorMode === "dark" ? "#484848" : "gray.300",
                     }}
                     isRound
                     size="xs"
@@ -176,7 +175,7 @@ const ChatCard = ({
                   right="55px"
                   bottom="5px"
                   padding={2}
-                  zIndex={200}
+                  zIndex={10}
                 >
                   <Text
                     textTransform="capitalize"

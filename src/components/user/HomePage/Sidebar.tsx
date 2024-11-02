@@ -1,14 +1,12 @@
 import { Avatar, Box, Text, useColorMode } from "@chakra-ui/react";
-import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
-import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-import { useUserStore } from "../../../store/user-store";
 import { useProfileStore } from "../../../store/profile-store";
+import { useUserStore } from "../../../store/user-store";
 
 const Sidebar = () => {
   const { colorMode } = useColorMode();
@@ -62,16 +60,6 @@ const Sidebar = () => {
           <Text ml="10px">Games</Text>
         </Box>
       </Link>
-      <Link to="/home">
-        <Box {...boxStyles}>
-          <RiNewsFill size="30px" />
-          <Text ml="10px">News Feed</Text>
-        </Box>
-      </Link>
-      <Box {...boxStyles} cursor="pointer">
-        <BiLogoMessenger size="30px" />
-        <Text ml="10px">Messenger</Text>
-      </Box>
     </Box>
   );
 };

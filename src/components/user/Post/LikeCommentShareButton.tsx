@@ -63,7 +63,7 @@ const LikeCommentShareButton = ({
     cursor: "pointer",
     width: "100%",
     _hover: {
-      bg: colorMode === "dark" ? "gray.600" : "gray.100",
+      bg: colorMode === "dark" ? "#383838" : "gray.100",
     },
     borderRadius: "5px",
   };

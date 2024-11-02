@@ -20,14 +20,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  FaCamera,
-  FaFacebookMessenger,
-  FaPlus,
-  FaUserCheck,
-  FaUserPlus,
-} from "react-icons/fa";
-import { FaUserXmark } from "react-icons/fa6";
+import { FaCamera, FaPlus, FaUserCheck, FaUserPlus } from "react-icons/fa";
+import { FaFacebookMessenger, FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
@@ -42,6 +36,7 @@ import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
+import MessageButton from "../Buttons/MessageButton";
 import UnfriendButton from "../Buttons/UnfriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
@@ -325,11 +320,10 @@ const ProfilePageHeader = () => {
                           )}
                         </AddFriendButton>
                       )}
-
-                      <Button mr="7px" color="#1877F2" ml="7px">
+                      <MessageButton friendId={userId} ml="7px">
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
-                      </Button>
+                      </MessageButton>
                     </>
                   )}
                   {/* <Button

@@ -12,6 +12,7 @@ import { FriendshipStatusProps } from "../../../hooks/user/useGetFriendshipStatu
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
 import UnfriendButton from "../Buttons/UnfriendButton";
+import MessageButton from "../Buttons/MessageButton";
 
 interface Props {
   friendshipStatus?: FriendshipStatusProps;
@@ -65,10 +66,13 @@ const UserProfileCardButton = ({
           </AddFriendButton>
         </Box>
       )}
-      <Button mr="7px" color="#1877F2">
+      <MessageButton friendId={postUserId}>
         <FaFacebookMessenger size="20px" />
         {isSmallScreen ? null : <Text ml="5px">Message</Text>}
-      </Button>
+      </MessageButton>
+      {/* <Button mr="7px" color="#1877F2">
+       
+      </Button> */}
     </>
   );
 };

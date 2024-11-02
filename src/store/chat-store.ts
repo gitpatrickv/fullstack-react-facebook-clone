@@ -1,28 +1,23 @@
 import { create } from "zustand";
 
+export interface ArrayItem {
+  chatId: number;
+  index: number;
+  isMaximized: boolean;
+}
+
 interface ChatStore {
-  isChatMaximize: boolean;
-  minimizeChat: () => void;
-  maximizeChat: () => void;
-  queue: number[];
-  addToQueue: (newElement: number) => void;
-  removeFromQueue: (element: number) => void;
+  chatArray: ArrayItem[];
+  setChatArray: (
+    updater: ArrayItem[] | ((prev: ArrayItem[]) => ArrayItem[])
+  ) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
-  isChatMaximize: false,
-  queue: [],
-  minimizeChat: () => set({ isChatMaximize: false }),
-  maximizeChat: () => set({ isChatMaximize: true }),
-  addToQueue: (newElement: number) =>
-    set((state) => {
-      const newQueue = [...state.queue, newElement];
-      if (newQueue.length > 3) newQueue.shift();
-      return { queue: newQueue };
-    }),
-  removeFromQueue: (element: number) =>
-    set((state) => {
-      const newQueue = state.queue.filter((item) => item !== element);
-      return { queue: newQueue };
-    }),
+  chatArray: [],
+  setChatArray: (updater) =>
+    set((state) => ({
+      chatArray:
+        typeof updater === "function" ? updater(state.chatArray) : updater,
+    })),
 }));

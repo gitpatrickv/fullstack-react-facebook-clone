@@ -7,8 +7,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { CgProfile } from "react-icons/cg";
-import { FaUserCheck } from "react-icons/fa";
-import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
+import { FaFacebookMessenger, FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
@@ -18,6 +17,7 @@ import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
+import MessageButton from "../Buttons/MessageButton";
 
 interface Props {
   user: UserDataModelList;
@@ -72,17 +72,15 @@ const SearchList = ({ user }: Props) => {
       ) : (
         <>
           {friendshipStatus && friendshipStatus?.status === "FRIENDS" ? (
-            <Button>
-              <Box display="flex">
-                {!isSmallScreen && <FaUserCheck size="20px" />}
-                <Text
-                  fontSize={{ base: "sm", md: "md" }}
-                  ml={{ base: "0", md: "5px" }}
-                >
-                  Friends
-                </Text>
-              </Box>
-            </Button>
+            <MessageButton friendId={user.userId}>
+              {isSmallScreen ? null : <FaFacebookMessenger size="20px" />}
+              <Text
+                ml={{ base: "0", md: "5px" }}
+                fontSize={{ base: "sm", md: "md" }}
+              >
+                Message
+              </Text>
+            </MessageButton>
           ) : friendRequestStatus &&
             friendRequestStatus?.status === "PENDING" ? (
             <>
