@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Flex,
   IconButton,
@@ -14,9 +13,9 @@ import { BiLogoMessenger } from "react-icons/bi";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
 
-import MessengerChatList from "./MessengerChatList";
-import ChatCard from "./ChatCard";
 import { useState } from "react";
+import ChatCard from "./ChatCard";
+import MessengerChatList from "./MessengerChatList";
 
 interface Props {
   userId: number;
@@ -45,11 +44,9 @@ const Messenger = ({ userId }: Props) => {
     ) || 0;
 
   const [chatArray, setChatArray] = useState<ArrayItem[]>([]);
-  const [isMaximized, setIsMaximized] = useState<boolean>();
 
   const handleAddToChatArray = (chatId: number) => {
     if (chatArray.some((arr) => arr.chatId === chatId)) {
-      console.log(`Chat ID ${chatId} is already in the array`);
       return;
     }
 
@@ -72,6 +69,52 @@ const Messenger = ({ userId }: Props) => {
 
     setChatArray(newArray);
     console.log(newArray);
+  };
+
+  const minimizeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const updatedArray = prevArray.map((chat, i) =>
+        i === index ? { ...chat, isMaximized: false } : chat
+      );
+
+      const minimizedChat = updatedArray[index];
+      const remainingChat = updatedArray.filter((_, i) => i !== index);
+      const newChatArray = [...remainingChat, minimizedChat].map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      console.log(newChatArray);
+      return newChatArray;
+    });
+  };
+
+  const maximizeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const updatedArray = prevArray.map((chat, i) =>
+        i === index ? { ...chat, isMaximized: true } : chat
+      );
+
+      const maximizeChat = updatedArray[index];
+      const remainingChat = updatedArray.filter((_, i) => i !== index);
+      const newChatArray = [maximizeChat, ...remainingChat].map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      console.log(newChatArray);
+      return newChatArray;
+    });
+  };
+
+  const closeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const filteredArray = prevArray.filter((chat) => chat.index !== index);
+      const newChatArray = filteredArray.map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      console.log(newChatArray);
+      return newChatArray;
+    });
   };
 
   return (
@@ -131,13 +174,18 @@ const Messenger = ({ userId }: Props) => {
           </Text>
         </Box>
       </Flex>
-      <Box position="fixed" bottom="0" right="80px" zIndex={10} display="flex">
+
+      <Box position="fixed" bottom="0" zIndex={100}>
         {chatArray.map((chat) => (
           <ChatCard
             key={chat.chatId}
             chatId={chat.chatId}
             index={chat.index}
             userId={userId}
+            isMaximized={chat.isMaximized}
+            minimizeChat={() => minimizeChat(chat.index)}
+            maximizeChat={() => maximizeChat(chat.index)}
+            closeChat={() => closeChat(chat.index)}
           />
         ))}
       </Box>
@@ -146,7 +194,7 @@ const Messenger = ({ userId }: Props) => {
 };
 
 export default Messenger;
-
+// rightValue: ${80 + chatArray.length * 340}px
 {
   /* <Box
               height="150px"
