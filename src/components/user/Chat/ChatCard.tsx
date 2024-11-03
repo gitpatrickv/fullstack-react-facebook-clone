@@ -9,10 +9,11 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { VscChromeMinimize } from "react-icons/vsc";
 import pic from "../../../assets/profpic.jpeg";
+import useFetchAllChatMessages from "../../../hooks/user/useFetchAlLChatMessages";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
@@ -37,15 +38,46 @@ const ChatCard = ({
   closeChat,
 }: Props) => {
   const { colorMode } = useColorMode();
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const { data: getChatById } = usesGetChatById(chatId, userId);
   const [isHover, setIsHover] = useState<boolean>(false);
+
+  const focusRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (focusRef.current && getChatById) {
+      focusRef.current.focus();
+    }
+  }, [getChatById]);
 
   const handleMinimizeClick = () => {
     minimizeChat();
     setIsHover(false);
   };
+
+  const {
+    data: fetchMessages,
+    // fetchNextPage,
+    // hasNextPage,
+    // refetch: refetchMessages,
+  } = useFetchAllChatMessages({
+    chatId: chatId,
+    pageSize: 30,
+  });
+
+  const picture =
+    getChatById?.chatType === "PRIVATE_CHAT"
+      ? getChatById?.privateChatUser?.profilePicture
+      : getChatById?.chatType === "GROUP_CHAT"
+      ? getChatById?.groupChatImage
+      : pic;
+
+  const chatName =
+    getChatById?.chatType === "PRIVATE_CHAT"
+      ? `${getChatById?.privateChatUser?.firstName}` +
+        " " +
+        `${getChatById?.privateChatUser?.lastName}`
+      : getChatById?.groupChatName;
 
   return (
     <>
@@ -65,75 +97,90 @@ const ChatCard = ({
           display="flex"
         >
           <Card width="330px" height="450px" borderRadius="6px 6px 0 0">
-            <Flex alignItems="center">
-              <Flex
-                alignItems="center"
-                _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
-                _active={{ bg: colorMode === "dark" ? "#383838" : "gray.200" }}
-                cursor="pointer"
-                padding="8px"
-                borderTopLeftRadius="6px"
-              >
-                <Avatar
-                  src={
-                    getChatById?.chatType === "PRIVATE_CHAT"
-                      ? getChatById?.privateChatUser?.profilePicture
-                      : getChatById?.chatType === "GROUP_CHAT"
-                      ? getChatById?.groupChatImage
-                      : pic
-                  }
+            <Box>
+              <Flex alignItems="center">
+                <Flex
+                  alignItems="center"
+                  _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
+                  _active={{
+                    bg: colorMode === "dark" ? "#383838" : "gray.200",
+                  }}
                   cursor="pointer"
+                  padding="8px"
+                  borderTopLeftRadius="6px"
+                >
+                  <Avatar src={picture} cursor="pointer" size="sm" />
+                  <Text
+                    ml="5px"
+                    textTransform="capitalize"
+                    fontWeight="semibold"
+                    isTruncated={true}
+                    maxWidth="200px"
+                  >
+                    {chatName}
+                  </Text>
+                </Flex>
+                <Spacer />
+                <IconButton
+                  aria-label="minimize"
+                  icon={<VscChromeMinimize size="20px" />}
+                  bg="transparent"
+                  _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
+                  _active={{
+                    bg: colorMode === "dark" ? "#383838" : "gray.200",
+                  }}
+                  isRound
                   size="sm"
+                  onClick={handleMinimizeClick}
                 />
+                <IconButton
+                  aria-label="close"
+                  icon={<IoClose size="25px" />}
+                  bg="transparent"
+                  _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
+                  _active={{
+                    bg: colorMode === "dark" ? "#383838" : "gray.200",
+                  }}
+                  isRound
+                  size="sm"
+                  mr="3px"
+                  onClick={closeChat}
+                />
+              </Flex>
+              <Divider color={colorMode === "dark" ? "#383838" : "gray.200"} />
+            </Box>
+
+            <Box overflowY="auto" height="410px">
+              <Flex
+                justifyContent="center"
+                alignItems="center"
+                mt="20px"
+                flexDirection="column"
+              >
+                <Avatar src={picture} size="lg" />
                 <Text
-                  ml="5px"
+                  fontSize="lg"
                   textTransform="capitalize"
                   fontWeight="semibold"
-                  isTruncated={true}
-                  maxWidth="200px"
+                  mt="10px"
+                  mb="20px"
                 >
-                  {getChatById?.chatType === "PRIVATE_CHAT"
-                    ? `${getChatById?.privateChatUser?.firstName}` +
-                      " " +
-                      `${getChatById?.privateChatUser?.lastName}`
-                    : getChatById?.groupChatName}
+                  {chatName}
                 </Text>
               </Flex>
-              <Spacer />
-              <IconButton
-                aria-label="minimize"
-                icon={<VscChromeMinimize size="20px" />}
-                bg="transparent"
-                _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
-                _active={{ bg: colorMode === "dark" ? "#383838" : "gray.200" }}
-                isRound
-                size="sm"
-                onClick={handleMinimizeClick}
-              />
-              <IconButton
-                aria-label="close"
-                icon={<IoClose size="25px" />}
-                bg="transparent"
-                _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
-                _active={{ bg: colorMode === "dark" ? "#383838" : "gray.200" }}
-                isRound
-                size="sm"
-                mr="3px"
-                onClick={closeChat}
-              />
-            </Flex>
-            <Divider
-              color={colorMode === "dark" ? "#383838" : "gray.200"}
-              mb="10px"
-            />
-            <Box overflowY="auto">
-              {array.map((arr) => (
-                <Messages key={arr} />
-              ))}
+              {fetchMessages?.pages.map((page) =>
+                page.messageModels.map((msg) => (
+                  <Messages
+                    key={msg.messageId}
+                    message={msg}
+                    isSender={msg.sender.userId === userId}
+                  />
+                ))
+              )}
             </Box>
 
             <Box height="65px">
-              <WriteMessage />
+              <WriteMessage chatId={chatId} focusRef={focusRef} />
             </Box>
           </Card>
         </Box>
@@ -184,26 +231,12 @@ const ChatCard = ({
                     maxWidth="200px"
                     fontSize="sm"
                   >
-                    {getChatById?.chatType === "PRIVATE_CHAT"
-                      ? `${getChatById?.privateChatUser?.firstName}` +
-                        " " +
-                        `${getChatById?.privateChatUser?.lastName}`
-                      : getChatById?.groupChatName}
+                    {chatName}
                   </Text>
                 </Card>
               </>
             )}
-            <Avatar
-              src={
-                getChatById?.chatType === "PRIVATE_CHAT"
-                  ? getChatById?.privateChatUser?.profilePicture
-                  : getChatById?.chatType === "GROUP_CHAT"
-                  ? getChatById?.groupChatImage
-                  : pic
-              }
-              onClick={maximizeChat}
-              cursor="pointer"
-            />
+            <Avatar src={picture} onClick={maximizeChat} cursor="pointer" />
           </Box>
         </>
       )}

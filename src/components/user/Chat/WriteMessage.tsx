@@ -1,15 +1,53 @@
 import { Box, Flex, IconButton, Input, useColorMode } from "@chakra-ui/react";
+import { ChangeEvent, RefObject, useState } from "react";
+import { useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
-import { MdAddPhotoAlternate } from "react-icons/md";
-const WriteMessage = () => {
+import useSendMessage, {
+  SendMessageProps,
+} from "../../../hooks/user/useSendMessage";
+
+interface Props {
+  chatId: number;
+  focusRef: RefObject<HTMLInputElement>;
+}
+
+const WriteMessage = ({ chatId, focusRef }: Props) => {
   const { colorMode } = useColorMode();
+
+  const { mutate: sendMessage } = useSendMessage();
+  const [message, setMessage] = useState<string>("");
+  const [loading, setIsLoading] = useState<boolean>(false);
+  const { register, handleSubmit, reset, setValue } =
+    useForm<SendMessageProps>();
+
+  const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+    setValue("text", e.target.value);
+  };
+
+  const onSubmit = (data: SendMessageProps) => {
+    setIsLoading(true);
+    sendMessage(
+      { text: data.text, chatId: chatId },
+      {
+        onSuccess: () => {
+          reset();
+          setIsLoading(false);
+          setMessage("");
+        },
+        onError: () => {
+          setIsLoading(false);
+        },
+      }
+    );
+  };
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box position="fixed" bottom="0" width="330px">
           <Flex alignItems="center" padding={2}>
-            <IconButton
+            {/* <IconButton
               aria-label="show"
               icon={<MdAddPhotoAlternate size="22px" />}
               bg="transparent"
@@ -26,8 +64,12 @@ const WriteMessage = () => {
               // {...register("file")}
               // ref={fileInputRef}
               // onChange={handleFileChange}
-            />
+            /> */}
             <Input
+              {...register("text")}
+              value={message}
+              ref={focusRef}
+              onChange={handleMessageChange}
               placeholder="Aa"
               size="sm"
               borderRadius="20px"
@@ -43,10 +85,12 @@ const WriteMessage = () => {
               bg="transparent"
               _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
               _active={{ bg: colorMode === "dark" ? "#383838" : "gray.200" }}
-              // type="submit"
+              type="submit"
               isRound
               size="sm"
               ml="10px"
+              isLoading={loading}
+              isDisabled={message === ""}
             />
           </Flex>
           {/* {imagePreview && (
