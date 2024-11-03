@@ -129,7 +129,6 @@ const ProfileImagesModal = ({
 
     return () => {
       URL.revokeObjectURL(imagePreview);
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
   const [isClicked, setIsClicked] = useState<boolean>(false);

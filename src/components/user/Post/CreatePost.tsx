@@ -92,7 +92,6 @@ const CreatePost = () => {
 
     return () => {
       imagePreview.forEach((url) => URL.revokeObjectURL(url));
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
   const gap = imagePreview && imagePreview?.length + 1 - 6;

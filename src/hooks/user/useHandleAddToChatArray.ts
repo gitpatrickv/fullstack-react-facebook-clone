@@ -26,7 +26,6 @@ const useHandleAddToChatArray = () => {
     }));
 
     setChatArray(newArray);
-    console.log(newArray);
   };
 
   return { handleAddToChatArray };

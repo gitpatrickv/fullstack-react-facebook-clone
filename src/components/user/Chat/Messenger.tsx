@@ -52,7 +52,6 @@ const Messenger = ({ userId }: Props) => {
         ...chat,
         index: i,
       }));
-      console.log(newChatArray);
       return newChatArray;
     });
   };
@@ -69,7 +68,6 @@ const Messenger = ({ userId }: Props) => {
         ...chat,
         index: i,
       }));
-      console.log(newChatArray);
       return newChatArray;
     });
   };
@@ -81,7 +79,6 @@ const Messenger = ({ userId }: Props) => {
         ...chat,
         index: i,
       }));
-      console.log(newChatArray);
       return newChatArray;
     });
   };

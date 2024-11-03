@@ -45,7 +45,6 @@ const useCreatePost = (userId: number) => {
         onClose();
       },
       onError: (error: any) => {
-        console.error("Error posting:", error);
         setLoading(false);
 
         if (error.response?.data.errorMessage) {

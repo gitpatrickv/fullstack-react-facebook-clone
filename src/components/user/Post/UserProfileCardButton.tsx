@@ -70,9 +70,6 @@ const UserProfileCardButton = ({
         <FaFacebookMessenger size="20px" />
         {isSmallScreen ? null : <Text ml="5px">Message</Text>}
       </MessageButton>
-      {/* <Button mr="7px" color="#1877F2">
-       
-      </Button> */}
     </>
   );
 };

@@ -121,7 +121,6 @@ const Posts = ({ posts }: PostProps) => {
 
     return () => {
       URL.revokeObjectURL(imagePreview);
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
 

@@ -43,7 +43,6 @@ const useWritePostComment = (postId: number) => {
         setImagePreview(null);
       },
       onError: (error: any) => {
-        console.error("Error posting:", error);
         setLoading(false);
 
         if (error.response?.data.errorMessage) {

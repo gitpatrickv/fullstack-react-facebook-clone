@@ -34,10 +34,9 @@ const useSharePost = (postId: number) => {
         setIsSuccessful(true);
         reset();
       },
-      onError: (error: any) => {
+      onError: () => {
         setLoading(false);
         setIsSuccessful(false);
-        console.error("Error sharing:", error);
       },
     }
   );

@@ -47,7 +47,6 @@ const useLogin = () => {
       }
     },
     onError: (error: any) => {
-      console.error("Login failed", error);
       setLoading(false);
 
       if (error.response?.data.errorMessage) {

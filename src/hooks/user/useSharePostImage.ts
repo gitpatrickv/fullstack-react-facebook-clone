@@ -24,16 +24,14 @@ const useSharePostImage = (postId: number, postImageId: number) => {
       }),
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(["userPostList"]);
         queryClient.invalidateQueries(["postShareImageCount", postImageId]);
         setLoading(false);
         setIsSuccessful(true);
         reset();
       },
-      onError: (error: any) => {
+      onError: () => {
         setLoading(false);
         setIsSuccessful(false);
-        console.error("Error sharing:", error);
       },
     }
   );
