@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Messenger = ({ userId }: Props) => {
-  const { chatArray, setChatArray } = useChatStore();
+  const { chatArray } = useChatStore();
   const { handleAddToChatArray } = useHandleAddToChatArray();
   const {
     data: fetchAllChat,
@@ -39,49 +39,6 @@ const Messenger = ({ userId }: Props) => {
       (total, page) => total + page.chatModels.length,
       0
     ) || 0;
-
-  const minimizeChat = (index: number) => {
-    setChatArray((prevArray) => {
-      const updatedArray = prevArray.map((chat, i) =>
-        i === index ? { ...chat, isMaximized: false } : chat
-      );
-
-      const minimizedChat = updatedArray[index];
-      const remainingChat = updatedArray.filter((_, i) => i !== index);
-      const newChatArray = [...remainingChat, minimizedChat].map((chat, i) => ({
-        ...chat,
-        index: i,
-      }));
-      return newChatArray;
-    });
-  };
-
-  const maximizeChat = (index: number) => {
-    setChatArray((prevArray) => {
-      const updatedArray = prevArray.map((chat, i) =>
-        i === index ? { ...chat, isMaximized: true } : chat
-      );
-
-      const maximizeChat = updatedArray[index];
-      const remainingChat = updatedArray.filter((_, i) => i !== index);
-      const newChatArray = [maximizeChat, ...remainingChat].map((chat, i) => ({
-        ...chat,
-        index: i,
-      }));
-      return newChatArray;
-    });
-  };
-
-  const closeChat = (index: number) => {
-    setChatArray((prevArray) => {
-      const filteredArray = prevArray.filter((chat) => chat.index !== index);
-      const newChatArray = filteredArray.map((chat, i) => ({
-        ...chat,
-        index: i,
-      }));
-      return newChatArray;
-    });
-  };
 
   return (
     <>
@@ -149,9 +106,6 @@ const Messenger = ({ userId }: Props) => {
             index={chat.index}
             userId={userId}
             isMaximized={chat.isMaximized}
-            minimizeChat={() => minimizeChat(chat.index)}
-            maximizeChat={() => maximizeChat(chat.index)}
-            closeChat={() => closeChat(chat.index)}
           />
         ))}
       </Box>

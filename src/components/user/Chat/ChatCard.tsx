@@ -13,47 +13,28 @@ import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { VscChromeMinimize } from "react-icons/vsc";
 import pic from "../../../assets/profpic.jpeg";
-import useFetchAllChatMessages from "../../../hooks/user/useFetchAlLChatMessages";
+
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
+import { useMessageStore } from "../../../store/message-store";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
+import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
+import { useChatStore } from "../../../store/chat-store";
 
 interface Props {
   chatId: number;
   index: number;
   userId: number;
   isMaximized: boolean;
-  minimizeChat: () => void;
-  maximizeChat: () => void;
-  closeChat: () => void;
 }
 
-const ChatCard = ({
-  chatId,
-  index,
-  userId,
-  isMaximized,
-  minimizeChat,
-  maximizeChat,
-  closeChat,
-}: Props) => {
+const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   const { colorMode } = useColorMode();
-
+  const { setChatArray } = useChatStore();
+  const { messagesByChatId, setMessageModels } = useMessageStore();
   const { data: getChatById } = usesGetChatById(chatId, userId);
   const [isHover, setIsHover] = useState<boolean>(false);
-
   const focusRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    if (focusRef.current && getChatById) {
-      focusRef.current.focus();
-    }
-  }, [getChatById]);
-
-  const handleMinimizeClick = () => {
-    minimizeChat();
-    setIsHover(false);
-  };
 
   const {
     data: fetchMessages,
@@ -62,8 +43,73 @@ const ChatCard = ({
     // refetch: refetchMessages,
   } = useFetchAllChatMessages({
     chatId: chatId,
-    pageSize: 30,
+    pageSize: 1000,
   });
+
+  useEffect(() => {
+    if (fetchMessages) {
+      const allChatMessages = fetchMessages.pages.flatMap(
+        (page) => page.messageModels
+      );
+      setMessageModels(chatId, allChatMessages);
+    }
+  }, [fetchMessages, setMessageModels, chatId]);
+
+  const messages = messagesByChatId[chatId] || [];
+
+  useEffect(() => {
+    if (focusRef.current && getChatById) {
+      focusRef.current.focus();
+    }
+  }, [getChatById]);
+
+  const minimizeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const updatedArray = prevArray.map((chat, i) =>
+        i === index ? { ...chat, isMaximized: false } : chat
+      );
+
+      const minimizedChat = updatedArray[index];
+      const remainingChat = updatedArray.filter((_, i) => i !== index);
+      const newChatArray = [...remainingChat, minimizedChat].map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      return newChatArray;
+    });
+  };
+
+  const maximizeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const updatedArray = prevArray.map((chat, i) =>
+        i === index ? { ...chat, isMaximized: true } : chat
+      );
+
+      const maximizeChat = updatedArray[index];
+      const remainingChat = updatedArray.filter((_, i) => i !== index);
+      const newChatArray = [maximizeChat, ...remainingChat].map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      return newChatArray;
+    });
+  };
+
+  const closeChat = (index: number) => {
+    setChatArray((prevArray) => {
+      const filteredArray = prevArray.filter((chat) => chat.index !== index);
+      const newChatArray = filteredArray.map((chat, i) => ({
+        ...chat,
+        index: i,
+      }));
+      return newChatArray;
+    });
+  };
+
+  const handleMinimizeClick = () => {
+    minimizeChat(index);
+    setIsHover(false);
+  };
 
   const picture =
     getChatById?.chatType === "PRIVATE_CHAT"
@@ -144,7 +190,7 @@ const ChatCard = ({
                   isRound
                   size="sm"
                   mr="3px"
-                  onClick={closeChat}
+                  onClick={() => closeChat(index)}
                 />
               </Flex>
               <Divider color={colorMode === "dark" ? "#383838" : "gray.200"} />
@@ -168,15 +214,14 @@ const ChatCard = ({
                   {chatName}
                 </Text>
               </Flex>
-              {fetchMessages?.pages.map((page) =>
-                page.messageModels.map((msg) => (
-                  <Messages
-                    key={msg.messageId}
-                    message={msg}
-                    isSender={msg.sender.userId === userId}
-                  />
-                ))
-              )}
+
+              {messages.map((msg: any) => (
+                <Messages
+                  key={msg.messageId}
+                  message={msg}
+                  isSender={msg.sender.userId === userId}
+                />
+              ))}
             </Box>
 
             <Box height="65px">
@@ -214,7 +259,7 @@ const ChatCard = ({
                     isRound
                     size="xs"
                     mr="3px"
-                    onClick={closeChat}
+                    onClick={() => closeChat(index)}
                   />
                 </Box>
                 <Card
@@ -236,7 +281,11 @@ const ChatCard = ({
                 </Card>
               </>
             )}
-            <Avatar src={picture} onClick={maximizeChat} cursor="pointer" />
+            <Avatar
+              src={picture}
+              onClick={() => maximizeChat(index)}
+              cursor="pointer"
+            />
           </Box>
         </>
       )}

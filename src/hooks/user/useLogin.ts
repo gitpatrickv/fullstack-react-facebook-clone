@@ -34,7 +34,8 @@ const useLogin = () => {
       queryClient.invalidateQueries(["allPostList"]);
       queryClient.invalidateQueries(["userPostList"]);
       queryClient.invalidateQueries(["postNotificationCount"]);
-      queryClient.invalidateQueries(["notificationList"]);
+      queryClient.invalidateQueries(["messages"]);
+      queryClient.invalidateQueries(["userChatList"]);
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);
       const currentUser = response.currentUser;

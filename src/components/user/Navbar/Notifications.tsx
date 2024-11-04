@@ -19,6 +19,7 @@ import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotificatio
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
 import { useNotificationStore } from "../../../store/notification-store";
 import NotificationCard from "./NotificationCard";
+import { useMessageStore } from "../../../store/message-store";
 
 interface Props {
   userId: number;
@@ -34,6 +35,8 @@ const Notifications = ({ userId, email }: Props) => {
     setNotificationModels,
     notificationModels,
   } = useNotificationStore();
+
+  const { addMessage } = useMessageStore();
 
   const {
     data: fetchAllNotifications,
@@ -72,9 +75,17 @@ const Notifications = ({ userId, email }: Props) => {
 
           console.log(`Connected to WebSocket for user email: ${email}`);
 
-          client.subscribe(`/user/${email}/notifications`, (message) => {
-            const notification = JSON.parse(message.body);
-            addNotification(notification);
+          stompClientRef.current.subscribe(
+            `/user/${email}/notifications`,
+            (message) => {
+              const notification = JSON.parse(message.body);
+              addNotification(notification);
+            }
+          );
+
+          stompClientRef.current.subscribe(`/user/${email}/chat`, (message) => {
+            const text = JSON.parse(message.body);
+            addMessage(text.chatId, text);
           });
         },
         (error) => {
@@ -90,7 +101,7 @@ const Notifications = ({ userId, email }: Props) => {
         }
       };
     }
-  }, [email, addNotification, stompClientRef]);
+  }, [email]);
 
   useEffect(() => {
     refetchNotificationCount();
