@@ -16,7 +16,7 @@ const Messages = ({ message, isSender }: Props) => {
     if (chatBottom.current) {
       chatBottom.current.scrollIntoView();
     }
-  }, [message.message]);
+  }, []);
   return (
     <Box
       display="flex"

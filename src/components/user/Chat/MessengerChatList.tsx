@@ -1,62 +1,113 @@
 import { Avatar, Box, Card, Flex, Text, useColorMode } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { GoTrash } from "react-icons/go";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { ChatModel } from "../../../entities/Chat";
+import useGetLastMessage from "../../../hooks/user/useGetLastMessage";
+import { useMessageStore } from "../../../store/message-store";
+import { useNotificationStore } from "../../../store/notification-store";
+import { useUserStore } from "../../../store/user-store";
 
 interface ChatProps {
   chat: ChatModel;
 }
 
 const MessengerChatList = ({ chat }: ChatProps) => {
+  const { userId } = useUserStore();
   const { colorMode } = useColorMode();
   const [isClick, setIsClick] = useState<boolean>(false);
+  const { data: getLastMessage, refetch: refetchLastMessage } =
+    useGetLastMessage(chat.chatId);
+  const time = new Date(getLastMessage?.timestamp ?? "");
+  const { messagesByChatId } = useMessageStore();
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     setIsClick(!isClick);
   };
+
+  useEffect(() => {
+    refetchLastMessage();
+  }, [messagesByChatId[chat.chatId]]);
+
+  const { stompClientRef, isConnected } = useNotificationStore();
+  const { addMessage } = useMessageStore();
+
+  useEffect(() => {
+    if (
+      chat.chatType === "GROUP_CHAT" &&
+      stompClientRef.current &&
+      isConnected
+    ) {
+      stompClientRef.current.subscribe(
+        `/topic/chat/${chat.chatId}`,
+        (message) => {
+          const text = JSON.parse(message.body);
+          addMessage(text.chatId, text);
+        }
+      );
+    }
+  }, [stompClientRef, isConnected]);
+
   return (
     <Box position="relative" mb="5px" mt="5px">
       <Flex alignItems="center">
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-        >
-          <Avatar
-            src={
-              chat.chatType === "PRIVATE_CHAT"
-                ? chat.privateChatUser?.profilePicture
-                : chat.chatType === "GROUP_CHAT"
-                ? chat.groupChatImage
-                : pic
-            }
-            cursor="pointer"
-            height="55px"
-            width="55px"
-          />
-        </Box>
-
-        <Box ml="15px" maxWidth="200px">
-          <Text fontSize="md" textTransform="capitalize" fontWeight="bold">
+        <Avatar
+          src={
+            chat.chatType === "PRIVATE_CHAT"
+              ? chat.privateChatUser?.profilePicture
+              : chat.chatType === "GROUP_CHAT"
+              ? chat.groupChatImage
+              : pic
+          }
+          cursor="pointer"
+          height="55px"
+          width="55px"
+        />
+        <Box ml="10px" maxWidth="170px" minWidth="170px">
+          <Text
+            fontSize="md"
+            textTransform="capitalize"
+            fontWeight="semibold"
+            isTruncated={true}
+          >
             {chat.chatType === "PRIVATE_CHAT"
               ? `${chat.privateChatUser?.firstName}` +
                 " " +
                 `${chat.privateChatUser?.lastName}`
               : chat.groupChatName}
           </Text>
-          <Box display="flex">
-            <Text fontSize="sm" isTruncated={true}>
-              last message here asdf asdf asdf asd f
+
+          {getLastMessage?.message ? (
+            <Box>
+              <Text fontSize="sm" isTruncated={true}>
+                {getLastMessage.sender.userId === userId ? (
+                  "You: "
+                ) : (
+                  <Text as="span" textTransform="capitalize">
+                    {getLastMessage?.sender.firstName}:{" "}
+                  </Text>
+                )}
+                {getLastMessage?.message}
+              </Text>
+
+              <Text fontSize="xs" fontWeight="semibold" color="#1877F2">
+                <ReactTimeAgo date={time} locale="en-US" />
+              </Text>
+            </Box>
+          ) : (
+            <Text fontSize="sm" color="gray.500">
+              send{" "}
+              <Text as="span" textTransform="capitalize">
+                {chat.chatType === "PRIVATE_CHAT"
+                  ? `${chat.privateChatUser?.firstName}`
+                  : chat.groupChatName}
+              </Text>{" "}
+              a message
             </Text>
-            <Text ml="7px">·</Text>
-            <Text fontSize="sm" fontWeight="semibold" ml="2px">
-              1hr
-            </Text>
-          </Box>
+          )}
         </Box>
 
         <Box
@@ -64,7 +115,6 @@ const MessengerChatList = ({ chat }: ChatProps) => {
           // onMouseLeave={() => setIsHover(false)}
           // position="relative"
           mr="10px"
-          ml="15px"
           height="30px"
           width="30px"
           borderRadius="full"

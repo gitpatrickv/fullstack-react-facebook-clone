@@ -34,6 +34,7 @@ const Notifications = ({ userId, email }: Props) => {
     stompClientRef,
     setNotificationModels,
     notificationModels,
+    setIsConnected,
   } = useNotificationStore();
 
   const { addMessage } = useMessageStore();
@@ -72,7 +73,7 @@ const Notifications = ({ userId, email }: Props) => {
         {},
         () => {
           stompClientRef.current = client;
-
+          setIsConnected(true);
           console.log(`Connected to WebSocket for user email: ${email}`);
 
           stompClientRef.current.subscribe(
@@ -97,6 +98,7 @@ const Notifications = ({ userId, email }: Props) => {
           stompClientRef.current.disconnect(() => {
             console.log("Disconnected from WebSocket");
             stompClientRef.current = null;
+            setIsConnected(false);
           });
         }
       };

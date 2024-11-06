@@ -20,6 +20,7 @@ const PeopleYouMayKnow = () => {
   const { setIsAllFriends, setIsSuggestions, setIsFriendsRequest } =
     useFriendStore();
   const navigate = useNavigate();
+
   const {
     data: fetchAllRequest,
     hasNextPage,
@@ -39,6 +40,7 @@ const PeopleYouMayKnow = () => {
     data: fetchFriendSuggestions,
     fetchNextPage: fetchNextPageSuggestions,
     hasNextPage: hasNextPageSuggestions,
+    isLoading: isLoadingSuggestions,
   } = useFetchAllFriendSuggestions({
     userId: userId,
     pageSize: 20,
@@ -114,44 +116,52 @@ const PeopleYouMayKnow = () => {
           <Divider mt="20px" mb="10px" />
         </>
       )}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={{ base: "10px", md: "20px" }}
-      >
-        <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
-          People you may know
-        </Text>
+      {isLoadingSuggestions ? (
+        <Box display="flex" justifyContent="center" mt="30px">
+          <Spinner />
+        </Box>
+      ) : (
+        <>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={{ base: "10px", md: "20px" }}
+          >
+            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
+              People you may know
+            </Text>
 
-        <Text
-          fontSize={{ base: "md", md: "lg" }}
-          color="blue.500"
-          cursor="pointer"
-          onClick={handleNavigateSuggestionsClick}
-        >
-          See all
-        </Text>
-      </Box>
-      <InfiniteScroll
-        dataLength={fetchFriendSuggestionsData}
-        next={fetchNextPageSuggestions}
-        hasMore={!!hasNextPageSuggestions}
-        loader={<Spinner />}
-        scrollableTarget="scrollable-box"
-      >
-        <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 7 }} spacing={2}>
-          {fetchFriendSuggestions?.pages.map((page) =>
-            page.userList.map((request) => (
-              <FriendRequestCard
-                key={request.uniqueId}
-                request={request}
-                isFriendRequest={false}
-              />
-            ))
-          )}
-        </SimpleGrid>
-      </InfiniteScroll>
+            <Text
+              fontSize={{ base: "md", md: "lg" }}
+              color="blue.500"
+              cursor="pointer"
+              onClick={handleNavigateSuggestionsClick}
+            >
+              See all
+            </Text>
+          </Box>
+          <InfiniteScroll
+            dataLength={fetchFriendSuggestionsData}
+            next={fetchNextPageSuggestions}
+            hasMore={!!hasNextPageSuggestions}
+            loader={<Spinner />}
+            scrollableTarget="scrollable-box"
+          >
+            <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 7 }} spacing={2}>
+              {fetchFriendSuggestions?.pages.map((page) =>
+                page.userList.map((request) => (
+                  <FriendRequestCard
+                    key={request.uniqueId}
+                    request={request}
+                    isFriendRequest={false}
+                  />
+                ))
+              )}
+            </SimpleGrid>
+          </InfiniteScroll>
+        </>
+      )}
     </Box>
   );
 };

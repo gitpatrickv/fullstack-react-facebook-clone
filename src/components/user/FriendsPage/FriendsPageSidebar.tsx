@@ -15,12 +15,17 @@ import { useFriendStore } from "../../../store/friend-store";
 
 const FriendsPageSideBar = () => {
   const { colorMode } = useColorMode();
-  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
-  const isMediumScreen = useBreakpointValue({
-    base: false,
-    md: true,
-    lg: false,
-  });
+
+  const isSmallScreen = useBreakpointValue(
+    { base: true, lg: false },
+    { fallback: "lg" }
+  );
+
+  const isMediumScreen = useBreakpointValue(
+    { base: false, md: true, lg: false },
+    { fallback: "lg" }
+  );
+
   const { setIsAllFriends, setIsSuggestions, setIsFriendsRequest } =
     useFriendStore();
   const navigate = useNavigate();
@@ -54,6 +59,7 @@ const FriendsPageSideBar = () => {
       bg: colorMode === "dark" ? "gray.600" : "gray.200",
     },
   };
+
   return (
     <Card
       borderRadius="none"

@@ -21,7 +21,11 @@ interface Props {
 }
 
 const FriendRequestCard = ({ request, isFriendRequest }: Props) => {
-  const isSmallScreen = useBreakpointValue({ base: true, md: false });
+  const isSmallScreen = useBreakpointValue(
+    { base: true, md: false },
+    { fallback: "md" }
+  );
+
   const navigate = useNavigate();
 
   const handleNavigateClick = () => {
