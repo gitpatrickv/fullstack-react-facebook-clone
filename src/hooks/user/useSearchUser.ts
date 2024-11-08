@@ -15,7 +15,7 @@ const useSearchUser = ({ keyword, pageSize }: SearchProps) => {
   const jwtToken = authStore.jwtToken;
 
   return useInfiniteQuery<UserListResponseProps, Error>({
-    queryKey: ["searchList", keyword],
+    queryKey: ["searchList", keyword, pageSize],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<UserListResponseProps>(
         `/user/search`,
