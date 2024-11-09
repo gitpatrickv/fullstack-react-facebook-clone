@@ -1,20 +1,13 @@
 import { Avatar, Flex, Text, useColorMode } from "@chakra-ui/react";
-import { UserDataModelList } from "../../../entities/User";
 import pic from "../../../assets/profpic.jpeg";
-import { useNavigate } from "react-router-dom";
+import { UserDataModelList } from "../../../entities/User";
 interface Props {
   user: UserDataModelList;
-  setShowSuggestions: (value: boolean) => void;
 }
 
-const UserSuggestion = ({ user, setShowSuggestions }: Props) => {
-  const navigate = useNavigate();
+const UserSuggestion = ({ user }: Props) => {
   const { colorMode } = useColorMode();
 
-  const handleNavigateClick = () => {
-    navigate(`/profile/${user.userId}`);
-    setShowSuggestions(false);
-  };
   return (
     <>
       <Flex
@@ -24,7 +17,6 @@ const UserSuggestion = ({ user, setShowSuggestions }: Props) => {
           bg: colorMode === "dark" ? "gray.600" : "gray.200",
         }}
         cursor="pointer"
-        onClick={handleNavigateClick}
       >
         <Avatar src={user.profilePicture || pic} height="30px" width="30px" />
 

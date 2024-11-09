@@ -55,6 +55,13 @@ const Search = () => {
     }
   }, [showInput]);
 
+  const handleNavigateClick = (userId: number) => {
+    navigate(`/profile/${userId}`);
+    setShowSuggestions(false);
+    setShowInput(false);
+    setKeyword("");
+  };
+
   return (
     <>
       {isSmallScreen ? (
@@ -170,11 +177,12 @@ const Search = () => {
         >
           {searchUser?.pages.flatMap((page) =>
             page.userList.map((user) => (
-              <UserSuggestion
+              <Box
                 key={user.uniqueId}
-                user={user}
-                setShowSuggestions={setShowSuggestions}
-              />
+                onClick={() => handleNavigateClick(user.userId)}
+              >
+                <UserSuggestion user={user} />
+              </Box>
             ))
           )}
         </Card>

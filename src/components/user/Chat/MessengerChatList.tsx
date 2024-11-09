@@ -77,7 +77,9 @@ const MessengerChatList = ({ chat }: ChatProps) => {
               ? `${chat.privateChatUser?.firstName}` +
                 " " +
                 `${chat.privateChatUser?.lastName}`
-              : chat.groupChatName}
+              : chat.groupChatName
+              ? chat.groupChatName
+              : "New Group Chat"}
           </Text>
 
           {getLastMessage?.message ? (

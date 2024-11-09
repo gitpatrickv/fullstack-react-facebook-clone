@@ -1,5 +1,6 @@
 import {
   Box,
+  Card,
   Flex,
   IconButton,
   Menu,
@@ -8,22 +9,27 @@ import {
   MenuList,
   Spinner,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
 import { BiLogoMessenger } from "react-icons/bi";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
-
+import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
 import { useChatStore } from "../../../store/chat-store";
 import ChatCard from "./ChatCard";
 import MessengerChatList from "./MessengerChatList";
-import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
+import NewMessage from "./NewMessage";
 
 interface Props {
   userId: number;
 }
 
 const Messenger = ({ userId }: Props) => {
+  const { colorMode } = useColorMode();
   const { chatArray } = useChatStore();
+  const [isHover, setIsHover] = useState<boolean>(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
   const {
     data: fetchAllChat,
@@ -108,6 +114,42 @@ const Messenger = ({ userId }: Props) => {
             isMaximized={chat.isMaximized}
           />
         ))}
+      </Box>
+      <Box position="fixed" bottom="15px" right="17px">
+        <IconButton
+          aria-label="close"
+          icon={<AiOutlineEdit size="25px" />}
+          bg={colorMode === "dark" ? "#303030" : "gray.200"}
+          _hover={{
+            bg: colorMode === "dark" ? "#484848" : "gray.300",
+          }}
+          isRound
+          size="lg"
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        />
+      </Box>
+      {isHover && (
+        <Card
+          position="fixed"
+          bottom="20px"
+          right="70px"
+          padding={2}
+          zIndex={10}
+        >
+          <Text
+            textTransform="capitalize"
+            isTruncated={true}
+            maxWidth="200px"
+            fontSize="sm"
+            fontWeight="semibold"
+          >
+            New message
+          </Text>
+        </Card>
+      )}
+      <Box position="fixed" bottom="0px" right="1100px">
+        <NewMessage />
       </Box>
     </>
   );

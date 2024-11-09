@@ -123,8 +123,9 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
       ? `${getChatById?.privateChatUser?.firstName}` +
         " " +
         `${getChatById?.privateChatUser?.lastName}`
-      : getChatById?.groupChatName;
-
+      : getChatById?.groupChatName
+      ? getChatById?.groupChatName
+      : "New Group Chat";
   return (
     <>
       {isMaximized ? (
@@ -233,11 +234,11 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
         <>
           <Box
             position="relative"
-            bottom="30px"
+            bottom="75px"
             right="-85px"
             display="flex"
             flexDirection="column"
-            mt="12px"
+            mt="10px"
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
           >
@@ -245,8 +246,8 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
               <>
                 <Box
                   position="absolute"
-                  right="-13px"
-                  bottom="32px"
+                  right="-10px"
+                  bottom="30px"
                   zIndex={10}
                 >
                   <IconButton

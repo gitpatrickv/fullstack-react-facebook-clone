@@ -11,7 +11,7 @@ const useFetchAllUserChats = ({ userId, pageSize }: PaginateProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   return useInfiniteQuery<ChatResponse, Error>({
-    queryKey: ["userChatList", userId],
+    queryKey: ["userChatList", userId, pageSize],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<ChatResponse>(`/chat/${userId}`, {
         headers: {
