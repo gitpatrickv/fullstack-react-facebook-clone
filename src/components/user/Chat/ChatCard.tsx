@@ -30,7 +30,7 @@ interface Props {
 
 const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   const { colorMode } = useColorMode();
-  const { setChatArray } = useChatStore();
+  const { setChatArray, isNewMessageMaximized } = useChatStore();
   const { messagesByChatId, setMessageModels } = useMessageStore();
   const { data: getChatById } = usesGetChatById(chatId, userId);
   const [isHover, setIsHover] = useState<boolean>(false);
@@ -133,7 +133,15 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           position="fixed"
           bottom="0"
           right={
-            index === 0
+            isNewMessageMaximized
+              ? index === 0
+                ? "425px"
+                : index === 1
+                ? "765px"
+                : index === 2
+                ? "1105px"
+                : undefined
+              : index === 0
               ? "85px"
               : index === 1
               ? "425px"

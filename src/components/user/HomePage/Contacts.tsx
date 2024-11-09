@@ -9,11 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
+import { useChatStore } from "../../../store/chat-store";
 import { useUserStore } from "../../../store/user-store";
 import ChatList from "./ChatList";
 
 const Contacts = () => {
   const { userId } = useUserStore();
+  const { isNewMessageMaximized, setIsNewMessageMaximized } = useChatStore();
   const { colorMode } = useColorMode();
   const { data: fetchAllChat, isLoading } = useFetchAllUserChats({
     userId: userId,
@@ -65,6 +67,7 @@ const Contacts = () => {
               }}
               isRound
               size="sm"
+              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
             />
             <Text ml="10px" fontWeight="semibold">
               Create group chat

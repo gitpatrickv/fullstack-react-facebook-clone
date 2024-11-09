@@ -11,6 +11,8 @@ interface ChatStore {
   setChatArray: (
     updater: ArrayItem[] | ((prev: ArrayItem[]) => ArrayItem[])
   ) => void;
+  isNewMessageMaximized: boolean;
+  setIsNewMessageMaximized: (value: boolean) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -20,4 +22,7 @@ export const useChatStore = create<ChatStore>((set) => ({
       chatArray:
         typeof updater === "function" ? updater(state.chatArray) : updater,
     })),
+  isNewMessageMaximized: false,
+  setIsNewMessageMaximized: (value: boolean) =>
+    set({ isNewMessageMaximized: value }),
 }));

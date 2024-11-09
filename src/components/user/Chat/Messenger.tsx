@@ -28,7 +28,8 @@ interface Props {
 
 const Messenger = ({ userId }: Props) => {
   const { colorMode } = useColorMode();
-  const { chatArray } = useChatStore();
+  const { chatArray, isNewMessageMaximized, setIsNewMessageMaximized } =
+    useChatStore();
   const [isHover, setIsHover] = useState<boolean>(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
   const {
@@ -46,6 +47,9 @@ const Messenger = ({ userId }: Props) => {
       0
     ) || 0;
 
+  const fetchAllChatLength =
+    fetchAllChat?.pages.flatMap((page) => page.chatModels).length || 0;
+
   return (
     <>
       <Flex justifyContent="center">
@@ -62,26 +66,46 @@ const Messenger = ({ userId }: Props) => {
                 Chats
               </Text>
             </Box>
-            <Box maxHeight="400px" overflowY="auto" id="scrollable-chat">
-              <InfiniteScroll
-                dataLength={fetchChatData}
-                next={fetchNextPage}
-                hasMore={!!hasNextPage}
-                loader={<Spinner />}
-                scrollableTarget="scrollable-chat"
-              >
-                {fetchAllChat?.pages.map((page) =>
-                  page.chatModels.map((chat) => (
-                    <MenuItem
-                      key={chat.chatId}
-                      onClick={() => handleAddToChatArray(chat.chatId)}
-                    >
-                      <MessengerChatList chat={chat} />
-                    </MenuItem>
-                  ))
-                )}
-              </InfiniteScroll>
-            </Box>
+            {fetchAllChatLength < 1 ? (
+              <>
+                <Box
+                  height="150px"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  width="250px"
+                >
+                  <Flex flexDirection="column" alignItems="center">
+                    <Text mt="10px" fontSize="x-large">
+                      No chats yet
+                    </Text>
+                  </Flex>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box maxHeight="400px" overflowY="auto" id="scrollable-chat">
+                  <InfiniteScroll
+                    dataLength={fetchChatData}
+                    next={fetchNextPage}
+                    hasMore={!!hasNextPage}
+                    loader={<Spinner />}
+                    scrollableTarget="scrollable-chat"
+                  >
+                    {fetchAllChat?.pages.map((page) =>
+                      page.chatModels.map((chat) => (
+                        <MenuItem
+                          key={chat.chatId}
+                          onClick={() => handleAddToChatArray(chat.chatId)}
+                        >
+                          <MessengerChatList chat={chat} />
+                        </MenuItem>
+                      ))
+                    )}
+                  </InfiniteScroll>
+                </Box>
+              </>
+            )}
           </MenuList>
         </Menu>
         <Box
@@ -117,7 +141,7 @@ const Messenger = ({ userId }: Props) => {
       </Box>
       <Box position="fixed" bottom="15px" right="17px">
         <IconButton
-          aria-label="close"
+          aria-label="message"
           icon={<AiOutlineEdit size="25px" />}
           bg={colorMode === "dark" ? "#303030" : "gray.200"}
           _hover={{
@@ -127,6 +151,7 @@ const Messenger = ({ userId }: Props) => {
           size="lg"
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
+          onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
         />
       </Box>
       {isHover && (
@@ -148,27 +173,13 @@ const Messenger = ({ userId }: Props) => {
           </Text>
         </Card>
       )}
-      <Box position="fixed" bottom="0px" right="1100px">
-        <NewMessage />
-      </Box>
+      {isNewMessageMaximized && (
+        <Box position="fixed" bottom="0px" right="85px">
+          <NewMessage />
+        </Box>
+      )}
     </>
   );
 };
 
 export default Messenger;
-// rightValue: ${80 + chatArray.length * 340}px
-{
-  /* <Box
-              height="150px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="250px"
-            >
-              <Flex flexDirection="column" alignItems="center">
-                <Text mt="10px" fontSize="x-large">
-                  No chats yet
-                </Text>
-              </Flex>
-            </Box> */
-}

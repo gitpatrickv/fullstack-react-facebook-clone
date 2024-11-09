@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 
@@ -11,7 +11,6 @@ export interface CreateGroupChatProps {
 const apiClient = axiosInstance;
 
 const useCreateGroupChat = () => {
-  const queryClient = useQueryClient();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
 
@@ -27,14 +26,6 @@ const useCreateGroupChat = () => {
         }
       );
       return response.data;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["userChatList"]);
-      },
-      onError: (error) => {
-        console.error("error creating group chat", error);
-      },
     }
   );
 };

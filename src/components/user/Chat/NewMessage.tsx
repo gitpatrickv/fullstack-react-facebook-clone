@@ -10,7 +10,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
@@ -20,6 +20,7 @@ import useCreateGroupChat, {
 } from "../../../hooks/user/useCreateGroupChat";
 import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
 import useSearchUser from "../../../hooks/user/useSearchUser";
+import { useChatStore } from "../../../store/chat-store";
 import { useUserStore } from "../../../store/user-store";
 import UserSuggestion from "../Navbar/UserSuggestion";
 
@@ -32,16 +33,16 @@ interface UserArray {
 
 const NewMessage = () => {
   const { userId: currentUserId } = useUserStore();
+  const focusRef = useRef<HTMLInputElement>(null);
   const { colorMode } = useColorMode();
   const [keyword, setKeyword] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
-
+  const { setIsNewMessageMaximized, isNewMessageMaximized } = useChatStore();
   const {
     data: searchUser,
     fetchNextPage,
     hasNextPage,
-    isLoading,
   } = useSearchUser({
     keyword: keyword,
     pageSize: 10,
@@ -87,6 +88,7 @@ const NewMessage = () => {
             setSelectedUser([]);
             setShowSuggestions(false);
             handleAddToChatArray(newChatId);
+            setIsNewMessageMaximized(false);
           },
           onError: () => {
             setIsLoading(false);
@@ -120,7 +122,26 @@ const NewMessage = () => {
     }));
 
     setSelectedUser(newUserArray);
+    console.log(newUserArray);
   };
+
+  const removeSelectedUser = (index: number) => {
+    setSelectedUser((prevArray) => {
+      const filteredUser = prevArray.filter((user) => user.index !== index);
+      const newUserArray = filteredUser.map((user, i) => ({
+        ...user,
+        index: i,
+      }));
+      console.log(newUserArray);
+      return newUserArray;
+    });
+  };
+
+  useEffect(() => {
+    if (focusRef.current && isNewMessageMaximized) {
+      focusRef.current.focus();
+    }
+  }, [isNewMessageMaximized, selectedUser]);
 
   return (
     <>
@@ -147,6 +168,7 @@ const NewMessage = () => {
             }}
             isRound
             size="sm"
+            onClick={() => setIsNewMessageMaximized(false)}
           />
         </Flex>
         <Flex alignItems="center" padding={1} flexWrap="wrap" ml="5px" mr="5px">
@@ -177,11 +199,13 @@ const NewMessage = () => {
                 isRound
                 size="xs"
                 ml="5px"
+                onClick={() => removeSelectedUser(u.index)}
               />
             </Flex>
           ))}
           <Input
             value={keyword || ""}
+            ref={focusRef}
             border="none"
             _focus={{ border: "none", boxShadow: "none" }}
             _hover={{ border: "none" }}
