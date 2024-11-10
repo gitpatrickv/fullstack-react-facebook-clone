@@ -63,7 +63,7 @@ const LikeCommentShareButton = ({
     cursor: "pointer",
     width: "100%",
     _hover: {
-      bg: colorMode === "dark" ? "#383838" : "gray.100",
+      bg: colorMode === "dark" ? "#303030" : "gray.100",
     },
     borderRadius: "5px",
   };
@@ -261,6 +261,7 @@ const LikeCommentShareButton = ({
         <ModalOverlay />
         <ModalContent height="500px">
           <ModalHeader>All Likes</ModalHeader>
+          <Divider />
           <ModalCloseButton />
           <ModalBody maxHeight="400px" overflowY="auto" id="list">
             <InfiniteScroll

@@ -39,7 +39,7 @@ const FriendListCard = ({ friend }: Props) => {
       <Card
         padding={4}
         _hover={{
-          bg: colorMode === "dark" ? "gray.800" : "gray.200",
+          bg: colorMode === "dark" ? "#303030" : "gray.100",
         }}
       >
         <Box display="flex" alignItems="center">

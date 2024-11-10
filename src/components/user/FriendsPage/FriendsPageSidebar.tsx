@@ -56,7 +56,7 @@ const FriendsPageSideBar = () => {
     padding: "10px",
     borderRadius: "5px",
     _hover: {
-      bg: colorMode === "dark" ? "gray.600" : "gray.200",
+      bg: colorMode === "dark" ? "#303030" : "gray.100",
     },
   };
 

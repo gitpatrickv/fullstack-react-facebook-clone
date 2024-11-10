@@ -5,22 +5,36 @@ import {
   Divider,
   Flex,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Portal,
   Spacer,
   Text,
   useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { IoClose } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
+import { FaUsers } from "react-icons/fa";
+import { IoChevronDown, IoClose } from "react-icons/io5";
 import { VscChromeMinimize } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-
+import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
+import { useChatStore } from "../../../store/chat-store";
 import { useMessageStore } from "../../../store/message-store";
+import UserListModel from "../Post/UserListModel";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
-import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
-import { useChatStore } from "../../../store/chat-store";
-
 interface Props {
   chatId: number;
   index: number;
@@ -35,7 +49,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   const { data: getChatById } = usesGetChatById(chatId, userId);
   const [isHover, setIsHover] = useState<boolean>(false);
   const focusRef = useRef<HTMLInputElement | null>(null);
-
+  const navigate = useNavigate();
   const {
     data: fetchMessages,
     // fetchNextPage,
@@ -126,6 +140,13 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
       : getChatById?.groupChatName
       ? getChatById?.groupChatName
       : "New Group Chat";
+
+  const handleNavigateClick = () => {
+    navigate(`/profile/${getChatById?.privateChatUser?.userId}`);
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
       {isMaximized ? (
@@ -154,27 +175,60 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           <Card width="330px" height="450px" borderRadius="6px 6px 0 0">
             <Box>
               <Flex alignItems="center">
-                <Flex
-                  alignItems="center"
-                  _hover={{ bg: colorMode === "dark" ? "#303030" : "gray.100" }}
-                  _active={{
-                    bg: colorMode === "dark" ? "#383838" : "gray.200",
-                  }}
-                  cursor="pointer"
-                  padding="8px"
-                  borderTopLeftRadius="6px"
-                >
-                  <Avatar src={picture} cursor="pointer" size="sm" />
-                  <Text
-                    ml="5px"
-                    textTransform="capitalize"
-                    fontWeight="semibold"
-                    isTruncated={true}
-                    maxWidth="200px"
+                <Menu>
+                  <MenuButton
+                    alignItems="center"
+                    _hover={{
+                      bg: colorMode === "dark" ? "#303030" : "gray.100",
+                    }}
+                    _active={{
+                      bg: colorMode === "dark" ? "#383838" : "gray.200",
+                    }}
+                    cursor="pointer"
+                    padding="8px"
+                    borderTopLeftRadius="6px"
+                    margin="0"
                   >
-                    {chatName}
-                  </Text>
-                </Flex>
+                    <Flex alignItems="center">
+                      <Avatar src={picture} cursor="pointer" size="sm" />
+                      <Text
+                        ml="5px"
+                        textTransform="capitalize"
+                        fontWeight="semibold"
+                        isTruncated={true}
+                        maxWidth="200px"
+                        mr="5px"
+                      >
+                        {chatName}
+                      </Text>
+                      <Box color="gray.500">
+                        <IoChevronDown />
+                      </Box>
+                    </Flex>
+                  </MenuButton>
+                  <Portal>
+                    <MenuList
+                      position="absolute"
+                      bottom="5px"
+                      left="-230px"
+                      border="none"
+                      zIndex={100}
+                    >
+                      {getChatById?.chatType === "PRIVATE_CHAT" && (
+                        <MenuItem onClick={handleNavigateClick}>
+                          <CgProfile size="20px" />
+                          <Text ml="10px">View Profile</Text>
+                        </MenuItem>
+                      )}
+                      {getChatById?.chatType === "GROUP_CHAT" && (
+                        <MenuItem onClick={onOpen}>
+                          <FaUsers size="20px" />
+                          <Text ml="10px">Members</Text>
+                        </MenuItem>
+                      )}
+                    </MenuList>
+                  </Portal>
+                </Menu>
                 <Spacer />
                 <IconButton
                   aria-label="minimize"
@@ -298,6 +352,20 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           </Box>
         </>
       )}
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+        <ModalOverlay />
+        <ModalContent height="500px">
+          <ModalHeader textAlign="center">Members</ModalHeader>
+          <ModalCloseButton />
+          <Divider />
+          <ModalBody maxHeight="450px" overflowY="auto">
+            {getChatById?.chatType === "GROUP_CHAT" &&
+              getChatById.users?.map((users) => (
+                <UserListModel key={users.userId} users={users} />
+              ))}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

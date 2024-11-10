@@ -1,10 +1,13 @@
 import {
   Box,
+  Button,
   Card,
+  Flex,
   Grid,
   GridItem,
   Show,
   useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
@@ -16,7 +19,7 @@ import NavbarRight from "./NavbarRight";
 import Search from "./Search";
 const Navbar = () => {
   const location = useLocation();
-
+  const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   const [selectedPage, setSelectedPage] = useState<string | null>(
@@ -26,6 +29,14 @@ const Navbar = () => {
   useEffect(() => {
     setSelectedPage(location.pathname);
   }, [location.pathname]);
+
+  const buttonStyle = {
+    bg: "transparent",
+    width: "100%",
+    _hover: {
+      bg: colorMode === "dark" ? "#303030" : "gray.100",
+    },
+  };
 
   return (
     <>
@@ -70,48 +81,53 @@ const Navbar = () => {
             </GridItem>
           )}
           <Show above="md">
-            <GridItem
-              area="content1"
-              display="flex"
-              justifyContent="space-around"
-              flexDirection="row"
-              alignItems="center"
-            >
-              <Link to="/home">
-                <Box color={selectedPage === "/home" ? "#1877F2" : "white.500"}>
-                  <FaHome size="35px" />
-                </Box>
-              </Link>
-              <Link to="/friends">
-                <Box
-                  color={selectedPage === "/friends" ? "#1877F2" : "white.500"}
-                >
-                  <FaUserFriends size="35px" />
-                </Box>
-              </Link>
-              <Link to="/watch">
-                <Box
-                  color={selectedPage === "/watch" ? "#1877F2" : "white.500"}
-                >
-                  <MdOndemandVideo size="35px" />
-                </Box>
-              </Link>
-              <Link to="/marketplace">
-                <Box
-                  color={
-                    selectedPage === "/marketplace" ? "#1877F2" : "white.500"
-                  }
-                >
-                  <IoStorefrontSharp size="35px" />
-                </Box>
-              </Link>
-              <Link to="/games">
-                <Box
-                  color={selectedPage === "/games" ? "#1877F2" : "white.500"}
-                >
-                  <IoLogoGameControllerA size="35px" />
-                </Box>
-              </Link>
+            <GridItem area="content1">
+              <Flex justifyContent="space-around" alignItems="center">
+                <Link to="/home" style={{ flex: 1 }}>
+                  <Button
+                    color={selectedPage === "/home" ? "#1877F2" : "white.500"}
+                    {...buttonStyle}
+                  >
+                    <FaHome size="35px" />
+                  </Button>
+                </Link>
+                <Link to="/friends" style={{ flex: 1 }}>
+                  <Button
+                    color={
+                      selectedPage === "/friends" ? "#1877F2" : "white.500"
+                    }
+                    {...buttonStyle}
+                  >
+                    <FaUserFriends size="35px" />
+                  </Button>
+                </Link>
+                <Link to="/watch" style={{ flex: 1 }}>
+                  <Button
+                    color={selectedPage === "/watch" ? "#1877F2" : "white.500"}
+                    {...buttonStyle}
+                  >
+                    <MdOndemandVideo size="35px" />
+                  </Button>
+                </Link>
+                <Link to="/marketplace" style={{ flex: 1 }}>
+                  <Button
+                    color={
+                      selectedPage === "/marketplace" ? "#1877F2" : "white.500"
+                    }
+                    {...buttonStyle}
+                  >
+                    <IoStorefrontSharp size="35px" />
+                  </Button>
+                </Link>
+                <Link to="/games" style={{ flex: 1 }}>
+                  <Button
+                    color={selectedPage === "/games" ? "#1877F2" : "white.500"}
+                    {...buttonStyle}
+                  >
+                    <IoLogoGameControllerA size="35px" />
+                  </Button>
+                </Link>
+              </Flex>
             </GridItem>
           </Show>
           <GridItem area="asideRight">
