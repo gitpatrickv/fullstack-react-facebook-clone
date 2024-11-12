@@ -23,13 +23,15 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { FaUsers } from "react-icons/fa";
-import { IoChevronDown, IoClose } from "react-icons/io5";
+import { FaEdit, FaUserPlus, FaUsers } from "react-icons/fa";
+import { IoChevronDown, IoClose, IoExitOutline } from "react-icons/io5";
+import { MdAddPhotoAlternate } from "react-icons/md";
 import { VscChromeMinimize } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
+import useUploadGroupChatImage from "../../../hooks/user/useUploadGroupChatImage";
 import { useChatStore } from "../../../store/chat-store";
 import { useMessageStore } from "../../../store/message-store";
 import UserListModel from "../Post/UserListModel";
@@ -50,12 +52,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   const [isHover, setIsHover] = useState<boolean>(false);
   const focusRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const {
-    data: fetchMessages,
-    // fetchNextPage,
-    // hasNextPage,
-    // refetch: refetchMessages,
-  } = useFetchAllChatMessages({
+  const { data: fetchMessages } = useFetchAllChatMessages({
     chatId: chatId,
     pageSize: 1000,
   });
@@ -147,6 +144,20 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { mutate: uploadPhoto } = useUploadGroupChatImage(chatId);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const handleInputClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadPhoto({ file: file });
+    }
+  };
+
   return (
     <>
       {isMaximized ? (
@@ -221,10 +232,35 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                         </MenuItem>
                       )}
                       {getChatById?.chatType === "GROUP_CHAT" && (
-                        <MenuItem onClick={onOpen}>
-                          <FaUsers size="20px" />
-                          <Text ml="10px">Members</Text>
-                        </MenuItem>
+                        <>
+                          <MenuItem>
+                            <FaEdit size="20px" />
+                            <Text ml="10px">Conversation Name</Text>
+                          </MenuItem>
+                          <MenuItem onClick={handleInputClick}>
+                            <MdAddPhotoAlternate size="20px" />
+                            <Text ml="10px">Change photo</Text>
+                          </MenuItem>
+                          <input
+                            type="file"
+                            accept=".jpeg, .png"
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                            onChange={handleUploadImage}
+                          />
+                          <MenuItem>
+                            <FaUserPlus size="20px" />
+                            <Text ml="10px">Add people</Text>
+                          </MenuItem>
+                          <MenuItem onClick={onOpen}>
+                            <FaUsers size="20px" />
+                            <Text ml="10px">Members</Text>
+                          </MenuItem>
+                          <MenuItem>
+                            <IoExitOutline size="20px" />
+                            <Text ml="10px">Leave group</Text>
+                          </MenuItem>
+                        </>
                       )}
                     </MenuList>
                   </Portal>

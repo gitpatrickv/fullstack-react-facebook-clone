@@ -16,7 +16,7 @@ const useSendMessage = () => {
 
   return useMutation(
     async ({ text, chatId }: SendMessageProps) => {
-      await apiClient.post(
+      const response = await apiClient.post(
         "/chat/message",
         { text, chatId },
         {
@@ -25,10 +25,12 @@ const useSendMessage = () => {
           },
         }
       );
+      return response;
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["messages"]);
+      onSuccess: (_, data) => {
+        const chatId = data.chatId;
+        queryClient.invalidateQueries(["messages", chatId]);
       },
       onError: (error) => {
         console.error("Message sending failed:", error);
