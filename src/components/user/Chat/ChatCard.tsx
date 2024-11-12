@@ -266,6 +266,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           setShowSuggestions(false);
           setIsLoadingAddToUser(false);
           queryClient.invalidateQueries(["chatById", chatId, userId]);
+          queryClient.invalidateQueries(["messages", chatId]);
           toast({
             title: "Users Added to Group Chat",
             description: "Selected users have joined the chat.",

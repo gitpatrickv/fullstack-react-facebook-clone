@@ -173,7 +173,7 @@ const Messenger = ({ userId }: Props) => {
           bottom="20px"
           right="70px"
           padding={2}
-          zIndex={20}
+          zIndex={150}
         >
           <Text
             textTransform="capitalize"
