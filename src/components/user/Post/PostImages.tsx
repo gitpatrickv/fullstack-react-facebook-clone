@@ -1,9 +1,10 @@
 import { Box, Image, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import PostImage from "../../../entities/PostImage";
+import { usePostStore } from "../../../store/post-store";
+import { getFlexBasis } from "../../../utilities/flexBasis";
 import PostImagesModal from "./PostImagesModal";
 import { PostProps } from "./Posts";
-import { getFlexBasis } from "../../../utilities/flexBasis";
 
 const PostImages = ({ posts }: PostProps) => {
   if (!posts.postImages || posts.postImages.length === 0) {
@@ -12,7 +13,7 @@ const PostImages = ({ posts }: PostProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [images, setImages] = useState<PostImage[]>(posts.postImages);
   const [activeImage, setActiveImage] = useState<PostImage | null>(null);
-
+  const { setIsPostImageModalOpen } = usePostStore();
   useEffect(() => {
     if (posts.postImages && posts.postImages.length > 0) {
       setImages(posts.postImages);
@@ -23,6 +24,7 @@ const PostImages = ({ posts }: PostProps) => {
   const handleImageClick = (images: PostImage) => {
     setActiveImage(images);
     onOpen();
+    setIsPostImageModalOpen(true);
   };
 
   const handleSelectNextImageRightClick = () => {

@@ -191,7 +191,7 @@ const PostImagesButtons = ({
           </Box>
         )}
       </Box>
-      <Divider mt="5px" mb="5px" color="gray.500" />
+      <Divider mt="5px" mb="5px" borderColor="gray.500" />
       <Box display="flex" justifyContent="space-around">
         <Box
           {...boxStyles}

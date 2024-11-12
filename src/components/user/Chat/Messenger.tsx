@@ -9,6 +9,7 @@ import {
   MenuList,
   Spinner,
   Text,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import { useChatStore } from "../../../store/chat-store";
 import ChatCard from "./ChatCard";
 import MessengerChatList from "./MessengerChatList";
 import NewMessage from "./NewMessage";
+import { usePostStore } from "../../../store/post-store";
 
 interface Props {
   userId: number;
@@ -50,6 +52,8 @@ const Messenger = ({ userId }: Props) => {
   const fetchAllChatLength =
     fetchAllChat?.pages.flatMap((page) => page.chatModels).length || 0;
 
+  const { isPostImageModalOpen } = usePostStore();
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   return (
     <>
       <Flex justifyContent="center">
@@ -108,7 +112,7 @@ const Messenger = ({ userId }: Props) => {
             )}
           </MenuList>
         </Menu>
-        <Box
+        {/* <Box
           h="22px"
           w="22px"
           bg="red"
@@ -125,42 +129,51 @@ const Messenger = ({ userId }: Props) => {
           >
             1
           </Text>
-        </Box>
+        </Box> */}
       </Flex>
 
-      <Box position="fixed" bottom="0">
-        {chatArray.map((chat) => (
-          <ChatCard
-            key={chat.chatId}
-            chatId={chat.chatId}
-            index={chat.index}
-            userId={userId}
-            isMaximized={chat.isMaximized}
-          />
-        ))}
+      <Box position="fixed" bottom="0" zIndex={100}>
+        {isLargeScreen && (
+          <>
+            {chatArray.map((chat) => (
+              <ChatCard
+                key={chat.chatId}
+                chatId={chat.chatId}
+                index={chat.index}
+                userId={userId}
+                isMaximized={chat.isMaximized}
+              />
+            ))}
+          </>
+        )}
       </Box>
-      <Box position="fixed" bottom="15px" right="17px">
-        <IconButton
-          aria-label="message"
-          icon={<AiOutlineEdit size="25px" />}
-          bg={colorMode === "dark" ? "#303030" : "gray.200"}
-          _hover={{
-            bg: colorMode === "dark" ? "#484848" : "gray.300",
-          }}
-          isRound
-          size="lg"
-          onMouseEnter={() => setIsHover(true)}
-          onMouseLeave={() => setIsHover(false)}
-          onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
-        />
-      </Box>
+      {(!isPostImageModalOpen ||
+        (isPostImageModalOpen && chatArray.length >= 1)) &&
+        isLargeScreen && (
+          <Box position="fixed" bottom="15px" right="17px">
+            <IconButton
+              aria-label="message"
+              icon={<AiOutlineEdit size="25px" />}
+              bg={colorMode === "dark" ? "#303030" : "gray.200"}
+              _hover={{
+                bg: colorMode === "dark" ? "#484848" : "gray.300",
+              }}
+              isRound
+              size="lg"
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
+            />
+          </Box>
+        )}
+
       {isHover && (
         <Card
           position="fixed"
           bottom="20px"
           right="70px"
           padding={2}
-          zIndex={10}
+          zIndex={20}
         >
           <Text
             textTransform="capitalize"
@@ -174,7 +187,7 @@ const Messenger = ({ userId }: Props) => {
         </Card>
       )}
       {isNewMessageMaximized && (
-        <Box position="fixed" bottom="0px" right="85px">
+        <Box position="fixed" bottom="0px" right="85px" zIndex={10}>
           <NewMessage />
         </Box>
       )}

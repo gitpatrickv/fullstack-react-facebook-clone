@@ -112,7 +112,7 @@ const MessengerChatList = ({ chat }: ChatProps) => {
           )}
         </Box>
 
-        <Box
+        {/* <Box
           onClick={handleButtonClick}
           // onMouseLeave={() => setIsHover(false)}
           // position="relative"
@@ -183,7 +183,7 @@ const MessengerChatList = ({ chat }: ChatProps) => {
           )}
         </Box>
 
-        <Box h="10px" w="10px" bg="#1877F2" borderRadius="full" />
+        <Box h="10px" w="10px" bg="#1877F2" borderRadius="full" /> */}
       </Flex>
     </Box>
   );

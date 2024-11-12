@@ -212,7 +212,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                       bottom="5px"
                       left="-230px"
                       border="none"
-                      zIndex={100}
+                      zIndex={1500}
                     >
                       {getChatById?.chatType === "PRIVATE_CHAT" && (
                         <MenuItem onClick={handleNavigateClick}>
@@ -330,7 +330,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                   right="55px"
                   bottom="5px"
                   padding={2}
-                  zIndex={10}
+                  zIndex={20}
                 >
                   <Text
                     textTransform="capitalize"

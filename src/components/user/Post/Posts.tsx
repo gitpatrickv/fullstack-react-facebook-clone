@@ -25,6 +25,7 @@ import PostImages from "./PostImages";
 import PostShareContent from "./PostShareContent";
 import PostShareImages from "./PostShareImages";
 import WriteComment from "./WriteComment";
+import useGetLastPostComment from "../../../hooks/user/useGetLastPostComment";
 
 export interface PostProps {
   posts: Post;
@@ -124,6 +125,8 @@ const Posts = ({ posts }: PostProps) => {
     };
   }, [imagePreview]);
 
+  const { data: getLastPostComment } = useGetLastPostComment(posts.postId);
+
   return (
     <>
       <Card padding={3} mt="10px">
@@ -195,12 +198,12 @@ const Posts = ({ posts }: PostProps) => {
             View more comments
           </Text>
         )}
-        {fetchAllPostComments?.pages
-          .flatMap((page) => page.postCommentList)
-          .slice(-1)
-          .map((comments) => (
-            <Comments key={comments.postCommentId} comments={comments} />
-          ))}
+        {getLastPostComment && (
+          <Comments
+            key={getLastPostComment?.postCommentId}
+            comments={getLastPostComment}
+          />
+        )}
         <Box mt="10px">
           <WriteComment
             focusRef={finalRef}
