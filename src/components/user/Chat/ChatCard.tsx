@@ -7,6 +7,8 @@ import {
   Flex,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -19,36 +21,55 @@ import {
   ModalHeader,
   ModalOverlay,
   Portal,
+  SimpleGrid,
   Spacer,
+  Spinner,
   Text,
   useColorMode,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { BsSearch } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FaEdit, FaUserPlus, FaUsers } from "react-icons/fa";
 import { IoChevronDown, IoClose, IoExitOutline } from "react-icons/io5";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { VscChromeMinimize } from "react-icons/vsc";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import useAddUserToGroupChat, {
+  AddUserToGroupChatProps,
+} from "../../../hooks/user/useAddUserToGroupChat";
 import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
+import useSearchUser from "../../../hooks/user/useSearchUser";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
-import useUploadGroupChatImage from "../../../hooks/user/useUploadGroupChatImage";
-import { useChatStore } from "../../../store/chat-store";
-import { useMessageStore } from "../../../store/message-store";
-import UserListModel from "../Post/UserListModel";
-import Messages from "./Messages";
-import WriteMessage from "./WriteMessage";
 import useUpdateGroupChatName, {
   UpdateGroupChatNameProps,
 } from "../../../hooks/user/useUpdateGroupChatName";
-import { useForm } from "react-hook-form";
+import useUploadGroupChatImage from "../../../hooks/user/useUploadGroupChatImage";
+import { useChatStore } from "../../../store/chat-store";
+import { useMessageStore } from "../../../store/message-store";
+import UserSuggestion from "../Navbar/UserSuggestion";
+import UserListModel from "../Post/UserListModel";
+import Messages from "./Messages";
+import WriteMessage from "./WriteMessage";
 interface Props {
   chatId: number;
   index: number;
   userId: number;
   isMaximized: boolean;
+}
+
+interface UserArray {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  index: number;
 }
 
 const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
@@ -155,6 +176,11 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     onOpen: onOpenUpdateName,
     onClose: onCloseUpdateName,
   } = useDisclosure();
+  const {
+    isOpen: isOpenAddUser,
+    onOpen: onOpenAddUser,
+    onClose: onCloseAddUser,
+  } = useDisclosure();
 
   const { mutate: uploadPhoto } = useUploadGroupChatImage(chatId);
 
@@ -195,6 +221,107 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
         },
       }
     );
+  };
+
+  const toast = useToast();
+  const [keyword, setKeyword] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingAddToUser, setIsLoadingAddToUser] = useState(false);
+  const { handleSubmit: handleAddUserSubmit } =
+    useForm<AddUserToGroupChatProps>();
+  const {
+    data: searchUser,
+    fetchNextPage,
+    hasNextPage,
+  } = useSearchUser({
+    keyword: keyword,
+    pageSize: 10,
+  });
+
+  const searchUserData =
+    searchUser?.pages.reduce(
+      (total, page) => total + page.userList.length,
+      0
+    ) || 0;
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const text = event.target.value;
+    setKeyword(text);
+    setShowSuggestions(true);
+  };
+  const [selectedUser, setSelectedUser] = useState<UserArray[]>([]);
+  const userIds = selectedUser.map((id) => id.userId);
+  const { mutate: addUserToGroupChat } = useAddUserToGroupChat(chatId);
+  const queryClient = useQueryClient();
+  const onSubmitAddToGroupChat = () => {
+    setIsLoadingAddToUser(true);
+    addUserToGroupChat(
+      { userId: userIds },
+      {
+        onSuccess: () => {
+          setKeyword("");
+          setSelectedUser([]);
+          setShowSuggestions(false);
+          setIsLoadingAddToUser(false);
+          queryClient.invalidateQueries(["chatById", chatId, userId]);
+          toast({
+            title: "Users Added to Group Chat",
+            description: "Selected users have joined the chat.",
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+            position: "bottom-left",
+          });
+          onCloseAddUser();
+        },
+        onError: () => {
+          setIsLoadingAddToUser(false);
+        },
+      }
+    );
+  };
+
+  const handleSelectUserClick = (
+    userId: number,
+    firstName: string,
+    lastName: string,
+    profilePicture: string
+  ) => {
+    if (selectedUser.some((user) => user.userId === userId)) {
+      return;
+    }
+
+    const newUser: UserArray = {
+      userId,
+      firstName,
+      lastName,
+      profilePicture,
+      index: selectedUser.length,
+    };
+
+    let newUserArray = [...selectedUser, newUser];
+
+    newUserArray = newUserArray.map((user, index) => ({
+      ...user,
+      index,
+    }));
+
+    setSelectedUser(newUserArray);
+    console.log(newUserArray);
+  };
+
+  const removeSelectedUser = (index: number) => {
+    setSelectedUser((prevArray) => {
+      const filteredUser = prevArray.filter((user) => user.index !== index);
+      const newUserArray = filteredUser.map((user, i) => ({
+        ...user,
+        index: i,
+      }));
+      console.log(newUserArray);
+      return newUserArray;
+    });
   };
 
   return (
@@ -287,7 +414,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                             style={{ display: "none" }}
                             onChange={handleUploadImage}
                           />
-                          <MenuItem>
+                          <MenuItem onClick={onOpenAddUser}>
                             <FaUserPlus size="20px" />
                             <Text ml="10px">Add people</Text>
                           </MenuItem>
@@ -492,6 +619,141 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                 width="100px"
               >
                 Save
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+
+      <Modal
+        isOpen={isOpenAddUser}
+        onClose={onCloseAddUser}
+        size="xl"
+        isCentered
+        finalFocusRef={focusRef}
+        initialFocusRef={initialRef}
+      >
+        <ModalOverlay />
+        <form onSubmit={handleAddUserSubmit(onSubmitAddToGroupChat)}>
+          <ModalContent height="500px">
+            <ModalHeader textAlign="center">Add people</ModalHeader>
+            <ModalCloseButton />
+            <Divider />
+            <ModalBody
+              maxHeight="450px"
+              overflowY="auto"
+              id="scrollable-add-user"
+            >
+              <InputGroup mt="10px" mb="10px">
+                <Input
+                  value={keyword || ""}
+                  ref={initialRef}
+                  onChange={handleSearchInputChange}
+                  borderRadius={20}
+                  placeholder="Search Facebook"
+                  variant="filled"
+                />
+                <InputRightElement>
+                  <IconButton
+                    aria-label="Search"
+                    icon={<BsSearch />}
+                    type="submit"
+                    bg="transparent"
+                    _hover={{ bg: "transparent" }}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <SimpleGrid columns={{ base: 5 }} spacing={1}>
+                {selectedUser.map((u) => (
+                  <Flex
+                    flexDirection="column"
+                    alignItems="center"
+                    position="relative"
+                    key={u.userId}
+                    mt="10px"
+                  >
+                    <Avatar src={u.profilePicture} />
+                    <IconButton
+                      aria-label="close-tab"
+                      icon={<IoClose size="20px" />}
+                      bg="#303030"
+                      _hover={{ bg: "#383838" }}
+                      isRound
+                      size="xs"
+                      ml="5px"
+                      onClick={() => removeSelectedUser(u.index)}
+                      position="absolute"
+                      right="10px"
+                      top="-5px"
+                    />
+                    <Text
+                      fontSize="xs"
+                      textTransform="capitalize"
+                      fontWeight="semibold"
+                      isTruncated={true}
+                    >
+                      {u.firstName} {u.lastName}
+                    </Text>
+                  </Flex>
+                ))}
+              </SimpleGrid>
+              {keyword && showSuggestions && (
+                <Box
+                  // overflowY="auto"
+                  // id="scrollable-add-user"
+                  // height="auto"
+                  // maxHeight="350px"
+                  mt="10px"
+                >
+                  <InfiniteScroll
+                    dataLength={searchUserData}
+                    next={fetchNextPage}
+                    hasMore={!!hasNextPage}
+                    loader={<Spinner />}
+                    scrollableTarget="scrollable-add-user"
+                  >
+                    {searchUser?.pages.flatMap((page) =>
+                      page.userList
+                        .filter(
+                          (user) =>
+                            user.userId !== userId &&
+                            !getChatById?.users?.some(
+                              (selected) => selected.userId === user.userId
+                            ) &&
+                            !selectedUser.some(
+                              (selected) => selected.userId === user.userId
+                            )
+                        )
+                        .map((user) => (
+                          <Box
+                            key={user.uniqueId}
+                            onClick={() =>
+                              handleSelectUserClick(
+                                user.userId,
+                                user.firstName,
+                                user.lastName,
+                                user.profilePicture ?? ""
+                              )
+                            }
+                          >
+                            <UserSuggestion user={user} />
+                          </Box>
+                        ))
+                    )}
+                  </InfiniteScroll>
+                </Box>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                isLoading={isLoadingAddToUser}
+                type="submit"
+                isDisabled={selectedUser.length < 1 ? true : false}
+                bg="#1877F2"
+                _hover={{ bg: "#165BB7" }}
+                width="100%"
+              >
+                Add people
               </Button>
             </ModalFooter>
           </ModalContent>

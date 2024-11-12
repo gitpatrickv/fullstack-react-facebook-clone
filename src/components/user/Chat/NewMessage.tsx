@@ -120,7 +120,6 @@ const NewMessage = () => {
       ...user,
       index,
     }));
-
     setSelectedUser(newUserArray);
     console.log(newUserArray);
   };
@@ -272,7 +271,7 @@ const NewMessage = () => {
                     {...register("text")}
                     value={message}
                     onChange={handleMessageChange}
-                    placeholder="Aa"
+                    placeholder="Send a message to start a chat"
                     size="sm"
                     borderRadius="20px"
                     bg={colorMode === "dark" ? "#303030" : "#F0F0F0"}
