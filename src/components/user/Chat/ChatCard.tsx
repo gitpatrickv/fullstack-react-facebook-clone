@@ -1,10 +1,12 @@
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Divider,
   Flex,
   IconButton,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -13,6 +15,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Portal,
@@ -21,7 +24,7 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaEdit, FaUserPlus, FaUsers } from "react-icons/fa";
 import { IoChevronDown, IoClose, IoExitOutline } from "react-icons/io5";
@@ -37,6 +40,10 @@ import { useMessageStore } from "../../../store/message-store";
 import UserListModel from "../Post/UserListModel";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
+import useUpdateGroupChatName, {
+  UpdateGroupChatNameProps,
+} from "../../../hooks/user/useUpdateGroupChatName";
+import { useForm } from "react-hook-form";
 interface Props {
   chatId: number;
   index: number;
@@ -143,6 +150,11 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenUpdateName,
+    onOpen: onOpenUpdateName,
+    onClose: onCloseUpdateName,
+  } = useDisclosure();
 
   const { mutate: uploadPhoto } = useUploadGroupChatImage(chatId);
 
@@ -156,6 +168,33 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     if (file) {
       uploadPhoto({ file: file });
     }
+  };
+  const { handleSubmit, setValue } = useForm<UpdateGroupChatNameProps>();
+
+  const [name, setName] = useState<string>("");
+  const { mutate: updateGroupChatName } = useUpdateGroupChatName();
+  const initialRef = useRef<HTMLInputElement | null>(null);
+  const [loading, setIsLoading] = useState<boolean>(false);
+  const handleUpdateNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    setValue("name", e.target.value);
+  };
+
+  const onSubmit = (data: UpdateGroupChatNameProps) => {
+    setIsLoading(true);
+    updateGroupChatName(
+      { chatId: chatId, name: data.name },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          setName("");
+          onCloseUpdateName();
+        },
+        onError: () => {
+          setIsLoading(false);
+        },
+      }
+    );
   };
 
   return (
@@ -233,7 +272,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                       )}
                       {getChatById?.chatType === "GROUP_CHAT" && (
                         <>
-                          <MenuItem>
+                          <MenuItem onClick={onOpenUpdateName}>
                             <FaEdit size="20px" />
                             <Text ml="10px">Conversation Name</Text>
                           </MenuItem>
@@ -388,7 +427,13 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           </Box>
         </>
       )}
-      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size="xl"
+        isCentered
+        finalFocusRef={focusRef}
+      >
         <ModalOverlay />
         <ModalContent height="500px">
           <ModalHeader textAlign="center">Members</ModalHeader>
@@ -401,6 +446,56 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
               ))}
           </ModalBody>
         </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isOpenUpdateName}
+        onClose={onCloseUpdateName}
+        size="xl"
+        isCentered
+        initialFocusRef={initialRef}
+        finalFocusRef={focusRef}
+      >
+        <ModalOverlay />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            <ModalHeader textAlign="center">Change chat name</ModalHeader>
+            <ModalCloseButton />
+            <Divider />
+            <ModalBody>
+              <Text>
+                Changing the name of a group chat changes it for everyone.
+              </Text>
+              <Input
+                ref={initialRef}
+                mt="10px"
+                onChange={handleUpdateNameChange}
+                value={name}
+                placeholder={"Group Chat Name"}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                onClick={onCloseUpdateName}
+                variant="ghost"
+                mr="5px"
+                width="100px"
+              >
+                Cancel
+              </Button>
+              <Button
+                isLoading={loading}
+                type="submit"
+                isDisabled={name === "" ? true : false}
+                bg="#1877F2"
+                _hover={{ bg: "#165BB7" }}
+                width="100px"
+              >
+                Save
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
       </Modal>
     </>
   );

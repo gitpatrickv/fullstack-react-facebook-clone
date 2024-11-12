@@ -17,8 +17,7 @@ const WriteMessage = ({ chatId, focusRef }: Props) => {
   const { mutate: sendMessage } = useSendMessage();
   const [message, setMessage] = useState<string>("");
   const [loading, setIsLoading] = useState<boolean>(false);
-  const { register, handleSubmit, reset, setValue } =
-    useForm<SendMessageProps>();
+  const { handleSubmit, reset, setValue } = useForm<SendMessageProps>();
 
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
@@ -66,7 +65,6 @@ const WriteMessage = ({ chatId, focusRef }: Props) => {
               // onChange={handleFileChange}
             /> */}
             <Input
-              {...register("text")}
               value={message}
               ref={focusRef}
               onChange={handleMessageChange}

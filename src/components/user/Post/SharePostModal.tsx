@@ -117,10 +117,9 @@ const SharePostModal = ({
               <ModalFooter>
                 <Button
                   type="submit"
-                  bg="#1877F2"
                   width="120px"
-                  _hover={{ bg: "blue.400" }}
-                  _active={{ bg: "blue.600" }}
+                  bg="#1877F2"
+                  _hover={{ bg: "#165BB7" }}
                   isLoading={loading}
                 >
                   Share now
