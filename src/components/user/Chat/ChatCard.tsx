@@ -45,6 +45,7 @@ import useAddUserToGroupChat, {
   AddUserToGroupChatProps,
 } from "../../../hooks/user/useAddUserToGroupChat";
 import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
+import useLeaveGroupChat from "../../../hooks/user/useLeaveGroupChat";
 import useSearchUser from "../../../hooks/user/useSearchUser";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
 import useUpdateGroupChatName, {
@@ -54,7 +55,6 @@ import useUploadGroupChatImage from "../../../hooks/user/useUploadGroupChatImage
 import { useChatStore } from "../../../store/chat-store";
 import { useMessageStore } from "../../../store/message-store";
 import UserSuggestion from "../Navbar/UserSuggestion";
-import UserListModel from "../Post/UserListModel";
 import Messages from "./Messages";
 import WriteMessage from "./WriteMessage";
 interface Props {
@@ -325,6 +325,21 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     });
   };
 
+  const { mutate: leaveGroupChat } = useLeaveGroupChat();
+
+  const handleLeaveGroupChatClick = () => {
+    leaveGroupChat({
+      chatId: chatId,
+      userId: userId,
+      leaveReason: "LEFT",
+    });
+    closeChat(index);
+  };
+
+  const handleNavigateProfileClick = (userId: number) => {
+    navigate(`/profile/${userId}`);
+  };
+
   return (
     <>
       {isMaximized ? (
@@ -387,8 +402,8 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                   <Portal>
                     <MenuList
                       position="absolute"
-                      bottom="5px"
-                      left="-230px"
+                      bottom="60px"
+                      left="0px"
                       border="none"
                       zIndex={1500}
                     >
@@ -423,7 +438,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
                             <FaUsers size="20px" />
                             <Text ml="10px">Members</Text>
                           </MenuItem>
-                          <MenuItem>
+                          <MenuItem onClick={handleLeaveGroupChatClick}>
                             <IoExitOutline size="20px" />
                             <Text ml="10px">Leave group</Text>
                           </MenuItem>
@@ -570,7 +585,45 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           <ModalBody maxHeight="450px" overflowY="auto">
             {getChatById?.chatType === "GROUP_CHAT" &&
               getChatById.users?.map((users) => (
-                <UserListModel key={users.userId} users={users} />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  mt="10px"
+                  cursor="pointer"
+                  key={users.userId}
+                >
+                  <Avatar
+                    src={users.profilePicture || pic}
+                    width="40px"
+                    height="40px"
+                    mr="10px"
+                    onClick={() => handleNavigateProfileClick(users.userId)}
+                  />
+
+                  <Text
+                    fontSize="md"
+                    textTransform="capitalize"
+                    fontWeight="semibold"
+                    onClick={() => handleNavigateProfileClick(users.userId)}
+                    isTruncated={true}
+                  >
+                    {users.firstName} {users.lastName}
+                  </Text>
+                  <Spacer />
+                  {userId !== users.userId && (
+                    <Button
+                      onClick={() =>
+                        leaveGroupChat({
+                          chatId: chatId,
+                          userId: users.userId,
+                          leaveReason: "KICKED",
+                        })
+                      }
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </Box>
               ))}
           </ModalBody>
         </ModalContent>

@@ -1,7 +1,8 @@
-import { Avatar, Box, Text, useColorMode } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text, useColorMode } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import pic from "../../../assets/profpic.jpeg";
 import MessageModel from "../../../entities/Message";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   message: MessageModel;
@@ -16,6 +17,10 @@ const Messages = ({ message, isSender }: Props) => {
       chatBottom.current.scrollIntoView();
     }
   }, []);
+  const navigate = useNavigate();
+  const handleNavigateClick = () => {
+    navigate(`/profile/${message.sender.userId}`);
+  };
   return (
     <>
       {message.message && (
@@ -65,11 +70,20 @@ const Messages = ({ message, isSender }: Props) => {
         </Box>
       )}
       {message.messageUpdate && (
-        <Box mb="5px">
-          <Text textAlign="center" fontSize="xs" userSelect="none">
-            {message.messageUpdate}
+        <Flex mb="5px" justifyContent="center">
+          <Text
+            fontSize="xs"
+            textTransform="capitalize"
+            mr="4px"
+            _hover={{ textDecoration: "underline" }}
+            cursor="pointer"
+            onClick={handleNavigateClick}
+            fontWeight="semibold"
+          >
+            {message.sender.firstName} {message.sender.lastName}
           </Text>
-        </Box>
+          <Text fontSize="xs">{message.messageUpdate}</Text>
+        </Flex>
       )}
       <Box ref={chatBottom}></Box>
     </>
