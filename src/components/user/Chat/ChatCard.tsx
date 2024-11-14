@@ -45,6 +45,7 @@ import useAddUserToGroupChat, {
   AddUserToGroupChatProps,
 } from "../../../hooks/user/useAddUserToGroupChat";
 import useFetchAllChatMessages from "../../../hooks/user/useFetchAllChatMessages";
+import useHandleSelectUserClick from "../../../hooks/user/useHandleSelectUserClick";
 import useLeaveGroupChat from "../../../hooks/user/useLeaveGroupChat";
 import useSearchUser from "../../../hooks/user/useSearchUser";
 import usesGetChatById from "../../../hooks/user/usesGetChatById";
@@ -64,14 +65,6 @@ interface Props {
   isMaximized: boolean;
 }
 
-interface UserArray {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  profilePicture: string;
-  index: number;
-}
-
 const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
   const { colorMode } = useColorMode();
   const { setChatArray, isNewMessageMaximized } = useChatStore();
@@ -84,6 +77,8 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     chatId: chatId,
     pageSize: 1000,
   });
+  const { handleSelectUserClick, selectedUser, setSelectedUser } =
+    useHandleSelectUserClick();
 
   useEffect(() => {
     if (fetchMessages) {
@@ -235,7 +230,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     hasNextPage,
   } = useSearchUser({
     keyword: keyword,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const searchUserData =
@@ -251,7 +246,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     setKeyword(text);
     setShowSuggestions(true);
   };
-  const [selectedUser, setSelectedUser] = useState<UserArray[]>([]);
+
   const userIds = selectedUser.map((id) => id.userId);
   const { mutate: addUserToGroupChat } = useAddUserToGroupChat(chatId);
   const queryClient = useQueryClient();
@@ -284,35 +279,6 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
     );
   };
 
-  const handleSelectUserClick = (
-    userId: number,
-    firstName: string,
-    lastName: string,
-    profilePicture: string
-  ) => {
-    if (selectedUser.some((user) => user.userId === userId)) {
-      return;
-    }
-
-    const newUser: UserArray = {
-      userId,
-      firstName,
-      lastName,
-      profilePicture,
-      index: selectedUser.length,
-    };
-
-    let newUserArray = [...selectedUser, newUser];
-
-    newUserArray = newUserArray.map((user, index) => ({
-      ...user,
-      index,
-    }));
-
-    setSelectedUser(newUserArray);
-    console.log(newUserArray);
-  };
-
   const removeSelectedUser = (index: number) => {
     setSelectedUser((prevArray) => {
       const filteredUser = prevArray.filter((user) => user.index !== index);
@@ -320,7 +286,6 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
         ...user,
         index: i,
       }));
-      console.log(newUserArray);
       return newUserArray;
     });
   };

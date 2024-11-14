@@ -19,17 +19,11 @@ import useCreateGroupChat, {
   CreateGroupChatProps,
 } from "../../../hooks/user/useCreateGroupChat";
 import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
+import useHandleSelectUserClick from "../../../hooks/user/useHandleSelectUserClick";
 import useSearchUser from "../../../hooks/user/useSearchUser";
 import { useChatStore } from "../../../store/chat-store";
 import { useUserStore } from "../../../store/user-store";
 import UserSuggestion from "../Navbar/UserSuggestion";
-
-interface UserArray {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  index: number;
-}
 
 const NewMessage = () => {
   const { userId: currentUserId } = useUserStore();
@@ -39,6 +33,8 @@ const NewMessage = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
   const { setIsNewMessageMaximized, isNewMessageMaximized } = useChatStore();
+  const { handleSelectUserClick, selectedUser, setSelectedUser } =
+    useHandleSelectUserClick();
   const {
     data: searchUser,
     fetchNextPage,
@@ -64,7 +60,6 @@ const NewMessage = () => {
   const { mutate: createGroupChat } = useCreateGroupChat();
   const { register, handleSubmit, reset, setValue } =
     useForm<CreateGroupChatProps>();
-  const [selectedUser, setSelectedUser] = useState<UserArray[]>([]);
   const [message, setMessage] = useState<string>("");
   const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
@@ -98,32 +93,6 @@ const NewMessage = () => {
     }
   };
 
-  const handleSelectUserClick = (
-    userId: number,
-    firstName: string,
-    lastName: string
-  ) => {
-    if (selectedUser.some((user) => user.userId === userId)) {
-      return;
-    }
-
-    const newUser: UserArray = {
-      userId,
-      firstName,
-      lastName,
-      index: selectedUser.length,
-    };
-
-    let newUserArray = [...selectedUser, newUser];
-
-    newUserArray = newUserArray.map((user, index) => ({
-      ...user,
-      index,
-    }));
-    setSelectedUser(newUserArray);
-    console.log(newUserArray);
-  };
-
   const removeSelectedUser = (index: number) => {
     setSelectedUser((prevArray) => {
       const filteredUser = prevArray.filter((user) => user.index !== index);
@@ -131,7 +100,6 @@ const NewMessage = () => {
         ...user,
         index: i,
       }));
-      console.log(newUserArray);
       return newUserArray;
     });
   };
@@ -245,7 +213,8 @@ const NewMessage = () => {
                         handleSelectUserClick(
                           user.userId,
                           user.firstName,
-                          user.lastName
+                          user.lastName,
+                          user.profilePicture ?? ""
                         )
                       }
                     >

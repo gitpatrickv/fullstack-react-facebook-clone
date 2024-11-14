@@ -127,7 +127,7 @@ const ProfilePageHeader = () => {
                   <Button
                     color="black"
                     bg="white"
-                    _hover={{ bg: "white" }}
+                    _hover={{ bg: "#E8E8E8" }}
                     onClick={() => handleOpenModalClick("COVER_PHOTO")}
                   >
                     <FaCamera size={isSmallScreen ? "20px" : "15px"} />
@@ -180,7 +180,10 @@ const ProfilePageHeader = () => {
                   <Box
                     height="36px"
                     width="36px"
-                    bg={colorMode === "dark" ? "gray.600" : "gray.200"}
+                    bg={colorMode === "dark" ? "#303030" : "gray.100"}
+                    _hover={{
+                      bg: colorMode === "dark" ? "#383838" : "gray.200",
+                    }}
                     borderRadius="full"
                     display="flex"
                     justifyContent="center"
