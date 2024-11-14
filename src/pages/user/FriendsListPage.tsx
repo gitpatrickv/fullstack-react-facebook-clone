@@ -1,5 +1,11 @@
+import Instruction from "../../components/user/FriendsPage/Instruction";
+
 const FriendsListPage = () => {
-  return <div>FriendsListPage</div>;
+  return (
+    <>
+      <Instruction />
+    </>
+  );
 };
 
 export default FriendsListPage;

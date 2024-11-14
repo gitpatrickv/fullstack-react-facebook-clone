@@ -1,10 +1,10 @@
-import { Box, Text } from "@chakra-ui/react";
+import Instruction from "../../components/user/FriendsPage/Instruction";
 
 const FriendSuggestionPage = () => {
   return (
-    <Box>
-      <Text>SUGGESSTIONS</Text>
-    </Box>
+    <>
+      <Instruction />
+    </>
   );
 };
 

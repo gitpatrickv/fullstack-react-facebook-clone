@@ -3,35 +3,27 @@ import {
   Button,
   Menu,
   MenuButton,
-  MenuItem,
-  MenuList,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaFacebookMessenger, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FaUserXmark } from "react-icons/fa6";
 import { FriendshipStatusProps } from "../../../hooks/user/useGetFriendshipStatus";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
+import AddFriendButton from "../Buttons/AddFriendButton";
+import UnfriendButton from "../Buttons/UnfriendButton";
+import MessageButton from "../Buttons/MessageButton";
 
 interface Props {
   friendshipStatus?: FriendshipStatusProps;
-  handleAddFriendClick: () => void;
-  handleUnfriendClick: () => void;
-  isLoading: boolean;
-  unfriendIsLoading: boolean;
+  postUserId: number;
   friendRequestStatus?: FriendshipStatusProps;
-  handleAcceptFriendRequestClick: () => void;
-  acceptRequestIsLoading: boolean;
 }
 
 const UserProfileCardButton = ({
   friendshipStatus,
-  handleAddFriendClick,
-  handleUnfriendClick,
-  isLoading,
-  unfriendIsLoading,
+  postUserId,
   friendRequestStatus,
-  handleAcceptFriendRequestClick,
-  acceptRequestIsLoading,
 }: Props) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
@@ -39,55 +31,45 @@ const UserProfileCardButton = ({
     <>
       {friendshipStatus && friendshipStatus?.status === "FRIENDS" ? (
         <Menu>
-          <MenuButton as={Button} mr="7px" isLoading={unfriendIsLoading}>
+          <MenuButton as={Button} mr="7px">
             <Box display="flex">
               <FaUserCheck size="20px" />
               {isSmallScreen ? null : <Text ml="10px">Friends</Text>}
             </Box>
           </MenuButton>
-
-          <MenuList>
-            <MenuItem onClick={handleUnfriendClick}>
-              <FaUserXmark size="20px" />
-              <Text ml="10px">Unfriend</Text>
-            </MenuItem>
-          </MenuList>
+          <UnfriendButton strangerUserId={postUserId} />
         </Menu>
       ) : friendRequestStatus && friendRequestStatus?.status === "PENDING" ? (
         <>
-          <Button
-            mr="7px"
-            onClick={handleAcceptFriendRequestClick}
-            isLoading={acceptRequestIsLoading}
-          >
+          <AcceptFriendRequestButton userId={postUserId} mr="7px">
             <FaUserPlus size="20px" />
             {isSmallScreen ? null : <Text ml="10px">Respond</Text>}
-          </Button>
+          </AcceptFriendRequestButton>
         </>
       ) : (
-        <Button mr="7px" onClick={handleAddFriendClick} isLoading={isLoading}>
-          {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
-            <>
-              <FaUserXmark size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Cancel request</Text>}
-            </>
-          ) : (
-            <>
-              <FaUserPlus size="20px" />
-              {isSmallScreen ? null : <Text ml="10px">Add friend</Text>}
-            </>
-          )}
-        </Button>
+        <Box mr="7px">
+          <AddFriendButton
+            userId={postUserId}
+            friendshipStatus={friendshipStatus?.status}
+          >
+            {friendshipStatus && friendshipStatus?.status === "PENDING" ? (
+              <>
+                <FaUserXmark size="20px" />
+                {isSmallScreen ? null : <Text ml="10px">Cancel request</Text>}
+              </>
+            ) : (
+              <>
+                <FaUserPlus size="20px" />
+                {isSmallScreen ? null : <Text ml="10px">Add friend</Text>}
+              </>
+            )}
+          </AddFriendButton>
+        </Box>
       )}
-      <Button
-        mr="7px"
-        bg="blue.500"
-        _hover={{ bg: "blue.600" }}
-        _active={{ bg: "blue.700" }}
-      >
+      <MessageButton friendId={postUserId}>
         <FaFacebookMessenger size="20px" />
         {isSmallScreen ? null : <Text ml="5px">Message</Text>}
-      </Button>
+      </MessageButton>
     </>
   );
 };

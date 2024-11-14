@@ -9,11 +9,8 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
-import useUnfriend from "../../../hooks/user/useUnfriend";
 import { useUserStore } from "../../../store/user-store";
 import UserProfileCardButton from "./UserProfileCardButton";
 
@@ -36,35 +33,8 @@ const PostUserProfileCard = ({
 }: ProfileCardProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { userId } = useUserStore();
-  const { mutation, isLoading, setIsLoading } = useAddToFriend();
   const { data: friendshipStatus } = useGetFriendshipStatus(postUserId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(postUserId);
-
-  const handleAddFriendClick = () => {
-    mutation.mutate(postUserId);
-    setIsLoading(true);
-  };
-
-  const {
-    mutation: unfriend,
-    isLoading: unfriendIsLoading,
-    setIsLoading: setUnfriendIsLoading,
-  } = useUnfriend(userId ?? 0);
-
-  const handleUnfriendClick = () => {
-    unfriend.mutate(postUserId);
-    setUnfriendIsLoading(true);
-  };
-
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(postUserId);
-    setAcceptRequestIsLoading(true);
-  };
 
   return (
     <Card
@@ -103,8 +73,8 @@ const PostUserProfileCard = ({
               <>
                 <Button
                   mr="7px"
-                  bg="blue.500"
-                  _hover={{ bg: "blue.600" }}
+                  bg="#1877F2"
+                  _hover={{ bg: "#165BB7" }}
                   ml={{ base: "10px", md: "0px" }}
                 >
                   <FaPlus size="15px" />
@@ -118,13 +88,8 @@ const PostUserProfileCard = ({
             ) : (
               <UserProfileCardButton
                 friendshipStatus={friendshipStatus}
-                handleAddFriendClick={handleAddFriendClick}
-                handleUnfriendClick={handleUnfriendClick}
-                isLoading={isLoading}
-                unfriendIsLoading={unfriendIsLoading}
+                postUserId={postUserId}
                 friendRequestStatus={friendRequestStatus}
-                handleAcceptFriendRequestClick={handleAcceptFriendRequestClick}
-                acceptRequestIsLoading={acceptRequestIsLoading}
               />
             )}
           </Box>

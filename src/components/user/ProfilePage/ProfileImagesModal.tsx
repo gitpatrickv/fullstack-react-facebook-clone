@@ -19,7 +19,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import { Images } from "../../../entities/PostImage";
 import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostImageComments";
-import useGetPostById from "../../../hooks/user/useGetPostById";
+import useGetPostCreatorById from "../../../hooks/user/useGetPostCreatorById";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import NavbarRight from "../Navbar/NavbarRight";
 import Comments from "../Post/Comments";
@@ -44,7 +44,7 @@ const ProfileImagesModal = ({
   nextLeftImage,
   imageList,
 }: Props) => {
-  const { data: getPost } = useGetPostById(activeImage?.postId ?? 0);
+  const { data: getPost } = useGetPostCreatorById(activeImage?.postId ?? 0);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
@@ -129,7 +129,6 @@ const ProfileImagesModal = ({
 
     return () => {
       URL.revokeObjectURL(imagePreview);
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -159,7 +158,7 @@ const ProfileImagesModal = ({
             _hover={{ bg: "gray.700" }}
           />
           <Link to="/home">
-            <Box position="absolute" top="2" left="50px" color="blue.500">
+            <Box position="absolute" top="2" left="50px" color="#1877F2">
               <FaFacebook size="40px" />
             </Box>
           </Link>

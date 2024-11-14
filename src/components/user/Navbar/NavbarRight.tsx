@@ -9,29 +9,35 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
-import {
-  IoLogOutSharp,
-  IoNotificationsCircle,
-  IoStorefrontSharp,
-} from "react-icons/io5";
+import { IoLogOutSharp, IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
+
+import Notifications from "./Notifications";
+import Messenger from "../Chat/Messenger";
 
 const NavbarRight = () => {
   const { resetUser } = useUserStore();
   const { data: getUserInfo } = useGetCurrentUserInfo();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
+
+  const { setIsProfile } = useProfileStore();
   const navigate = useNavigate();
+  const handleNavigateProfileClick = () => {
+    navigate(`/profile/${getUserInfo?.userId}`);
+    setIsProfile(true);
+  };
+
   const handleLogout = () => {
     logout(navigate);
     queryClient.setQueryData(["user"], null);
@@ -41,10 +47,13 @@ const NavbarRight = () => {
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
       <ColorModeSwitch />
       <Box mr="5px">
-        <BiLogoMessenger size="43px" />
+        <Messenger userId={getUserInfo?.userId ?? 0} />
       </Box>
       <Box mr="5px">
-        <IoNotificationsCircle size="38px" />
+        <Notifications
+          userId={getUserInfo?.userId ?? 0}
+          email={getUserInfo?.email || ""}
+        />
       </Box>
       <Menu>
         <MenuButton
@@ -55,18 +64,21 @@ const NavbarRight = () => {
         />
 
         <MenuList>
-          <Link to={`/profile/${getUserInfo?.userId}`}>
-            <MenuItem paddingBottom={3} paddingTop={3}>
-              <Avatar
-                src={getUserInfo?.profilePicture || pic}
-                size="xs"
-                ml="3px"
-              />
-              <Text ml="12px" textTransform="capitalize">
-                {getUserInfo?.firstName} {getUserInfo?.lastName}
-              </Text>
-            </MenuItem>
-          </Link>
+          <MenuItem
+            paddingBottom={3}
+            paddingTop={3}
+            onClick={handleNavigateProfileClick}
+          >
+            <Avatar
+              src={getUserInfo?.profilePicture || pic}
+              size="xs"
+              ml="3px"
+            />
+            <Text ml="12px" textTransform="capitalize">
+              {getUserInfo?.firstName} {getUserInfo?.lastName}
+            </Text>
+          </MenuItem>
+
           <Link to="/home">
             <MenuItem>
               <RiNewsFill size="30px" />

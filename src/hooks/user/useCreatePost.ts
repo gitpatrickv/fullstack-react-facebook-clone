@@ -18,11 +18,12 @@ const useCreatePost = (userId: number) => {
   const jwtToken = authStore.jwtToken;
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, reset } = useForm<CreatePostProps>();
+  const { register, handleSubmit, reset, setValue } =
+    useForm<CreatePostProps>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [post, setPost] = useState<string>("");
   const [imageFile, setImageFile] = useState<FileList | null>(null);
-
+  const [imagePreview, setImagePreview] = useState<string[] | null>(null);
   const mutation = useMutation(
     (formData: FormData) =>
       apiClient.post(`/post/save/${userId}`, formData, {
@@ -35,14 +36,15 @@ const useCreatePost = (userId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["allPostList"]);
         setLoading(false);
         reset();
         setPost("");
         setImageFile(null);
+        setImagePreview(null);
         onClose();
       },
       onError: (error: any) => {
-        console.error("Error posting:", error);
         setLoading(false);
 
         if (error.response?.data.errorMessage) {
@@ -87,6 +89,9 @@ const useCreatePost = (userId: number) => {
     setPost,
     imageFile,
     setImageFile,
+    setValue,
+    setImagePreview,
+    imagePreview,
   };
 };
 

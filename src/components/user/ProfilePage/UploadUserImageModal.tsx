@@ -89,7 +89,6 @@ const UploadUserImageModal = ({
 
     return () => {
       URL.revokeObjectURL(imagePreview);
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
 

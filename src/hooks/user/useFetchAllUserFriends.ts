@@ -34,6 +34,7 @@ const useFetchAllUserFriends = ({ userId, pageSize }: PaginateProps) => {
       const { pageNo, totalPages } = pageResponse;
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
+    keepPreviousData: true,
     enabled: !!jwtToken && !!userId,
   });
 };

@@ -36,6 +36,7 @@ const useWritePostComment = (postId: number) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["postCommentList", postId]);
         queryClient.invalidateQueries(["postCommentCount", postId]);
+        queryClient.invalidateQueries(["lastComment", postId]);
         setLoading(false);
         reset();
         setComment("");
@@ -43,7 +44,6 @@ const useWritePostComment = (postId: number) => {
         setImagePreview(null);
       },
       onError: (error: any) => {
-        console.error("Error posting:", error);
         setLoading(false);
 
         if (error.response?.data.errorMessage) {

@@ -46,10 +46,6 @@ const useUploadUserImage = (imageType: string) => {
         setIsSuccessful(true);
       },
       onError: (error: any) => {
-        console.error(
-          "Error uploading photo: File size is too big. Only PNG and JPEG formats are accepted.",
-          error
-        );
         setIsSuccessful(false);
         if (error.response?.data.errorMessage) {
           toast({

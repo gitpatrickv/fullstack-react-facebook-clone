@@ -43,7 +43,6 @@ const useRegister = () => {
     },
     onError: (error: any) => {
       setLoading(false);
-      console.error("Registration failed", error);
 
       if (error.response?.data.email) {
         setError("email", {

@@ -10,10 +10,12 @@ import GamesPage from "../pages/user/GamesPage";
 import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
+import PostPage from "../pages/user/PostPage";
 import ProfileAboutPage from "../pages/user/ProfileAboutPage";
 import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
 import ProfilePhotosPage from "../pages/user/ProfilePhotosPage";
+import SearchPage from "../pages/user/SearchPage";
 import WatchPage from "../pages/user/WatchPage";
 
 const router = createBrowserRouter([
@@ -35,6 +37,22 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/search",
+        element: (
+          <UserRoute>
+            <SearchPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/post/:postId",
+        element: (
+          <UserRoute>
+            <PostPage />
+          </UserRoute>
+        ),
+      },
+      {
         path: "/friends",
         element: (
           <UserRoute>
@@ -49,16 +67,16 @@ const router = createBrowserRouter([
           {
             path: "suggestions",
             element: <FriendSuggestionPage />,
+          },
+          {
+            path: "list",
+            element: <FriendsListPage />,
             // children: [
             //   {
             //     path: "profile/:userId",
             //     element: <ProfilePage />,
             //   },
             // ],
-          },
-          {
-            path: "list",
-            element: <FriendsListPage />,
           },
         ],
       },

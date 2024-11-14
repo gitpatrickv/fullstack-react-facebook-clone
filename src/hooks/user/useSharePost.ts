@@ -29,14 +29,14 @@ const useSharePost = (postId: number) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
         queryClient.invalidateQueries(["postShareCount", postId]);
+        queryClient.invalidateQueries(["allPostList"]);
         setLoading(false);
         setIsSuccessful(true);
         reset();
       },
-      onError: (error: any) => {
+      onError: () => {
         setLoading(false);
         setIsSuccessful(false);
-        console.error("Error sharing:", error);
       },
     }
   );

@@ -1,5 +1,5 @@
 const ProfileAboutPage = () => {
-  return <div>ProfileAboutPage</div>;
+  return <div>Not Yet Implemented</div>;
 };
 
 export default ProfileAboutPage;

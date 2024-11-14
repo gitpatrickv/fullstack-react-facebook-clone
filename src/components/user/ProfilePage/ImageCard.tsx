@@ -1,9 +1,9 @@
 import { Image, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { Images } from "../../../entities/PostImage";
 import ProfileImagesModal from "./ProfileImagesModal";
+import { useLocation, useParams } from "react-router-dom";
 
 interface Props {
   images: Images;

@@ -9,8 +9,6 @@ import {
   Image,
   Menu,
   MenuButton,
-  MenuItem,
-  MenuList,
   Show,
   Skeleton,
   SkeletonCircle,
@@ -22,28 +20,24 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  FaCamera,
-  FaFacebookMessenger,
-  FaPlus,
-  FaUserCheck,
-  FaUserPlus,
-} from "react-icons/fa";
-import { FaUserXmark } from "react-icons/fa6";
+import { FaCamera, FaPlus, FaUserCheck, FaUserPlus } from "react-icons/fa";
+import { FaFacebookMessenger, FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
-import useAcceptFriendRequest from "../../../hooks/user/useAcceptFriendRequest";
-import useAddToFriend from "../../../hooks/user/useAddToFriend";
-import useDeleteFriendRequest from "../../../hooks/user/useDeleteFriendRequest";
 import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
-import useUnfriend from "../../../hooks/user/useUnfriend";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
+import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
+import AddFriendButton from "../Buttons/AddFriendButton";
+import DeleteFriendRequestButton from "../Buttons/DeleteFriendRequestButton";
+import MessageButton from "../Buttons/MessageButton";
+import UnfriendButton from "../Buttons/UnfriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
@@ -58,48 +52,6 @@ const ProfilePageHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
-  const {
-    mutation,
-    isLoading: addFriendIsLoading,
-    setIsLoading: setAddFriendIsLoading,
-  } = useAddToFriend();
-  const {
-    mutation: unfriend,
-    isLoading: deleteIsLoading,
-    setIsLoading: setDeleteIsLoading,
-  } = useUnfriend(currentUserId ?? 0);
-
-  const handleAddFriendClick = () => {
-    mutation.mutate(userId);
-    setAddFriendIsLoading(true);
-  };
-
-  const handleUnfriendClick = () => {
-    unfriend.mutate(userId);
-    setDeleteIsLoading(true);
-  };
-
-  const {
-    mutation: acceptRequest,
-    isLoading: acceptRequestIsLoading,
-    setIsLoading: setAcceptRequestIsLoading,
-  } = useAcceptFriendRequest();
-
-  const handleAcceptFriendRequestClick = () => {
-    acceptRequest.mutate(userId);
-    setAcceptRequestIsLoading(true);
-  };
-
-  const {
-    mutation: deleteRequest,
-    isLoading: deleteRequestIsLoading,
-    setIsLoading: setDeleteRequestIsLoading,
-  } = useDeleteFriendRequest(currentUserId ?? 0);
-
-  const handleDeleteFriendRequestClick = () => {
-    deleteRequest.mutate(userId);
-    setDeleteRequestIsLoading(true);
-  };
 
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
@@ -111,10 +63,17 @@ const ProfilePageHeader = () => {
 
   const { data: fetchAllFriends } = useFetchAllUserFriends({
     userId: userId,
-    pageSize: 6,
+    pageSize: 10,
   });
 
   const { data: getFriendListCount } = useGetUserFriendListCount(userId);
+
+  const { setIsProfile } = useProfileStore();
+  const navigate = useNavigate();
+  const handleNavigateProfileClick = (userId: number) => {
+    navigate(`/profile/${userId}`);
+    setIsProfile(true);
+  };
 
   return (
     <Card>
@@ -130,7 +89,7 @@ const ProfilePageHeader = () => {
           xl: `"asideLeft header asideRight"`,
         }}
       >
-        <GridItem area="header">
+        <GridItem area="header" as="nav">
           {isLoading ? (
             <ProfilePageHeaderSkeleton />
           ) : (
@@ -168,7 +127,7 @@ const ProfilePageHeader = () => {
                   <Button
                     color="black"
                     bg="white"
-                    _hover={{ bg: "white" }}
+                    _hover={{ bg: "#E8E8E8" }}
                     onClick={() => handleOpenModalClick("COVER_PHOTO")}
                   >
                     <FaCamera size={isSmallScreen ? "20px" : "15px"} />
@@ -221,7 +180,10 @@ const ProfilePageHeader = () => {
                   <Box
                     height="36px"
                     width="36px"
-                    bg={colorMode === "dark" ? "gray.600" : "gray.200"}
+                    bg={colorMode === "dark" ? "#303030" : "gray.100"}
+                    _hover={{
+                      bg: colorMode === "dark" ? "#383838" : "gray.200",
+                    }}
                     borderRadius="full"
                     display="flex"
                     justifyContent="center"
@@ -271,19 +233,20 @@ const ProfilePageHeader = () => {
               {fetchAllFriends?.pages.map((page, pageIndex) =>
                 pageIndex === 0
                   ? page.userList.map((list, index) => (
-                      <Link to={`/profile/${list.userId}`} key={list.uniqueId}>
-                        <Avatar
-                          src={list.profilePicture || pic}
-                          height="40px"
-                          width="40px"
-                          ml={index === 0 ? 0 : "-10px"}
-                          zIndex={page.userList.length - index}
-                          borderWidth="2px"
-                          borderColor={
-                            colorMode === "dark" ? "gray.700" : "white"
-                          }
-                        />
-                      </Link>
+                      <Avatar
+                        key={list.uniqueId}
+                        src={list.profilePicture || pic}
+                        height="40px"
+                        width="40px"
+                        ml={index === 0 ? 0 : "-10px"}
+                        zIndex={page.userList.length - index}
+                        borderWidth="2px"
+                        borderColor={
+                          colorMode === "dark" ? "gray.700" : "white"
+                        }
+                        onClick={() => handleNavigateProfileClick(list.userId)}
+                        cursor="pointer"
+                      />
                     ))
                   : null
               )}
@@ -308,9 +271,8 @@ const ProfilePageHeader = () => {
                     <>
                       <Button
                         mr="7px"
-                        bg="blue.500"
-                        _hover={{ bg: "blue.600" }}
-                        _active={{ bg: "blue.700" }}
+                        bg="#1877F2"
+                        _hover={{ bg: "#165BB7" }}
                         ml={{ base: "10px", md: "0px" }}
                       >
                         <FaPlus size="15px" />
@@ -326,41 +288,26 @@ const ProfilePageHeader = () => {
                       {friendshipStatus &&
                       friendshipStatus?.status === "FRIENDS" ? (
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            mr="7px"
-                            isLoading={deleteIsLoading}
-                          >
+                          <MenuButton as={Button}>
                             <Box display="flex">
                               <FaUserCheck size="20px" />
                               <Text ml="10px">Friends</Text>
                             </Box>
                           </MenuButton>
-
-                          <MenuList>
-                            <MenuItem onClick={handleUnfriendClick}>
-                              <FaUserXmark size="20px" />
-                              <Text ml="10px">Unfriend</Text>
-                            </MenuItem>
-                          </MenuList>
+                          <UnfriendButton strangerUserId={userId} />
                         </Menu>
                       ) : friendRequestStatus &&
                         friendRequestStatus?.status === "PENDING" ? (
                         <>
-                          <Button
-                            mr="7px"
-                            onClick={handleAcceptFriendRequestClick}
-                            isLoading={acceptRequestIsLoading}
-                          >
+                          <AcceptFriendRequestButton userId={userId}>
                             <FaUserPlus size="20px" />
                             <Text ml="10px">Respond</Text>
-                          </Button>
+                          </AcceptFriendRequestButton>
                         </>
                       ) : (
-                        <Button
-                          mr="7px"
-                          onClick={handleAddFriendClick}
-                          isLoading={addFriendIsLoading}
+                        <AddFriendButton
+                          userId={userId}
+                          friendshipStatus={friendshipStatus?.status}
                         >
                           {friendshipStatus &&
                           friendshipStatus?.status === "PENDING" ? (
@@ -374,18 +321,12 @@ const ProfilePageHeader = () => {
                               <Text ml="10px">Add friend</Text>
                             </>
                           )}
-                        </Button>
+                        </AddFriendButton>
                       )}
-
-                      <Button
-                        mr="7px"
-                        bg="blue.500"
-                        _hover={{ bg: "blue.600" }}
-                        _active={{ bg: "blue.700" }}
-                      >
+                      <MessageButton friendId={userId} ml="7px">
                         <FaFacebookMessenger size="20px" />
                         <Text ml="5px">Message</Text>
-                      </Button>
+                      </MessageButton>
                     </>
                   )}
                   {/* <Button
@@ -418,28 +359,18 @@ const ProfilePageHeader = () => {
                   sent you a friend request
                 </Text>
                 <Spacer />
-                <Button
-                  mr="7px"
-                  bg="blue.500"
-                  _hover={{ bg: "blue.600" }}
-                  _active={{ bg: "blue.700" }}
-                  onClick={handleAcceptFriendRequestClick}
-                  isLoading={acceptRequestIsLoading}
-                >
+                <AcceptFriendRequestButton userId={userId} mr="7px">
                   <FaUserPlus size="20px" />
                   {isMobileScreen ? null : (
                     <Text ml="10px">Confirm Request</Text>
                   )}
-                </Button>
-                <Button
-                  onClick={handleDeleteFriendRequestClick}
-                  isLoading={deleteRequestIsLoading}
-                >
-                  <IoTrashOutline size="20px" />{" "}
+                </AcceptFriendRequestButton>
+                <DeleteFriendRequestButton strangerUserId={userId}>
+                  <IoTrashOutline size="20px" />
                   {isMobileScreen ? null : (
                     <Text ml="10px">Delete Request</Text>
                   )}
-                </Button>
+                </DeleteFriendRequestButton>
               </Box>
             </Card>
           )}
@@ -449,10 +380,10 @@ const ProfilePageHeader = () => {
           </Box>
         </GridItem>
         <Show above="xl">
-          <GridItem area="asideLeft" />
+          <GridItem area="asideLeft" as="aside" />
         </Show>
         <Show above="xl">
-          <GridItem area="asideRight" />
+          <GridItem area="asideRight" as="aside" />
         </Show>
       </Grid>
     </Card>

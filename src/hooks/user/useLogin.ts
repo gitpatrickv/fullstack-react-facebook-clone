@@ -31,7 +31,11 @@ const useLogin = () => {
 
     onSuccess: (response) => {
       queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries(["allPostList"]);
       queryClient.invalidateQueries(["userPostList"]);
+      queryClient.invalidateQueries(["postNotificationCount"]);
+      queryClient.invalidateQueries(["messages"]);
+      queryClient.invalidateQueries(["userChatList"]);
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);
       const currentUser = response.currentUser;
@@ -44,7 +48,6 @@ const useLogin = () => {
       }
     },
     onError: (error: any) => {
-      console.error("Login failed", error);
       setLoading(false);
 
       if (error.response?.data.errorMessage) {

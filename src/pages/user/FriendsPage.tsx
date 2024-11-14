@@ -1,16 +1,19 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useBreakpointValue } from "@chakra-ui/react";
 
 import { Outlet, useLocation } from "react-router-dom";
+import AllFriends from "../../components/user/FriendsPage/AllFriends";
 import FriendsPageSideBar from "../../components/user/FriendsPage/FriendsPageSidebar";
 import PeopleYouMayKnow from "../../components/user/FriendsPage/PeopleYouMayKnow";
+import FriendSuggestions from "../../components/user/FriendsPage/FriendSuggestions";
+import FriendRequests from "../../components/user/FriendsPage/FriendRequests";
 
 const FriendsPage = () => {
   const location = useLocation();
-
+  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   return (
     <>
       <Grid
-        templateColumns={{ base: "1fr", lg: "0.2fr 1fr" }}
+        templateColumns={{ base: "1fr", lg: "0.25fr 1fr" }}
         templateAreas={{
           base: `
           "section1"
@@ -21,15 +24,20 @@ const FriendsPage = () => {
           `,
         }}
       >
-        <GridItem area="section1" bg="blue">
-          <FriendsPageSideBar />
+        <GridItem area="section1">
+          {location.pathname === "/friends" && <FriendsPageSideBar />}
+          {location.pathname === "/friends/list" && <AllFriends />}
+          {location.pathname === "/friends/suggestions" && (
+            <FriendSuggestions />
+          )}
+          {location.pathname === "/friends/requests" && <FriendRequests />}
         </GridItem>
-        <GridItem
-          area="section2"
-          padding={{ base: 2, md: 5, lg: 7 }}
-          mt={{ lg: "40px", xl: "0" }}
-        >
-          {location.pathname === "/friends" ? <PeopleYouMayKnow /> : <Outlet />}
+        <GridItem area="section2" mt={{ lg: "40px", xl: "0" }}>
+          {location.pathname === "/friends" ? (
+            <PeopleYouMayKnow />
+          ) : !isSmallScreen ? (
+            <Outlet />
+          ) : null}
         </GridItem>
       </Grid>
     </>

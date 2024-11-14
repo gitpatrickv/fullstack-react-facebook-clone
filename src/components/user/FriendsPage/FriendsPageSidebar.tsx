@@ -10,25 +10,56 @@ import {
 import { FaChevronRight, FaUserFriends, FaUserPlus } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa6";
 import { RiUserSearchFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useFriendStore } from "../../../store/friend-store";
 
 const FriendsPageSideBar = () => {
   const { colorMode } = useColorMode();
-  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
-  const isMediumScreen = useBreakpointValue({
-    base: false,
-    md: true,
-    lg: false,
-  });
+
+  const isSmallScreen = useBreakpointValue(
+    { base: true, lg: false },
+    { fallback: "lg" }
+  );
+
+  const isMediumScreen = useBreakpointValue(
+    { base: false, md: true, lg: false },
+    { fallback: "lg" }
+  );
+
+  const { setIsAllFriends, setIsSuggestions, setIsFriendsRequest } =
+    useFriendStore();
+  const navigate = useNavigate();
+  const handleNavigateFriendRequestClick = () => {
+    navigate("/friends/requests");
+    setIsFriendsRequest(true);
+    setIsSuggestions(false);
+    setIsAllFriends(false);
+  };
+
+  const handleNavigateSuggestionsClick = () => {
+    navigate("/friends/suggestions");
+    setIsSuggestions(true);
+    setIsFriendsRequest(false);
+    setIsAllFriends(false);
+  };
+
+  const handleNavigateAllFriendsClick = () => {
+    navigate("/friends/list");
+    setIsAllFriends(true);
+    setIsSuggestions(false);
+    setIsFriendsRequest(false);
+  };
+
   const boxStyles = {
     display: "flex",
     alignItems: "center",
     padding: "10px",
     borderRadius: "5px",
     _hover: {
-      bg: colorMode === "dark" ? "gray.600" : "gray.200",
+      bg: colorMode === "dark" ? "#303030" : "gray.100",
     },
   };
+
   return (
     <Card
       borderRadius="none"
@@ -52,29 +83,26 @@ const FriendsPageSideBar = () => {
                 <Text ml={{ base: "0", md: "10px", lg: "0" }}>Home</Text>
               </Button>
             </Link>
-            <Link to="/friends/requests">
-              <Button mr="5px">
-                <FaUserPlus size="30px" />
-                {isMediumScreen && <Text ml="10px">Friend Request</Text>}
-              </Button>
-            </Link>
-            <Link to="/friends/suggestions">
-              <Button mr="5px">
-                <RiUserSearchFill size="30px" />
-                {isMediumScreen && <Text ml="10px">Suggestions</Text>}
-              </Button>
-            </Link>
-            <Link to="/friends/list">
-              <Button>
-                <FaUsers size="30px" />
-                {isMediumScreen && <Text ml="10px"> All friends</Text>}
-              </Button>
-            </Link>
+
+            <Button mr="5px" onClick={handleNavigateFriendRequestClick}>
+              <FaUserPlus size="30px" />
+              {isMediumScreen && <Text ml="10px">Friend Request</Text>}
+            </Button>
+
+            <Button mr="5px" onClick={handleNavigateSuggestionsClick}>
+              <RiUserSearchFill size="30px" />
+              {isMediumScreen && <Text ml="10px">Suggestions</Text>}
+            </Button>
+
+            <Button onClick={handleNavigateAllFriendsClick}>
+              <FaUsers size="30px" />
+              {isMediumScreen && <Text ml="10px"> All friends</Text>}
+            </Button>
           </>
         ) : (
           <>
             <Link to="/friends">
-              <Box {...boxStyles} cursor="pointer">
+              <Box {...boxStyles} cursor="pointer" color="#1877F2">
                 <FaUserFriends size="30px" />
                 <Text
                   ml="10px"
@@ -86,42 +114,51 @@ const FriendsPageSideBar = () => {
                 </Text>
               </Box>
             </Link>
-            <Link to="/friends/requests">
-              <Box {...boxStyles} cursor="pointer">
-                <FaUserPlus size="30px" />
-                <Text
-                  ml="10px"
-                  fontSize="xl"
-                  fontWeight="semibold"
-                  whiteSpace="nowrap"
-                  mr="10px"
-                >
-                  Friend Request
-                </Text>
-                <Spacer />
-                <FaChevronRight size="20px" />
-              </Box>
-            </Link>
-            <Link to="/friends/suggestions">
-              <Box {...boxStyles} cursor="pointer">
-                <RiUserSearchFill size="30px" />
-                <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
-                  Suggestions
-                </Text>
-                <Spacer />
-                <FaChevronRight size="20px" />
-              </Box>
-            </Link>
-            <Link to="/friends/list">
-              <Box {...boxStyles} cursor="pointer">
-                <FaUsers size="30px" />
-                <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
-                  All friends
-                </Text>
-                <Spacer />
-                <FaChevronRight size="20px" />
-              </Box>
-            </Link>
+
+            <Box
+              {...boxStyles}
+              cursor="pointer"
+              onClick={handleNavigateFriendRequestClick}
+            >
+              <FaUserPlus size="30px" />
+              <Text
+                ml="10px"
+                fontSize="xl"
+                fontWeight="semibold"
+                whiteSpace="nowrap"
+                mr="10px"
+              >
+                Friend Request
+              </Text>
+              <Spacer />
+              <FaChevronRight size="20px" />
+            </Box>
+
+            <Box
+              {...boxStyles}
+              cursor="pointer"
+              onClick={handleNavigateSuggestionsClick}
+            >
+              <RiUserSearchFill size="30px" />
+              <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
+                Suggestions
+              </Text>
+              <Spacer />
+              <FaChevronRight size="20px" />
+            </Box>
+
+            <Box
+              {...boxStyles}
+              cursor="pointer"
+              onClick={handleNavigateAllFriendsClick}
+            >
+              <FaUsers size="30px" />
+              <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
+                All friends
+              </Text>
+              <Spacer />
+              <FaChevronRight size="20px" />
+            </Box>
           </>
         )}
       </Box>

@@ -61,9 +61,9 @@ const WriteComment = ({
             <Avatar src={profilePicture || pic} size="sm" mr="10px" />
             <Box
               width="100%"
-              border="1px solid"
               borderRadius="20px"
-              borderColor="gray.500"
+              bg={colorMode === "dark" ? "#303030" : "#F5F5F5"}
+              overflow="hidden"
             >
               <Input
                 {...register("comment")}

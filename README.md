@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# Facebook Clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Status
 
-Currently, two official plugins are available:
+This project is a work in progress!
+More features are being added.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Overview
 
-## Expanding the ESLint configuration
+A fully-featured Facebook clone that replicates the core functions of Facebook's desktop version with a responsive UI for all devices. Users can connect, share, and interact seamlessly, with real-time notifications and instant messaging for a dynamic social media experience.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend:** React, TypeScript, Chakra UI, React Query, Zustand
+- **Backend:** Spring Boot, Java 17, MySql
+- **Authentication:** Spring Security, JWT
+- **DevOps:** Docker, Github Actions
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Entity Relationship Diagram
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+![ERD FB_CLONE](https://github.com/user-attachments/assets/67cbede8-868b-4f4f-aafa-e9f74893af28)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Screenshots
+- **Home Page**
+![HomePage](https://github.com/user-attachments/assets/fd32ea52-f35b-48c2-b42c-790ded42ac28)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+
+- **Profile Page**
+![ProfilePage](https://github.com/user-attachments/assets/82cb6e0f-ceed-4e35-a257-59c663361964)
+
+
+- **Friends Page**
+![FriendsPage](https://github.com/user-attachments/assets/60f2bc56-3b44-40fc-80c8-59fb8116160b)
+
+
+- **Post Images Modal**
+![PostImages](https://github.com/user-attachments/assets/7b812463-926f-4e47-b9ed-3a36dabd58d6)
+
+
+- **Login Page**
+![LoginPage](https://github.com/user-attachments/assets/6f732ba8-8d83-41f3-8722-644a9df85d1c)
+
+

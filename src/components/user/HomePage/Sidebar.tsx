@@ -1,12 +1,11 @@
 import { Avatar, Box, Text, useColorMode } from "@chakra-ui/react";
-import { BiLogoMessenger } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
-import { RiNewsFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
+import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 
 const Sidebar = () => {
@@ -21,17 +20,22 @@ const Sidebar = () => {
     },
   };
   const { firstName, lastName, profilePicture, userId } = useUserStore();
+  const { setIsProfile } = useProfileStore();
+  const navigate = useNavigate();
+  const handleNavigateClick = () => {
+    navigate(`/profile/${userId}`);
+    setIsProfile(true);
+  };
 
   return (
-    <Box>
-      <Link to={`/profile/${userId}`}>
-        <Box {...boxStyles} cursor="pointer">
-          <Avatar src={profilePicture || pic} height="30px" width="30px" />
-          <Text ml="10px" textTransform="capitalize">
-            {firstName} {lastName}
-          </Text>
-        </Box>
-      </Link>
+    <Box width="300px">
+      <Box {...boxStyles} cursor="pointer" onClick={handleNavigateClick}>
+        <Avatar src={profilePicture || pic} height="30px" width="30px" />
+        <Text ml="10px" textTransform="capitalize">
+          {firstName} {lastName}
+        </Text>
+      </Box>
+
       <Link to="/friends">
         <Box {...boxStyles}>
           <FaUserFriends size="30px" />
@@ -56,16 +60,6 @@ const Sidebar = () => {
           <Text ml="10px">Games</Text>
         </Box>
       </Link>
-      <Link to="/home">
-        <Box {...boxStyles}>
-          <RiNewsFill size="30px" />
-          <Text ml="10px">News Feed</Text>
-        </Box>
-      </Link>
-      <Box {...boxStyles} cursor="pointer">
-        <BiLogoMessenger size="30px" />
-        <Text ml="10px">Messenger</Text>
-      </Box>
     </Box>
   );
 };

@@ -14,7 +14,7 @@ const useFetchAllPosts = ({ pageSize }: PaginateProps) => {
   const jwtToken = authStore.jwtToken;
 
   return useInfiniteQuery<PostListResponse, Error>({
-    queryKey: ["userPostList"],
+    queryKey: ["allPostList"],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<PostListResponse>(`/post/get/all`, {
         headers: {

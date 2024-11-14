@@ -16,10 +16,11 @@ const Footer = () => {
           <Text mr="5px" mt="10px">
             Built using:
           </Text>
+          <Text>Backend: Spring Boot, Java 17, MySQL</Text>
+          <Text textAlign="center">DevOps: Docker, GitHub Actions (CI/CD)</Text>
           <Text textAlign="center">
             Frontend: React, Typescript, Chakra UI, React Query, Zustand
           </Text>
-          <Text>Backend: Spring Boot, Java 22, MySQL</Text>
           <Text mt="10px">© 2024 Patrick V. All rights reserved.</Text>
         </Box>
       </CardBody>

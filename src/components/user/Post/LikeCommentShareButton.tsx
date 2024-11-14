@@ -29,6 +29,7 @@ import useGetPostLikeUserList from "../../../hooks/user/useGetPostLikeUserList";
 import useGetPostShareCount from "../../../hooks/user/useGetPostShareCount";
 import useLikePost from "../../../hooks/user/useLikePost";
 import useSharePost from "../../../hooks/user/useSharePost";
+
 import SharePostModal from "./SharePostModal";
 import UserListModel from "./UserListModel";
 
@@ -52,6 +53,7 @@ const LikeCommentShareButton = ({
   const handleLikePostClick = () => {
     likePost(posts.postId);
   };
+
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const boxStyles = {
@@ -61,7 +63,7 @@ const LikeCommentShareButton = ({
     cursor: "pointer",
     width: "100%",
     _hover: {
-      bg: colorMode === "dark" ? "gray.600" : "gray.100",
+      bg: colorMode === "dark" ? "#303030" : "gray.100",
     },
     borderRadius: "5px",
   };
@@ -124,8 +126,8 @@ const LikeCommentShareButton = ({
               display="flex"
               justifyContent="center"
               alignItems="center"
-              borderColor="blue.500"
-              bg="blue.500"
+              borderColor="#1877F2"
+              bg="#1877F2"
               mr="5px"
               cursor="pointer"
               onMouseEnter={() => setIsHovered(true)}
@@ -218,18 +220,24 @@ const LikeCommentShareButton = ({
         <Box
           {...boxStyles}
           onClick={handleLikePostClick}
-          color={postLike?.liked ? "blue.500" : "white.500"}
+          color={postLike?.liked ? "#1877F2" : "white.500"}
         >
           {postLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
-          <Text ml="5px">Like</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Like
+          </Text>
         </Box>
         <Box {...boxStyles} onClick={handleFocusInputClick}>
           <FaComment size="20px" />
-          <Text ml="5px">Comment</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Comment
+          </Text>
         </Box>
         <Box {...boxStyles} onClick={onOpenShareModal}>
           <IoIosShareAlt size="25px" />
-          <Text ml="5px">Share</Text>
+          <Text ml="5px" fontWeight="semibold">
+            Share
+          </Text>
         </Box>
         <SharePostModal
           isOpen={isOpenShareModal}
@@ -253,6 +261,7 @@ const LikeCommentShareButton = ({
         <ModalOverlay />
         <ModalContent height="500px">
           <ModalHeader>All Likes</ModalHeader>
+          <Divider />
           <ModalCloseButton />
           <ModalBody maxHeight="400px" overflowY="auto" id="list">
             <InfiniteScroll

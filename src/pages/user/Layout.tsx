@@ -1,5 +1,5 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
 import { useAuthQueryStore } from "../../store/auth-store";

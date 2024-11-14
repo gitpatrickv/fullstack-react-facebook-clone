@@ -25,6 +25,7 @@ import PostImages from "./PostImages";
 import PostShareContent from "./PostShareContent";
 import PostShareImages from "./PostShareImages";
 import WriteComment from "./WriteComment";
+import useGetLastPostComment from "../../../hooks/user/useGetLastPostComment";
 
 export interface PostProps {
   posts: Post;
@@ -121,9 +122,10 @@ const Posts = ({ posts }: PostProps) => {
 
     return () => {
       URL.revokeObjectURL(imagePreview);
-      console.log("cleaning up " + imagePreview);
     };
   }, [imagePreview]);
+
+  const { data: getLastPostComment } = useGetLastPostComment(posts.postId);
 
   return (
     <>
@@ -151,7 +153,11 @@ const Posts = ({ posts }: PostProps) => {
         )}
         {posts.postImages && <PostImages posts={posts} />}
         {posts.sharedPost && (
-          <Card border="1px solid" borderColor="gray.500" borderRadius="20px">
+          <Card
+            border="1px solid"
+            borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
+            borderRadius="20px"
+          >
             <Box overflow="hidden" borderTopRadius="20px">
               {posts.sharedPost.postImages && <PostShareImages posts={posts} />}
             </Box>
@@ -192,12 +198,12 @@ const Posts = ({ posts }: PostProps) => {
             View more comments
           </Text>
         )}
-        {fetchAllPostComments?.pages
-          .flatMap((page) => page.postCommentList)
-          .slice(-1)
-          .map((comments) => (
-            <Comments key={comments.postCommentId} comments={comments} />
-          ))}
+        {getLastPostComment && (
+          <Comments
+            key={getLastPostComment?.postCommentId}
+            comments={getLastPostComment}
+          />
+        )}
         <Box mt="10px">
           <WriteComment
             focusRef={finalRef}
@@ -269,7 +275,7 @@ const Posts = ({ posts }: PostProps) => {
             {posts.sharedPost && (
               <Card
                 border="1px solid"
-                borderColor="gray.500"
+                borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
                 borderRadius="20px"
               >
                 <Box overflow="hidden" borderTopRadius="20px">
