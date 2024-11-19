@@ -158,7 +158,7 @@ const LoginPage = () => {
         >
           <Text
             fontSize={{ base: "xx-large", md: "xxx-large" }}
-            color="blue.500"
+            color="#1877F2"
             fontWeight="bold"
           >
             facebook
@@ -228,9 +228,8 @@ const LoginPage = () => {
                     isLoading={loading}
                     type="submit"
                     width="100%"
-                    bg="blue.500"
-                    _hover={{ bg: "blue.500" }}
-                    _active={{ bg: "blue.600" }}
+                    bg="#1877F2"
+                    _hover={{ bg: "#165BB7" }}
                   >
                     Log In
                   </Button>
@@ -238,7 +237,7 @@ const LoginPage = () => {
                 <Text
                   textAlign="center"
                   mt="20px"
-                  color="blue.500"
+                  color="#1877F2"
                   cursor="pointer"
                 >
                   Forget Password?

@@ -47,12 +47,13 @@ const useUploadUserImage = (imageType: string) => {
       },
       onError: (error: any) => {
         setIsSuccessful(false);
+        setLoading(false);
         if (error.response?.data.errorMessage) {
           toast({
             title: "Error uploading image.",
             description: error.response.data.errorMessage,
             status: "error",
-            duration: 3000,
+            duration: 4000,
             isClosable: true,
           });
         }

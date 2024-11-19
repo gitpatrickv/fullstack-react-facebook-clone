@@ -40,7 +40,7 @@ const Messenger = ({ userId }: Props) => {
     hasNextPage,
   } = useFetchAllUserChats({
     userId: userId,
-    pageSize: 10,
+    pageSize: 15,
   });
 
   const fetchChatData =

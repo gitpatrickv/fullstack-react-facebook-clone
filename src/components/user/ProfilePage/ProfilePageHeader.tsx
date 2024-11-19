@@ -30,7 +30,6 @@ import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
-import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
@@ -42,11 +41,24 @@ import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
 import UploadUserImageModal from "./UploadUserImageModal";
 
-const ProfilePageHeader = () => {
+interface Props {
+  isLoading: boolean;
+  coverPhoto?: string;
+  profilePicture?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+const ProfilePageHeader = ({
+  isLoading,
+  coverPhoto,
+  profilePicture,
+  firstName,
+  lastName,
+}: Props) => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
   const { userId: currentUserId } = useUserStore();
-  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
   const { colorMode } = useColorMode();
   const [imageType, setImageType] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -105,9 +117,9 @@ const ProfilePageHeader = () => {
               justifyContent="flex-end"
               position="relative"
             >
-              {getUserProfile?.coverPhoto && (
+              {coverPhoto && (
                 <Image
-                  src={getUserProfile.coverPhoto}
+                  src={coverPhoto}
                   width="100%"
                   height="450px"
                   objectFit="cover"
@@ -135,9 +147,7 @@ const ProfilePageHeader = () => {
                       ""
                     ) : (
                       <Text ml="5px">
-                        {getUserProfile?.coverPhoto
-                          ? "Edit Cover Photo"
-                          : "Add Cover Photo"}
+                        {coverPhoto ? "Edit Cover Photo" : "Add Cover Photo"}
                       </Text>
                     )}
                   </Button>
@@ -167,7 +177,7 @@ const ProfilePageHeader = () => {
                   />
                 ) : (
                   <Avatar
-                    src={getUserProfile?.profilePicture || pic}
+                    src={profilePicture || pic}
                     borderWidth="6px"
                     borderColor={colorMode === "dark" ? "gray.700" : "white"}
                     width="180px"
@@ -218,7 +228,7 @@ const ProfilePageHeader = () => {
                   fontWeight="bold"
                   textTransform="capitalize"
                 >
-                  {getUserProfile?.firstName} {getUserProfile?.lastName}
+                  {firstName} {lastName}
                 </Text>
               )}
 
@@ -353,7 +363,7 @@ const ProfilePageHeader = () => {
                   textTransform="capitalize"
                   mr="5px"
                 >
-                  {getUserProfile?.firstName}
+                  {firstName}
                 </Text>
                 <Text fontSize={{ base: "xs", md: "lg" }} whiteSpace="nowrap">
                   sent you a friend request

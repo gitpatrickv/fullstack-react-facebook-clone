@@ -1,4 +1,5 @@
 import { Grid, GridItem, Show, Skeleton, Spinner } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
@@ -6,6 +7,7 @@ import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import NoAvailablePost from "../../components/user/ProfilePage/NoAvailablePost";
 import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
+import { useUserStore } from "../../store/user-store";
 
 const HomePage = () => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useFetchAllPosts({
@@ -15,6 +17,16 @@ const HomePage = () => {
   const fetchedPostData =
     data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
   const array = [1, 2, 3];
+
+  const { firstName } = useUserStore();
+  const [name, setName] = useState<string>("");
+
+  useEffect(() => {
+    if (firstName) {
+      setName(firstName);
+    }
+  }, [firstName]);
+
   return (
     <>
       <Grid
@@ -33,7 +45,11 @@ const HomePage = () => {
         as="main"
       >
         <GridItem area="section" as="section">
-          {isLoading ? <Skeleton height="100px" /> : <CreatePost />}
+          {isLoading ? (
+            <Skeleton height="100px" />
+          ) : (
+            <CreatePost firstName={name || null} />
+          )}
 
           <InfiniteScroll
             dataLength={fetchedPostData}

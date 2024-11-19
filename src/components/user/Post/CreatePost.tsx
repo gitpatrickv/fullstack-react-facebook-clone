@@ -25,11 +25,15 @@ import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import { getFlexBasis } from "../../../utilities/flexBasis";
 
-const CreatePost = () => {
+interface Props {
+  firstName: string | null;
+}
+
+const CreatePost = ({ firstName }: Props) => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
   const {
-    firstName,
+    firstName: currentFirstName,
     lastName,
     profilePicture,
     userId: currentUserId,
@@ -102,6 +106,12 @@ const CreatePost = () => {
     setImagePreview(null);
   };
 
+  const name = `${firstName?.charAt(0).toUpperCase()}${firstName?.slice(1)}`;
+  const message =
+    location.pathname === "/home" || currentUserId === userId
+      ? `What's on your mind, ${name}?`
+      : `Write something to ${name}...`;
+
   return (
     <>
       <Card padding={3}>
@@ -109,7 +119,7 @@ const CreatePost = () => {
           <Avatar src={profilePicture || pic} size="sm" mr="10px" />
           <Input
             borderRadius={20}
-            placeholder={`What's on your mind, ${firstName}?`}
+            placeholder={message}
             variant="filled"
             textAlign="left"
             fontSize={["sm", "md", "lg"]}
@@ -161,14 +171,14 @@ const CreatePost = () => {
                   onClick={handleNavigateProfileClick}
                   cursor="pointer"
                 >
-                  {firstName} {lastName}
+                  {currentFirstName} {lastName}
                 </Text>
               </Box>
               <FormControl>
                 <Textarea
                   {...register("content")}
                   ref={initialRef}
-                  placeholder={`What's on your mind, ${firstName}?`}
+                  placeholder={message}
                   onClick={onOpen}
                   border="none"
                   _focus={{ border: "none", boxShadow: "none" }}

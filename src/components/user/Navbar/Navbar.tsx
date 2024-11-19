@@ -15,13 +15,15 @@ import { IoLogoGameControllerA } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
+import { useGameStore } from "../../../store/game-store";
+import GameModal from "./GameModal";
 import NavbarRight from "./NavbarRight";
 import Search from "./Search";
 const Navbar = () => {
   const location = useLocation();
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
-
+  const { onOpen } = useGameStore();
   const [selectedPage, setSelectedPage] = useState<string | null>(
     location.pathname
   );
@@ -119,15 +121,17 @@ const Navbar = () => {
                     <IoStorefrontSharp size="35px" />
                   </Button>
                 </Link>
-                <Link to="/games" style={{ flex: 1 }}>
+                <Box style={{ flex: 1 }}>
                   <Button
                     color={selectedPage === "/games" ? "#1877F2" : "white.500"}
                     {...buttonStyle}
+                    onClick={onOpen}
                   >
                     <IoLogoGameControllerA size="35px" />
                   </Button>
-                </Link>
+                </Box>
               </Flex>
+              <GameModal />
             </GridItem>
           </Show>
           <GridItem area="asideRight">

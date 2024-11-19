@@ -19,7 +19,7 @@ const Contacts = () => {
   const { colorMode } = useColorMode();
   const { data: fetchAllChat, isLoading } = useFetchAllUserChats({
     userId: userId,
-    pageSize: 20,
+    pageSize: 15,
   });
   const array = [1, 2, 3, 4, 5, 6, 7, 8];
 

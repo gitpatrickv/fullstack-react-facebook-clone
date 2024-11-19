@@ -6,7 +6,6 @@ import FriendRequestPage from "../pages/user/FriendRequestPage";
 import FriendSuggestionPage from "../pages/user/FriendSuggestionPage";
 import FriendsListPage from "../pages/user/FriendsListPage";
 import FriendsPage from "../pages/user/FriendsPage";
-import GamesPage from "../pages/user/GamesPage";
 import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
@@ -93,14 +92,6 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <MarketPage />
-          </UserRoute>
-        ),
-      },
-      {
-        path: "/games",
-        element: (
-          <UserRoute>
-            <GamesPage />
           </UserRoute>
         ),
       },

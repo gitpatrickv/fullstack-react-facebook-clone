@@ -38,7 +38,7 @@ const useSearchUser = ({ keyword, pageSize }: SearchProps) => {
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken,
+    enabled: !!jwtToken && !!keyword,
   });
 };
 
