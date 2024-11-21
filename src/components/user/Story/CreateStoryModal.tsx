@@ -15,7 +15,6 @@ import {
   ModalOverlay,
   Text,
   Textarea,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef } from "react";
@@ -27,10 +26,8 @@ import pic from "../../../assets/profpic.jpeg";
 import useCreateStory from "../../../hooks/user/useCreateStory";
 import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
-import NavbarRight from "../Navbar/NavbarRight";
 
 const CreateStoryModal = () => {
-  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const { profilePicture, firstName, lastName, userId } = useUserStore();
   const { isOpen, onClose } = useStoryStore();
   const { colorMode } = useColorMode();
@@ -143,7 +140,7 @@ const CreateStoryModal = () => {
             <GridItem
               area="section1"
               bg={colorMode === "dark" ? "#262626" : "white"}
-              height="100vh"
+              height={{ base: "auto", lg: "100vh" }}
               position="relative"
             >
               <Box mb="70px">
@@ -167,12 +164,6 @@ const CreateStoryModal = () => {
                 >
                   <FaFacebook size="40px" />
                 </Box>
-
-                {isSmallScreen && (
-                  <Box padding={2}>
-                    <NavbarRight />
-                  </Box>
-                )}
               </Box>
 
               <Text fontSize="x-large" ml="10px" fontWeight="bold">
@@ -191,17 +182,6 @@ const CreateStoryModal = () => {
               </Flex>
               <Divider mt="20px" mb="20px" />
 
-              {isTextStory && (
-                <Box padding={2}>
-                  <Textarea
-                    placeholder="Start typing"
-                    height="150px"
-                    onChange={handleTextChange}
-                    ref={inputRef}
-                    resize="none"
-                  />
-                </Box>
-              )}
               {imageFile && (
                 <Flex
                   alignItems="center"
@@ -231,11 +211,26 @@ const CreateStoryModal = () => {
                   </Text>
                 </Flex>
               )}
+
+              {(isTextStory || isPhotoStory) && (
+                <Box padding={2}>
+                  <Textarea
+                    placeholder="Start typing"
+                    height={{ base: "auto", lg: "150px" }}
+                    onChange={handleTextChange}
+                    ref={inputRef}
+                    resize="none"
+                  />
+                </Box>
+              )}
+
               <form onSubmit={handleSubmit(onSubmit)}>
                 <>
                   {(text || imageFile) && (
                     <Flex
-                      position="absolute"
+                      position={{ base: "relative", lg: "absolute" }}
+                      mt={{ base: "30px", lg: "0" }}
+                      ml={{ base: "10px", lg: "0" }}
                       bottom="20px"
                       left="50%"
                       transform="translateX(-50%)"
@@ -258,7 +253,7 @@ const CreateStoryModal = () => {
             </GridItem>
             <GridItem
               area="section2"
-              height="100vh"
+              height={{ base: "auto", lg: "100vh" }}
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -266,8 +261,8 @@ const CreateStoryModal = () => {
             >
               {text || imageFile ? (
                 <Card
-                  height="90vh"
-                  width="60%"
+                  height={{ base: "60vh", md: "90vh" }}
+                  width={{ base: "100%", lg: "85%", xl: "60%" }}
                   bg={colorMode === "dark" ? "#262626" : "white"}
                   padding={4}
                 >
@@ -291,7 +286,7 @@ const CreateStoryModal = () => {
                           : "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
                       }
                       height="90%"
-                      width="45%"
+                      width={{ base: "80%", lg: "60%", xl: "45%" }}
                       border="1px solid"
                       borderColor="gray.500"
                       overflow="hidden"
@@ -299,20 +294,22 @@ const CreateStoryModal = () => {
                       justifyContent="center"
                       alignItems="center"
                     >
-                      {isPhotoStory && (
-                        <Textarea
-                          placeholder="Start typing"
-                          border="none"
-                          _focus={{ border: "none", boxShadow: "none" }}
-                          _hover={{ border: "none" }}
-                          resize="none"
-                          onChange={handleTextChange}
-                          ref={inputTextPhotoRef}
-                          fontSize="lg"
-                          color="white"
-                        />
+                      {imageFile && (
+                        <Flex
+                          position="relative"
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Text
+                            position="absolute"
+                            padding={4}
+                            fontSize={{ base: "md", md: "x-large" }}
+                          >
+                            {text}
+                          </Text>
+                          <Image src={imagePreview || pic} />
+                        </Flex>
                       )}
-                      {imageFile && <Image src={imagePreview || pic} />}
                       {text && isTextStory && (
                         <Box padding={4}>
                           <Text fontSize="xl" fontWeight="semibold">
@@ -324,17 +321,19 @@ const CreateStoryModal = () => {
                   </Card>
                 </Card>
               ) : (
-                <>
+                <Flex mt={{ base: "20px", lg: "0" }}>
                   <Card
-                    height="330px"
-                    width="220px"
+                    height={{ base: "250px", md: "330px" }}
+                    width={{ base: "150px", md: "220px" }}
                     bgGradient="linear(to-t, #30cfd0 0%, #330867 100%)"
                     justifyContent="center"
                     _hover={{ filter: "brightness(1.1)" }}
+                    onClick={handleFileInputClick}
+                    cursor="pointer"
                   >
                     <Box textAlign="center">
                       <IconButton
-                        aria-label="image"
+                        aria-label="image_story"
                         icon={<IoMdImages size="20px" />}
                         bg={colorMode === "dark" ? "#303030" : "gray.100"}
                         _hover={{
@@ -342,9 +341,12 @@ const CreateStoryModal = () => {
                         }}
                         isRound
                         size="md"
-                        onClick={handleFileInputClick}
                       />
-                      <Text fontWeight="semibold" mt="5px">
+                      <Text
+                        fontWeight="semibold"
+                        mt="5px"
+                        fontSize={{ base: "sm", md: "md" }}
+                      >
                         Create a photo story
                       </Text>
                       <input
@@ -358,16 +360,18 @@ const CreateStoryModal = () => {
                     </Box>
                   </Card>
                   <Card
-                    height="330px"
-                    width="220px"
+                    height={{ base: "250px", md: "330px" }}
+                    width={{ base: "150px", md: "220px" }}
                     bgGradient="linear(to-tr, #f093fb 0%, #f5576c 100%)"
-                    ml="20px"
+                    ml={{ base: "10px", lg: "20px" }}
                     justifyContent="center"
                     _hover={{ filter: "brightness(1.1)" }}
+                    onClick={handleTextAreaClick}
+                    cursor="pointer"
                   >
                     <Box textAlign="center">
                       <IconButton
-                        aria-label="image"
+                        aria-label="text_story"
                         icon={<IoText size="20px" />}
                         bg={colorMode === "dark" ? "#303030" : "gray.100"}
                         _hover={{
@@ -375,14 +379,17 @@ const CreateStoryModal = () => {
                         }}
                         isRound
                         size="md"
-                        onClick={handleTextAreaClick}
                       />
-                      <Text fontWeight="semibold" mt="5px">
+                      <Text
+                        fontWeight="semibold"
+                        mt="5px"
+                        fontSize={{ base: "sm", md: "md" }}
+                      >
                         Create a text story
                       </Text>
                     </Box>
                   </Card>
-                </>
+                </Flex>
               )}
             </GridItem>
           </Grid>

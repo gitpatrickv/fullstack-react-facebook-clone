@@ -1,4 +1,11 @@
-import { Grid, GridItem, Show, Skeleton, Spinner } from "@chakra-ui/react";
+import {
+  Flex,
+  Grid,
+  GridItem,
+  Show,
+  Skeleton,
+  Spinner,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Contacts from "../../components/user/HomePage/Contacts";
@@ -6,8 +13,10 @@ import Sidebar from "../../components/user/HomePage/Sidebar";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import NoAvailablePost from "../../components/user/ProfilePage/NoAvailablePost";
+import CreateStoryCard from "../../components/user/Story/CreateStoryCard";
 import StoryCard from "../../components/user/Story/StoryCard";
 import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
+import useFetchAllStories from "../../hooks/user/useFetchAllStories";
 import { useUserStore } from "../../store/user-store";
 
 const HomePage = () => {
@@ -19,8 +28,9 @@ const HomePage = () => {
     data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
   const array = [1, 2, 3];
 
-  const { firstName } = useUserStore();
+  const { firstName, userId } = useUserStore();
   const [name, setName] = useState<string>("");
+  const { data: fetchAllStories } = useFetchAllStories(userId ?? 0);
 
   useEffect(() => {
     if (firstName) {
@@ -51,8 +61,12 @@ const HomePage = () => {
           ) : (
             <CreatePost firstName={name || null} />
           )}
-          <StoryCard />
-
+          <Flex>
+            <CreateStoryCard />
+            {fetchAllStories?.map((story) => (
+              <StoryCard key={story.userId} story={story} />
+            ))}
+          </Flex>
           <InfiniteScroll
             dataLength={fetchedPostData}
             next={fetchNextPage}
