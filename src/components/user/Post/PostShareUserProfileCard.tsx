@@ -11,6 +11,7 @@ import { MdModeEdit } from "react-icons/md";
 import pic from "../../../assets/profpic.jpeg";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
+import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import { ProfileCardProps } from "./PostUserProfileCard";
 import UserProfileCardButton from "./UserProfileCardButton";
@@ -29,6 +30,7 @@ const PostShareUserProfileCard = ({
   const { data: friendRequestStatus } = useGetFriendRequestStatus(
     postUserId ?? 0
   );
+  const { onOpen } = useStoryStore();
 
   return (
     <Card
@@ -70,6 +72,7 @@ const PostShareUserProfileCard = ({
                   bg="#1877F2"
                   _hover={{ bg: "#165BB7" }}
                   ml={{ base: "10px", md: "0px" }}
+                  onClick={onOpen}
                 >
                   <FaPlus size="15px" />
                   {isSmallScreen ? null : <Text ml="5px">Add to Story</Text>}

@@ -2,6 +2,7 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
+import CreateStoryModal from "../../components/user/Story/CreateStoryModal";
 import { useAuthQueryStore } from "../../store/auth-store";
 
 const Layout = () => {
@@ -23,6 +24,7 @@ const Layout = () => {
             <Outlet />
             {/* <ScrollRestoration /> */}
           </Box>
+          <CreateStoryModal />
         </GridItem>
       </Grid>
       {location.pathname === "/" ? <Footer /> : ""}

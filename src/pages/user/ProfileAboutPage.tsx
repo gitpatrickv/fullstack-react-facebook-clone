@@ -1,5 +1,11 @@
+import { Box } from "@chakra-ui/react";
+
 const ProfileAboutPage = () => {
-  return <div>Not Yet Implemented</div>;
+  return (
+    <Box textAlign="center" mt="100px" fontSize="xl">
+      Not Yet Implemented
+    </Box>
+  );
 };
 
 export default ProfileAboutPage;

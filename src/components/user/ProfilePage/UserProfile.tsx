@@ -167,7 +167,10 @@ const UserProfile = () => {
                             ? page.postImageModels
                                 .slice(0, sliceLength)
                                 .map((image) => (
-                                  <Box key={image.postImageId}>
+                                  <Box
+                                    key={image.postImageId}
+                                    _hover={{ filter: "brightness(1.1)" }}
+                                  >
                                     <ImageCard
                                       images={image}
                                       imageList={page.postImageModels}
@@ -218,7 +221,10 @@ const UserProfile = () => {
                             ? page.userList
                                 .slice(0, sliceLength)
                                 .map((list) => (
-                                  <Box key={list.uniqueId}>
+                                  <Box
+                                    key={list.uniqueId}
+                                    _hover={{ filter: "brightness(1.1)" }}
+                                  >
                                     <Image
                                       src={list.profilePicture || pic}
                                       height="130px"

@@ -31,6 +31,7 @@ import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestSt
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
 import { useProfileStore } from "../../../store/profile-store";
+import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
@@ -64,7 +65,7 @@ const ProfilePageHeader = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
-
+  const { onOpen: onOpenAddStory } = useStoryStore();
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
     onOpen();
@@ -284,6 +285,7 @@ const ProfilePageHeader = ({
                         bg="#1877F2"
                         _hover={{ bg: "#165BB7" }}
                         ml={{ base: "10px", md: "0px" }}
+                        onClick={onOpenAddStory}
                       >
                         <FaPlus size="15px" />
                         <Text ml="5px">Add to Story</Text>

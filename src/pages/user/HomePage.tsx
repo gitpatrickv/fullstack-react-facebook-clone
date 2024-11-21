@@ -6,6 +6,7 @@ import Sidebar from "../../components/user/HomePage/Sidebar";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import NoAvailablePost from "../../components/user/ProfilePage/NoAvailablePost";
+import StoryCard from "../../components/user/Story/StoryCard";
 import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
 import { useUserStore } from "../../store/user-store";
 
@@ -50,6 +51,7 @@ const HomePage = () => {
           ) : (
             <CreatePost firstName={name || null} />
           )}
+          <StoryCard />
 
           <InfiniteScroll
             dataLength={fetchedPostData}
