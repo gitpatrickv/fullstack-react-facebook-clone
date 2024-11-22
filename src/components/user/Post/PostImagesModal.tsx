@@ -12,6 +12,7 @@ import {
   Show,
   Spinner,
   useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
@@ -51,16 +52,15 @@ const PostImagesModal = ({
 }: ImageModalProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-
+  const { colorMode } = useColorMode();
   const nextButton = (direction: "left" | "right") => (
     <IconButton
       isRound={true}
       aria-label={direction === "left" ? "Left" : "Right"}
       size={isSmallScreen ? "md" : "lg"}
-      colorScheme="gray.500"
-      bg="gray.500"
-      _hover={{ bg: "gray.600" }}
-      _active={{ bg: "gray.700" }}
+      bg={colorMode === "dark" ? "#303030" : "white"}
+      _hover={{ bg: colorMode === "dark" ? "#383838" : "gray.100" }}
+      _active={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
       icon={
         direction === "left" ? (
           <FaChevronLeft size="25px" />

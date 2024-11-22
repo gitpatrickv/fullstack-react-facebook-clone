@@ -9,7 +9,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IoMdNotificationsOff } from "react-icons/io";
 import { IoNotificationsCircle } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -17,9 +17,9 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
+import { useMessageStore } from "../../../store/message-store";
 import { useNotificationStore } from "../../../store/notification-store";
 import NotificationCard from "./NotificationCard";
-import { useMessageStore } from "../../../store/message-store";
 
 interface Props {
   userId: number;
@@ -105,9 +105,14 @@ const Notifications = ({ userId, email }: Props) => {
     }
   }, [email]);
 
+  const prevNotificationModels = useRef(notificationModels.length);
+
   useEffect(() => {
-    refetchNotificationCount();
-    refetchNotifications();
+    if (prevNotificationModels.current !== notificationModels.length) {
+      refetchNotificationCount();
+      refetchNotifications();
+      prevNotificationModels.current = notificationModels.length;
+    }
   }, [notificationModels]);
 
   return (

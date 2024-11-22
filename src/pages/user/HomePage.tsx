@@ -1,12 +1,17 @@
 import {
+  Box,
   Flex,
   Grid,
   GridItem,
+  IconButton,
   Show,
   Skeleton,
   Spinner,
+  useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Contacts from "../../components/user/HomePage/Contacts";
 import Sidebar from "../../components/user/HomePage/Sidebar";
@@ -30,13 +35,54 @@ const HomePage = () => {
 
   const { firstName, userId } = useUserStore();
   const [name, setName] = useState<string>("");
-  const { data: fetchAllStories } = useFetchAllStories(userId ?? 0);
-
+  const { data: fetchAllStories, isLoading: isStoriesLoading } =
+    useFetchAllStories(userId ?? 0);
+  const { colorMode } = useColorMode();
   useEffect(() => {
     if (firstName) {
       setName(firstName);
     }
   }, [firstName]);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const storiesLength = fetchAllStories?.length ?? 0;
+
+  const storiesBreakpoint = useBreakpointValue({
+    base: 2,
+    md: 5,
+    lg: 4,
+    xl: 5,
+  });
+
+  const showButtons = storiesLength >= (storiesBreakpoint ?? 0);
+
+  const handleScroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const nextButton = (direction: "left" | "right") => (
+    <IconButton
+      isRound={true}
+      aria-label={direction === "left" ? "Left" : "Right"}
+      bg={colorMode === "dark" ? "#303030" : "white"}
+      _hover={{ bg: colorMode === "dark" ? "#383838" : "gray.100" }}
+      _active={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
+      icon={
+        direction === "left" ? (
+          <FaChevronLeft size="20px" />
+        ) : (
+          <FaChevronRight size="20px" />
+        )
+      }
+      onClick={() => handleScroll(direction)}
+    />
+  );
 
   return (
     <>
@@ -55,18 +101,61 @@ const HomePage = () => {
         padding={{ base: 2, md: 7, lg: 2 }}
         as="main"
       >
-        <GridItem area="section" as="section">
+        <GridItem
+          area="section"
+          as="section"
+          overflow="hidden"
+          position="relative"
+        >
           {isLoading ? (
             <Skeleton height="100px" />
           ) : (
             <CreatePost firstName={name || null} />
           )}
-          <Flex>
-            <CreateStoryCard />
-            {fetchAllStories?.map((story) => (
-              <StoryCard key={story.userId} story={story} />
-            ))}
+          {showButtons && (
+            <>
+              <Box position="absolute" top="210px" left="5px" zIndex={5}>
+                {nextButton("left")}
+              </Box>
+              <Box position="absolute" top="210px" right="5px" zIndex={5}>
+                {nextButton("right")}
+              </Box>
+            </>
+          )}
+          <Flex
+            ref={scrollRef}
+            overflowX="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              scrollbarWidth: "none",
+            }}
+          >
+            {isStoriesLoading ? (
+              <>
+                {array.map((skeleton) => (
+                  <Skeleton
+                    height="200px"
+                    minWidth="120px"
+                    maxWidth="120px"
+                    mt="10px"
+                    mr="10px"
+                    borderRadius="5px"
+                    key={skeleton}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                <CreateStoryCard />
+                {fetchAllStories?.map((story) => (
+                  <StoryCard key={story.userId} story={story} />
+                ))}
+              </>
+            )}
           </Flex>
+
           <InfiniteScroll
             dataLength={fetchedPostData}
             next={fetchNextPage}

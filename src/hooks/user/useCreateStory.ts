@@ -37,9 +37,7 @@ const useCreateStory = (userId: number) => {
 
     {
       onSuccess: () => {
-        // queryClient.invalidateQueries(["postCommentList", postId]);
-        // queryClient.invalidateQueries(["postCommentCount", postId]);
-        // queryClient.invalidateQueries(["lastComment", postId]);
+        queryClient.invalidateQueries(["stories"]);
         setLoading(false);
         reset();
         setText("");

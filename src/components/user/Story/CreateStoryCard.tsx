@@ -19,7 +19,8 @@ const CreateStoryCard = () => {
     <>
       <Card
         height="200px"
-        width="120px"
+        minWidth="120px"
+        maxWidth="120px"
         mt="10px"
         overflow="hidden"
         cursor="pointer"

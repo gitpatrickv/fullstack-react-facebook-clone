@@ -22,7 +22,8 @@ const StoryCard = ({ story }: Props) => {
     <>
       <Card
         height="200px"
-        width="120px"
+        minWidth="120px"
+        maxWidth="120px"
         mt="10px"
         cursor="pointer"
         position="relative"
@@ -36,9 +37,10 @@ const StoryCard = ({ story }: Props) => {
             ? "#262626"
             : "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
         }
+        overflow="hidden"
       >
         <Box position="absolute" top="10px" left="10px">
-          <Avatar src={story.profilePicture || pic} size="sm" zIndex={10} />
+          <Avatar src={story.profilePicture || pic} size="sm" zIndex={2} />
         </Box>
 
         <Text
@@ -49,18 +51,30 @@ const StoryCard = ({ story }: Props) => {
           fontSize="10px"
           textTransform="uppercase"
           textAlign="center"
+          zIndex={2}
         >
           {text}
         </Text>
-        {storyImage && <Image src={storyImage} />}
+        {storyImage && (
+          <Image
+            src={storyImage}
+            _hover={{
+              transform: "scale(1.03)",
+              transition: "transform .15s ease-in",
+            }}
+            height="100%"
+            objectFit="cover"
+          />
+        )}
 
         <Text
           position="absolute"
           bottom="10px"
           left="10px"
           fontSize="sm"
-          fontWeight="bold"
+          fontWeight="semibold"
           textTransform="capitalize"
+          zIndex={2}
         >
           {story.firstName} {story.lastName}
         </Text>
