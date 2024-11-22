@@ -25,6 +25,7 @@ const CreateStoryCard = () => {
         overflow="hidden"
         cursor="pointer"
         onClick={onOpen}
+        userSelect="none"
       >
         <Box textAlign="center">
           <Image

@@ -180,7 +180,10 @@ const CreateStoryModal = () => {
                   {firstName} {lastName}
                 </Text>
               </Flex>
-              <Divider mt="20px" mb="20px" />
+              <Divider
+                mt={{ base: "10px", lg: "20px" }}
+                mb={{ base: "0px", lg: "20px" }}
+              />
 
               {imageFile && (
                 <Flex
@@ -194,7 +197,9 @@ const CreateStoryModal = () => {
                   userSelect="none"
                   ml="10px"
                   mr="10px"
+                  mb="10px"
                   onClick={handlePhotoTextAreaClick}
+                  mt={{ base: "10px", lg: "0" }}
                 >
                   <IconButton
                     aria-label="close"
