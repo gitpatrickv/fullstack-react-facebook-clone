@@ -9,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoLogOutSharp, IoStorefrontSharp } from "react-icons/io5";
@@ -19,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import pic from "../../../assets/profpic.jpeg";
+import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
 import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
 import { useMessageStore } from "../../../store/message-store";
@@ -32,7 +33,8 @@ import Notifications from "./Notifications";
 const NavbarRight = () => {
   const { data: getUserInfo } = useGetCurrentUserInfo();
   const { resetUser } = useUserStore();
-
+  const { addNotification, stompClientRef, setIsConnected, isConnected } =
+    useNotificationStore();
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
 
@@ -47,11 +49,28 @@ const NavbarRight = () => {
     logout(navigate);
     queryClient.setQueryData(["user"], null);
     resetUser();
+    setIsConnected(false);
   };
 
-  const { addNotification, stompClientRef, setIsConnected } =
-    useNotificationStore();
+  const {
+    data: fetchAllChat,
+    fetchNextPage,
+    hasNextPage,
+  } = useFetchAllUserChats({
+    userId: getUserInfo?.userId ?? 0,
+    pageSize: 15,
+  });
+
+  const groupChatIds =
+    fetchAllChat?.pages.flatMap((page) =>
+      page.chatModels
+        .filter((chat) => chat.chatType === "GROUP_CHAT")
+        .map((chat) => chat.chatId)
+    ) || [];
+
   const { addMessage } = useMessageStore();
+
+  const subscribedChatIdsRef = useRef(new Map<number, Stomp.Subscription>());
 
   useEffect(() => {
     if (getUserInfo && stompClientRef.current === null) {
@@ -93,17 +112,57 @@ const NavbarRight = () => {
             console.log("Disconnected from WebSocket");
             stompClientRef.current = null;
             setIsConnected(false);
+
+            subscribedChatIdsRef.current.forEach((subscription) => {
+              subscription.unsubscribe();
+            });
+            subscribedChatIdsRef.current.clear();
+
+            console.log("All subscriptions cleared.");
           });
         }
       };
     }
-  }, [getUserInfo]);
+  }, [getUserInfo?.email]);
+
+  useEffect(() => {
+    if (isConnected && fetchAllChat) {
+      groupChatIds.forEach((chatId) => {
+        if (!subscribedChatIdsRef.current.has(chatId)) {
+          const subscription = stompClientRef.current?.subscribe(
+            `/topic/chat/${chatId}`,
+            (message) => {
+              const text = JSON.parse(message.body);
+              addMessage(text.chatId, text);
+            }
+          );
+          if (subscription) {
+            subscribedChatIdsRef.current.set(chatId, subscription);
+          }
+        }
+      });
+    }
+  }, [fetchAllChat, isConnected, groupChatIds]);
+
+  useEffect(() => {
+    if (groupChatIds.length !== subscribedChatIdsRef.current.size)
+      subscribedChatIdsRef.current.forEach((subscription, chatId) => {
+        if (!groupChatIds.includes(chatId)) {
+          subscription.unsubscribe();
+          subscribedChatIdsRef.current.delete(chatId);
+        }
+      });
+  }, [groupChatIds.length]);
 
   return (
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
       <ColorModeSwitch />
       <Box mr="5px">
-        <Messenger />
+        <Messenger
+          fetchAllChat={fetchAllChat}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage ?? false}
+        />
       </Box>
       <Box mr="5px">
         <Notifications />

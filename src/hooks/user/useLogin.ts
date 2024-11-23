@@ -23,7 +23,7 @@ const useLogin = () => {
   } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setJwtToken, setRole, setAuthUser } = useAuthQueryStore();
+  const { setJwtToken, setRole } = useAuthQueryStore();
 
   const mutation = useMutation({
     mutationFn: (data: FormData) =>
@@ -39,8 +39,6 @@ const useLogin = () => {
       queryClient.invalidateQueries(["stories"]);
       const jwtToken = response.jwtToken;
       setJwtToken(jwtToken);
-      const currentUser = response.currentUser;
-      setAuthUser(currentUser);
       const role = response.role;
       setRole(role);
       setLoading(false);

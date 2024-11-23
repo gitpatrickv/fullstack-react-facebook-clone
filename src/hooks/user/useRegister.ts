@@ -21,7 +21,7 @@ const useRegister = () => {
   } = useForm<User>({ resolver: zodResolver(schema) });
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { setJwtToken, setRole, setAuthUser } = useAuthQueryStore();
+  const { setJwtToken, setRole } = useAuthQueryStore();
 
   const mutation = useMutation({
     mutationFn: (data: User) =>
@@ -34,8 +34,6 @@ const useRegister = () => {
       setJwtToken(jwtToken);
       const role = response.role;
       setRole(role);
-      const currentUser = response.authUser;
-      setAuthUser(currentUser);
 
       if (role === "USER") {
         navigate("/home");

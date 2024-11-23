@@ -14,10 +14,14 @@ const Layout = () => {
 
   return (
     <>
-      {jwtToken && <Navbar />}
-      <Box position="fixed" right="0px" top="0px" zIndex="2000" mt="12px">
-        <NavbarRight />
-      </Box>
+      {jwtToken && (
+        <>
+          <Navbar />
+          <Box position="fixed" right="0px" top="0px" zIndex="2000" mt="12px">
+            <NavbarRight />
+          </Box>
+        </>
+      )}
       <Grid
         templateColumns="1fr"
         templateAreas={`"main"`}
