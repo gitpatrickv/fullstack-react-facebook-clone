@@ -12,36 +12,46 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BiLogoMessenger } from "react-icons/bi";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
 import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
 import { useChatStore } from "../../../store/chat-store";
+import { usePostStore } from "../../../store/post-store";
+import { useUserStore } from "../../../store/user-store";
 import ChatCard from "./ChatCard";
 import MessengerChatList from "./MessengerChatList";
 import NewMessage from "./NewMessage";
-import { usePostStore } from "../../../store/post-store";
+import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
+import { useMessageStore } from "../../../store/message-store";
+import { useNotificationStore } from "../../../store/notification-store";
 
-interface Props {
-  userId: number;
-}
-
-const Messenger = ({ userId }: Props) => {
+const Messenger = () => {
+  const { userId } = useUserStore();
   const { colorMode } = useColorMode();
   const { chatArray, isNewMessageMaximized, setIsNewMessageMaximized } =
     useChatStore();
   const [isHover, setIsHover] = useState<boolean>(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
+  const { isPostImageModalOpen } = usePostStore();
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+
   const {
     data: fetchAllChat,
     fetchNextPage,
     hasNextPage,
   } = useFetchAllUserChats({
-    userId: userId,
+    userId: userId ?? 0,
     pageSize: 15,
   });
+
+  const groupChatIds =
+    fetchAllChat?.pages.flatMap((page) =>
+      page.chatModels
+        .filter((chat) => chat.chatType === "GROUP_CHAT")
+        .map((chat) => chat.chatId)
+    ) || [];
 
   const fetchChatData =
     fetchAllChat?.pages.reduce(
@@ -52,8 +62,29 @@ const Messenger = ({ userId }: Props) => {
   const fetchAllChatLength =
     fetchAllChat?.pages.flatMap((page) => page.chatModels).length || 0;
 
-  const { isPostImageModalOpen } = usePostStore();
-  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+  const subscribedChatIdsRef = useRef(new Set<number>());
+
+  const { stompClientRef, isConnected } = useNotificationStore();
+  const { addMessage } = useMessageStore();
+
+  useEffect(() => {
+    if (isConnected && fetchAllChat) {
+      groupChatIds.forEach((chatId) => {
+        if (!subscribedChatIdsRef.current.has(chatId)) {
+          subscribedChatIdsRef.current.add(chatId);
+
+          stompClientRef.current?.subscribe(
+            `/topic/chat/${chatId}`,
+            (message) => {
+              const text = JSON.parse(message.body);
+              addMessage(text.chatId, text);
+            }
+          );
+        }
+      });
+    }
+  }, [fetchAllChat, isConnected, groupChatIds]);
+
   return (
     <>
       <Flex justifyContent="center">
@@ -140,7 +171,7 @@ const Messenger = ({ userId }: Props) => {
                 key={chat.chatId}
                 chatId={chat.chatId}
                 index={chat.index}
-                userId={userId}
+                userId={userId ?? 0}
                 isMaximized={chat.isMaximized}
               />
             ))}
@@ -150,7 +181,7 @@ const Messenger = ({ userId }: Props) => {
       {(!isPostImageModalOpen ||
         (isPostImageModalOpen && chatArray.length >= 1)) &&
         isLargeScreen && (
-          <Box position="fixed" bottom="15px" right="17px">
+          <Box position="fixed" bottom="15px" right="20px">
             <IconButton
               aria-label="message"
               icon={<AiOutlineEdit size="25px" />}

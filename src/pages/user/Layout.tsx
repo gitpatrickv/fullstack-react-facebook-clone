@@ -5,6 +5,7 @@ import Navbar from "../../components/user/Navbar/Navbar";
 
 import { useAuthQueryStore } from "../../store/auth-store";
 import CreateStoryModal from "../../components/user/HomePage/CreateStoryModal";
+import NavbarRight from "../../components/user/Navbar/NavbarRight";
 
 const Layout = () => {
   const location = useLocation();
@@ -14,6 +15,9 @@ const Layout = () => {
   return (
     <>
       {jwtToken && <Navbar />}
+      <Box position="fixed" right="0px" top="0px" zIndex="2000" mt="12px">
+        <NavbarRight />
+      </Box>
       <Grid
         templateColumns="1fr"
         templateAreas={`"main"`}

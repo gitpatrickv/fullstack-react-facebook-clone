@@ -9,25 +9,30 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoLogOutSharp, IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { RiNewsFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 import pic from "../../../assets/profpic.jpeg";
 import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
+import { useMessageStore } from "../../../store/message-store";
+import { useNotificationStore } from "../../../store/notification-store";
 import { useProfileStore } from "../../../store/profile-store";
 import { useUserStore } from "../../../store/user-store";
 import ColorModeSwitch from "../../ColorModeSwitch";
-
-import Notifications from "./Notifications";
 import Messenger from "../Chat/Messenger";
+import Notifications from "./Notifications";
 
 const NavbarRight = () => {
-  const { resetUser } = useUserStore();
   const { data: getUserInfo } = useGetCurrentUserInfo();
+  const { resetUser } = useUserStore();
+
   const queryClient = useQueryClient();
   const { logout } = useAuthQueryStore();
 
@@ -43,17 +48,65 @@ const NavbarRight = () => {
     queryClient.setQueryData(["user"], null);
     resetUser();
   };
+
+  const { addNotification, stompClientRef, setIsConnected } =
+    useNotificationStore();
+  const { addMessage } = useMessageStore();
+
+  useEffect(() => {
+    if (getUserInfo && stompClientRef.current === null) {
+      const socket = new SockJS("http://localhost:8080/ws");
+      const client = Stomp.over(socket);
+
+      client.connect(
+        {},
+        () => {
+          stompClientRef.current = client;
+          setIsConnected(true);
+          console.log(
+            `Connected to WebSocket for user email: ${getUserInfo?.email}`
+          );
+
+          stompClientRef.current.subscribe(
+            `/user/${getUserInfo?.email}/notifications`,
+            (message) => {
+              const notification = JSON.parse(message.body);
+              addNotification(notification);
+            }
+          );
+
+          stompClientRef.current.subscribe(
+            `/user/${getUserInfo?.email}/chat`,
+            (message) => {
+              const text = JSON.parse(message.body);
+              addMessage(text.chatId, text);
+            }
+          );
+        },
+        (error) => {
+          console.error("WebSocket connection error:", error);
+        }
+      );
+      return () => {
+        if (stompClientRef.current) {
+          stompClientRef.current.disconnect(() => {
+            console.log("Disconnected from WebSocket");
+            stompClientRef.current = null;
+            setIsConnected(false);
+          });
+        }
+      };
+    }
+  }, [getUserInfo]);
+
   return (
     <Box display="flex" justifyContent="end" mr="10px" alignItems="center">
       <ColorModeSwitch />
       <Box mr="5px">
-        <Messenger userId={getUserInfo?.userId ?? 0} />
+        <Messenger />
       </Box>
       <Box mr="5px">
-        <Notifications
-          userId={getUserInfo?.userId ?? 0}
-          email={getUserInfo?.email || ""}
-        />
+        <Notifications />
       </Box>
       <Menu>
         <MenuButton

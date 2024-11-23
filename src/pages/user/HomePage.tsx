@@ -32,7 +32,7 @@ const HomePage = () => {
   const fetchedPostData =
     data?.pages.reduce((total, page) => total + page.postList.length, 0) || 0;
   const array = [1, 2, 3];
-
+  const storiesArray = [1, 2, 3, 4, 5, 6];
   const { firstName, userId } = useUserStore();
   const [name, setName] = useState<string>("");
   const { data: fetchAllStories, isLoading: isStoriesLoading } =
@@ -134,7 +134,7 @@ const HomePage = () => {
           >
             {isStoriesLoading ? (
               <>
-                {array.map((skeleton) => (
+                {storiesArray.map((skeleton) => (
                   <Skeleton
                     height="200px"
                     minWidth="120px"
@@ -149,9 +149,16 @@ const HomePage = () => {
             ) : (
               <>
                 <CreateStoryCard />
-                {fetchAllStories?.map((story) => (
-                  <StoryCard key={story.userId} story={story} />
-                ))}
+                {fetchAllStories
+                  ?.filter((id) => id.userId === userId)
+                  .map((story) => (
+                    <StoryCard key={story.userId} story={story} />
+                  ))}
+                {fetchAllStories
+                  ?.filter((id) => id.userId !== userId)
+                  .map((story) => (
+                    <StoryCard key={story.userId} story={story} />
+                  ))}
               </>
             )}
           </Flex>

@@ -480,7 +480,7 @@ const ChatCard = ({ chatId, index, userId, isMaximized }: Props) => {
           <Box
             position="relative"
             bottom="75px"
-            right="-85px"
+            right="-75px"
             display="flex"
             flexDirection="column"
             mt="10px"

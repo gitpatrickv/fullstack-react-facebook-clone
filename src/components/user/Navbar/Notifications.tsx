@@ -13,31 +13,17 @@ import { useEffect, useRef } from "react";
 import { IoMdNotificationsOff } from "react-icons/io";
 import { IoNotificationsCircle } from "react-icons/io5";
 import InfiniteScroll from "react-infinite-scroll-component";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
-import { useMessageStore } from "../../../store/message-store";
 import { useNotificationStore } from "../../../store/notification-store";
+import { useUserStore } from "../../../store/user-store";
 import NotificationCard from "./NotificationCard";
 
-interface Props {
-  userId: number;
-  email: string;
-}
-
-const Notifications = ({ userId, email }: Props) => {
+const Notifications = () => {
+  const { userId } = useUserStore();
   const { data: getNotificationCount, refetch: refetchNotificationCount } =
-    useGetNotificationCount(userId);
-  const {
-    addNotification,
-    stompClientRef,
-    setNotificationModels,
-    notificationModels,
-    setIsConnected,
-  } = useNotificationStore();
-
-  const { addMessage } = useMessageStore();
+    useGetNotificationCount(userId ?? 0);
+  const { setNotificationModels, notificationModels } = useNotificationStore();
 
   const {
     data: fetchAllNotifications,
@@ -63,47 +49,6 @@ const Notifications = ({ userId, email }: Props) => {
       setNotificationModels(allNotifications);
     }
   }, [fetchAllNotifications, setNotificationModels]);
-
-  useEffect(() => {
-    if (email && stompClientRef.current === null) {
-      const socket = new SockJS("http://localhost:8080/ws");
-      const client = Stomp.over(socket);
-
-      client.connect(
-        {},
-        () => {
-          stompClientRef.current = client;
-          setIsConnected(true);
-          console.log(`Connected to WebSocket for user email: ${email}`);
-
-          stompClientRef.current.subscribe(
-            `/user/${email}/notifications`,
-            (message) => {
-              const notification = JSON.parse(message.body);
-              addNotification(notification);
-            }
-          );
-
-          stompClientRef.current.subscribe(`/user/${email}/chat`, (message) => {
-            const text = JSON.parse(message.body);
-            addMessage(text.chatId, text);
-          });
-        },
-        (error) => {
-          console.error("WebSocket connection error:", error);
-        }
-      );
-      return () => {
-        if (stompClientRef.current) {
-          stompClientRef.current.disconnect(() => {
-            console.log("Disconnected from WebSocket");
-            stompClientRef.current = null;
-            setIsConnected(false);
-          });
-        }
-      };
-    }
-  }, [email]);
 
   const prevNotificationModels = useRef(notificationModels.length);
 
@@ -177,8 +122,8 @@ const Notifications = ({ userId, email }: Props) => {
             bg="red"
             borderRadius="full"
             position="absolute"
-            top="7px"
-            right="57px"
+            top="-3px"
+            right="50px"
           >
             <Text
               textAlign="center"

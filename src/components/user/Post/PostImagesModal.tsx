@@ -24,7 +24,6 @@ import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostIma
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import { useChatStore } from "../../../store/chat-store";
 import { usePostStore } from "../../../store/post-store";
-import NavbarRight from "../Navbar/NavbarRight";
 import Comments from "./Comments";
 import PostContent from "./PostContent";
 import PostImagesButtons from "./PostImagesButtons";
@@ -172,11 +171,7 @@ const PostImagesModal = ({
             <FaFacebook size="40px" />
           </Box>
         </Link>
-        {isSmallScreen && (
-          <Box padding={2}>
-            <NavbarRight />
-          </Box>
-        )}
+        {isSmallScreen && <Box mt="60px" />}
 
         <Grid
           templateColumns={{
@@ -235,20 +230,14 @@ const PostImagesModal = ({
             {isSmallScreen && <Box padding={5} />}
           </GridItem>
           <GridItem area="section2">
-            <Show above="lg">
-              <Box padding={2}>
-                <NavbarRight />
-              </Box>
-            </Show>
-            <Divider borderColor="gray.500" />
-
+            <Divider borderColor="gray.500" mt="60px" />
             <Box
               width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
               borderRight={
                 isLargeScreen && chatArray.length >= 1 ? "1px solid" : "none"
               }
               borderColor="gray.500"
-              height={isLargeScreen ? "93.7%" : undefined}
+              height={isLargeScreen ? "93.4%" : undefined}
             >
               <Box>
                 {posts.sharedPost ? (

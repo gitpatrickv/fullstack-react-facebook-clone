@@ -21,7 +21,8 @@ import { Images } from "../../../entities/PostImage";
 import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostImageComments";
 import useGetPostCreatorById from "../../../hooks/user/useGetPostCreatorById";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
-import NavbarRight from "../Navbar/NavbarRight";
+import { useChatStore } from "../../../store/chat-store";
+import { usePostStore } from "../../../store/post-store";
 import Comments from "../Post/Comments";
 import PostContent from "../Post/PostContent";
 import PostImagesButtons from "../Post/PostImagesButtons";
@@ -47,7 +48,7 @@ const ProfileImagesModal = ({
   const { data: getPost } = useGetPostCreatorById(activeImage?.postId ?? 0);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-
+  const { chatArray } = useChatStore();
   const nextButton = (direction: "left" | "right") => (
     <IconButton
       isRound={true}
@@ -136,12 +137,17 @@ const ProfileImagesModal = ({
     initialRef.current?.focus();
     setIsClicked(true);
   };
+  const { setIsPostImageModalOpen } = usePostStore();
+  const handleCloseModalClick = () => {
+    onClose();
+    setIsPostImageModalOpen(false);
+  };
 
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleCloseModalClick}
         size="full"
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -162,17 +168,13 @@ const ProfileImagesModal = ({
               <FaFacebook size="40px" />
             </Box>
           </Link>
-          {isSmallScreen && (
-            <Box padding={2}>
-              <NavbarRight />
-            </Box>
-          )}
+          {isSmallScreen && <Box mt="60px" />}
 
           <Grid
             templateColumns={{
               base: "1fr",
-              lg: "60px 0.7fr 60px 0.3fr",
-              xl: "60px 0.8fr 60px 0.25fr",
+              lg: "60px 0.7fr 60px 0.5fr",
+              xl: "60px 0.8fr 60px 0.3fr",
             }}
             templateAreas={{
               base: `"section1"
@@ -225,76 +227,80 @@ const ProfileImagesModal = ({
               {isSmallScreen && <Box padding={5} />}
             </GridItem>
             <GridItem area="section2">
-              <Show above="lg">
-                <Box padding={2}>
-                  <NavbarRight />
-                </Box>
-              </Show>
-              <Divider />
-              <Box>
-                {getPost && (
-                  <Box padding={3}>
-                    <PostContent
-                      firstName={getPost?.firstName}
-                      lastName={getPost?.lastName}
-                      postUserId={getPost?.userId}
-                      profilePicture={getPost?.profilePicture}
-                      timestamp={getPost?.postTimestamp}
-                      postId={getPost?.postId}
-                      content={getPost?.content}
-                    />
-                  </Box>
-                )}
-
-                <PostImagesButtons
-                  activeImage={activeImage}
-                  focusInputClick={handleFocusInputClick}
-                  postId={getPost?.postId ?? 0}
-                />
-              </Box>
-              <Divider mt="5px" color="gray.500" />
+              <Divider mt="60px" borderColor="gray.500" />
               <Box
-                padding={3}
-                maxHeight="600px"
-                overflowY="auto"
-                id="scrollable-body"
+                width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
+                borderRight={
+                  isLargeScreen && chatArray.length >= 1 ? "1px solid" : "none"
+                }
+                borderColor="gray.500"
+                height={isLargeScreen ? "93.4%" : undefined}
               >
-                <InfiniteScroll
-                  dataLength={fetchedCommentData}
-                  next={fetchNextPage}
-                  hasMore={!!hasNextPage}
-                  loader={<Spinner />}
-                  scrollableTarget="scrollable-body"
-                >
-                  {fetchAllPostImageComments?.pages.map((page) =>
-                    page.postCommentList.map((comments) => (
-                      <Comments
-                        key={comments.postCommentId}
-                        comments={comments}
+                <Box>
+                  {getPost && (
+                    <Box padding={3}>
+                      <PostContent
+                        firstName={getPost?.firstName}
+                        lastName={getPost?.lastName}
+                        postUserId={getPost?.userId}
+                        profilePicture={getPost?.profilePicture}
+                        timestamp={getPost?.postTimestamp}
+                        postId={getPost?.postId}
+                        content={getPost?.content}
                       />
-                    ))
+                    </Box>
                   )}
-                </InfiniteScroll>
-              </Box>
 
-              <Box position="relative" padding={3}>
-                <WriteComment
-                  focusRef={initialRef}
-                  register={register}
-                  handleSubmit={handleSubmit}
-                  onSubmit={onSubmit}
-                  loading={loading}
-                  comment={comment}
-                  imageFile={imageFile}
-                  handleInputClick={handleInputClick}
-                  handleCommentChange={handleCommentChange}
-                  fileInputRef={fileInputRef}
-                  handleFileChange={handleFileChange}
-                  imagePreview={imagePreview}
-                  removeImageClick={handleRemoveImagePreviewClick}
-                  isClicked={isClicked}
-                  setIsClicked={setIsClicked}
-                />
+                  <PostImagesButtons
+                    activeImage={activeImage}
+                    focusInputClick={handleFocusInputClick}
+                    postId={getPost?.postId ?? 0}
+                  />
+                </Box>
+                <Divider mt="5px" borderColor="gray.500" />
+                <Box
+                  padding={3}
+                  maxHeight="600px"
+                  overflowY="auto"
+                  id="scrollable-body"
+                >
+                  <InfiniteScroll
+                    dataLength={fetchedCommentData}
+                    next={fetchNextPage}
+                    hasMore={!!hasNextPage}
+                    loader={<Spinner />}
+                    scrollableTarget="scrollable-body"
+                  >
+                    {fetchAllPostImageComments?.pages.map((page) =>
+                      page.postCommentList.map((comments) => (
+                        <Comments
+                          key={comments.postCommentId}
+                          comments={comments}
+                        />
+                      ))
+                    )}
+                  </InfiniteScroll>
+                </Box>
+
+                <Box position="relative" padding={3}>
+                  <WriteComment
+                    focusRef={initialRef}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    loading={loading}
+                    comment={comment}
+                    imageFile={imageFile}
+                    handleInputClick={handleInputClick}
+                    handleCommentChange={handleCommentChange}
+                    fileInputRef={fileInputRef}
+                    handleFileChange={handleFileChange}
+                    imagePreview={imagePreview}
+                    removeImageClick={handleRemoveImagePreviewClick}
+                    isClicked={isClicked}
+                    setIsClicked={setIsClicked}
+                  />
+                </Box>
               </Box>
             </GridItem>
             <Show above="lg">

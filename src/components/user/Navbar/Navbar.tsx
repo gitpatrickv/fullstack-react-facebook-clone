@@ -17,8 +17,8 @@ import { MdOndemandVideo } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { useGameStore } from "../../../store/game-store";
 import GameModal from "./GameModal";
-import NavbarRight from "./NavbarRight";
 import Search from "./Search";
+
 const Navbar = () => {
   const location = useLocation();
   const { colorMode } = useColorMode();
@@ -134,9 +134,7 @@ const Navbar = () => {
               <GameModal />
             </GridItem>
           </Show>
-          <GridItem area="asideRight">
-            <NavbarRight />
-          </GridItem>
+          <GridItem area="asideRight" />
         </Grid>
       </Card>
     </>

@@ -1,9 +1,10 @@
 import { Image, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import { Images } from "../../../entities/PostImage";
+import { usePostStore } from "../../../store/post-store";
 import ProfileImagesModal from "./ProfileImagesModal";
-import { useLocation, useParams } from "react-router-dom";
 
 interface Props {
   images: Images;
@@ -17,8 +18,10 @@ const ImageCard = ({ images, imageList }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [photos, setPhotos] = useState<Images[]>(imageList);
   const [activeImage, setActiveImage] = useState<Images | null>(null);
+  const { setIsPostImageModalOpen } = usePostStore();
   const handleImageClick = (images: Images) => {
     setActiveImage(images);
+    setIsPostImageModalOpen(true);
     onOpen();
   };
 

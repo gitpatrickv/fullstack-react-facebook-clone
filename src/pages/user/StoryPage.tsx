@@ -19,7 +19,6 @@ import { FaFacebook } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import pic from "../../assets/profpic.jpeg";
-import NavbarRight from "../../components/user/Navbar/NavbarRight";
 import StoryListCard from "../../components/user/StoryPage/StoryListCard";
 import useFetchAllStories from "../../hooks/user/useFetchAllStories";
 import { useStoryStore } from "../../store/story-store";
@@ -63,9 +62,10 @@ const StoryPage = () => {
               height={{ base: "auto", lg: "100vh" }}
               // position="relative"
             >
-              <Box mb="55px">
+              <Box mb="60px">
                 <ModalCloseButton
                   position="fixed"
+                  top="10px"
                   left="5px"
                   size="lg"
                   borderRadius="full"
@@ -75,7 +75,7 @@ const StoryPage = () => {
                 />
                 <Box
                   position="fixed"
-                  top="2"
+                  top="10px"
                   left="50px"
                   color="#1877F2"
                   onClick={handleNavigateClick}
@@ -156,16 +156,6 @@ const StoryPage = () => {
               position="relative"
               userSelect="none"
             >
-              <Box
-                position="fixed"
-                // right={{ base: "-15px", lg: "0px" }}
-                right="0px"
-                top="0px"
-                padding="10px"
-                zIndex="modal"
-              >
-                <NavbarRight />
-              </Box>
               <Card
                 bg={
                   // "#262626"
