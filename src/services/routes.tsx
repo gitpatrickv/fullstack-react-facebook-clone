@@ -15,6 +15,7 @@ import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
 import ProfilePhotosPage from "../pages/user/ProfilePhotosPage";
 import SearchPage from "../pages/user/SearchPage";
+import StoryPage from "../pages/user/StoryPage";
 import WatchPage from "../pages/user/WatchPage";
 
 const router = createBrowserRouter([
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <SearchPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/stories",
+        element: (
+          <UserRoute>
+            <StoryPage />
           </UserRoute>
         ),
       },

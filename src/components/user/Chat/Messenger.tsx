@@ -85,7 +85,26 @@ const Messenger = ({ fetchAllChat, fetchNextPage, hasNextPage }: Props) => {
               </>
             ) : (
               <>
-                <Box maxHeight="400px" overflowY="auto" id="scrollable-chat">
+                <Box
+                  maxHeight="400px"
+                  overflowY="auto"
+                  id="scrollable-chat"
+                  css={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "gray",
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#555",
+                    },
+                  }}
+                >
                   <InfiniteScroll
                     dataLength={fetchChatData}
                     next={fetchNextPage}

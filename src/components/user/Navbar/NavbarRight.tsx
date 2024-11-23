@@ -22,6 +22,7 @@ import pic from "../../../assets/profpic.jpeg";
 import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
 import useGetCurrentUserInfo from "../../../hooks/user/useGetCurrentUserInfo";
 import { useAuthQueryStore } from "../../../store/auth-store";
+import { useGameStore } from "../../../store/game-store";
 import { useMessageStore } from "../../../store/message-store";
 import { useNotificationStore } from "../../../store/notification-store";
 import { useProfileStore } from "../../../store/profile-store";
@@ -31,6 +32,7 @@ import Messenger from "../Chat/Messenger";
 import Notifications from "./Notifications";
 
 const NavbarRight = () => {
+  const { onOpen } = useGameStore();
   const { data: getUserInfo } = useGetCurrentUserInfo();
   const { resetUser } = useUserStore();
   const { addNotification, stompClientRef, setIsConnected, isConnected } =
@@ -58,7 +60,7 @@ const NavbarRight = () => {
     hasNextPage,
   } = useFetchAllUserChats({
     userId: getUserInfo?.userId ?? 0,
-    pageSize: 15,
+    pageSize: 20,
   });
 
   const groupChatIds =
@@ -244,19 +246,18 @@ const NavbarRight = () => {
               </Box>
             </MenuItem>
           </Link>
-          <Link to="/games">
-            <MenuItem>
-              <IoLogoGameControllerA size="30px" />
-              <Box flexDirection="row">
-                <Text fontSize="sm" ml="10px">
-                  Play Games
-                </Text>
-                <Text fontSize="xs" ml="10px">
-                  Play your favorite games.
-                </Text>
-              </Box>
-            </MenuItem>
-          </Link>
+
+          <MenuItem onClick={onOpen}>
+            <IoLogoGameControllerA size="30px" />
+            <Box flexDirection="row">
+              <Text fontSize="sm" ml="10px">
+                Play Games
+              </Text>
+              <Text fontSize="xs" ml="10px">
+                Play your favorite games.
+              </Text>
+            </Box>
+          </MenuItem>
 
           <MenuItem onClick={handleLogout}>
             <IoLogOutSharp size="30px" />

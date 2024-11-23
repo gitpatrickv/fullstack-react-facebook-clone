@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Skeleton,
   Text,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { FaFacebook } from "react-icons/fa6";
@@ -36,7 +37,7 @@ const StoryPage = () => {
   const array = [1, 2, 3, 4, 5];
 
   const storyByUser = fetchAllStories?.some((id) => id.userId === userId);
-
+  const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   return (
     <>
       <Modal isOpen={true} onClose={handleNavigateClick} size="full">
@@ -60,9 +61,14 @@ const StoryPage = () => {
               area="section1"
               bg={colorMode === "dark" ? "gray.700" : "white"}
               height={{ base: "auto", lg: "100vh" }}
-              // position="relative"
             >
-              <Box mb="60px">
+              <Card
+                position="fixed"
+                width="100%"
+                borderRadius="none"
+                zIndex="10"
+                boxShadow="none"
+              >
                 <ModalCloseButton
                   position="fixed"
                   top="10px"
@@ -83,9 +89,33 @@ const StoryPage = () => {
                 >
                   <FaFacebook size="40px" />
                 </Box>
-              </Box>
+                {isSmallScreen && <Box mt="60px" />}
+              </Card>
+
               <Divider />
-              <Flex flexDirection="column" padding="10px">
+              <Flex
+                mt="60px"
+                flexDirection="column"
+                padding="10px"
+                overflowY="auto"
+                height="auto"
+                maxHeight="93%"
+                css={{
+                  "&::-webkit-scrollbar": {
+                    width: "8px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "gray",
+                    borderRadius: "8px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#555",
+                  },
+                }}
+              >
                 <Text fontSize="x-large" fontWeight="bold" ml="10px">
                   Stories
                 </Text>
@@ -148,7 +178,7 @@ const StoryPage = () => {
             </GridItem>
             <GridItem
               area="section2"
-              height={{ base: "auto", lg: "100vh" }}
+              height="100vh"
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -162,7 +192,7 @@ const StoryPage = () => {
                   "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
                 }
                 height="90%"
-                width={{ base: "80%", lg: "55%", xl: "30%" }}
+                width={{ base: "90%", md: "55%", lg: "55%", xl: "30%" }}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"

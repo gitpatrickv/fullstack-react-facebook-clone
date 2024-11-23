@@ -60,6 +60,21 @@ const FriendSuggestions = () => {
         height="100%"
         overflowY="auto"
         id="scrollable-suggestions"
+        css={{
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "gray",
+            borderRadius: "8px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555",
+          },
+        }}
       >
         <Flex alignItems="center">
           <IconButton

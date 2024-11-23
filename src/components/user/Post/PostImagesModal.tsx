@@ -1,5 +1,6 @@
 import {
   Box,
+  Card,
   Divider,
   Grid,
   GridItem,
@@ -157,21 +158,23 @@ const PostImagesModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalCloseButton
-          position="absolute"
-          left="5px"
-          size="lg"
-          borderRadius="full"
-          bg="gray.800"
-          color="white"
-          _hover={{ bg: "gray.700" }}
-        />
-        <Link to="/home">
-          <Box position="absolute" top="2" left="50px" color="#1877F2">
-            <FaFacebook size="40px" />
-          </Box>
-        </Link>
-        {isSmallScreen && <Box mt="60px" />}
+        <Card position="fixed" width="100%" borderRadius="none" zIndex="10">
+          <ModalCloseButton
+            position="fixed"
+            left="5px"
+            size="lg"
+            borderRadius="full"
+            bg="gray.800"
+            color="white"
+            _hover={{ bg: "gray.700" }}
+          />
+          <Link to="/home">
+            <Box position="fixed" top="2" left="50px" color="#1877F2">
+              <FaFacebook size="40px" />
+            </Box>
+          </Link>
+          {isSmallScreen && <Box mt="60px" />}
+        </Card>
 
         <Grid
           templateColumns={{
@@ -190,12 +193,12 @@ const PostImagesModal = ({
           <GridItem
             area="section1"
             bg="black"
-            height={isLargeScreen ? "100vh" : "auto"}
+            height={isLargeScreen ? "100%" : "auto"}
             display={isLargeScreen ? "flex" : "block"}
             justifyContent={isLargeScreen ? "center" : undefined}
             alignItems={isLargeScreen ? "center" : undefined}
           >
-            {isSmallScreen && <Box padding={5} />}
+            {isSmallScreen && <Box padding={5} mt="60px" />}
             <Box display="flex" alignItems="center" justifyContent="center">
               {postImages.length > 1 && isSmallScreen && (
                 <Box
@@ -229,8 +232,22 @@ const PostImagesModal = ({
             </Box>
             {isSmallScreen && <Box padding={5} />}
           </GridItem>
-          <GridItem area="section2">
-            <Divider borderColor="gray.500" mt="60px" />
+          <GridItem area="section2" height="100%">
+            {isLargeScreen && (
+              <>
+                <Card
+                  position="fixed"
+                  width="100%"
+                  borderRadius="none"
+                  zIndex="10"
+                  height="60px"
+                  boxShadow="none"
+                  borderBottom="1px solid"
+                  borderBottomColor="gray.500"
+                />
+              </>
+            )}
+
             <Box
               width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
               borderRight={
@@ -238,6 +255,7 @@ const PostImagesModal = ({
               }
               borderColor="gray.500"
               height={isLargeScreen ? "93.4%" : undefined}
+              mt={{ base: "0", lg: "60px" }}
             >
               <Box>
                 {posts.sharedPost ? (
@@ -296,9 +314,25 @@ const PostImagesModal = ({
               <Divider mt="5px" borderColor="gray.500" />
               <Box
                 padding={3}
-                maxHeight={{ base: "310px", lg: "600px" }}
+                height="auto"
+                maxHeight={{ base: "400px", lg: "590px" }}
                 overflowY="auto"
                 id="scrollable-body"
+                css={{
+                  "&::-webkit-scrollbar": {
+                    width: "8px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "gray",
+                    borderRadius: "8px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#555",
+                  },
+                }}
               >
                 <InfiniteScroll
                   dataLength={fetchedCommentData}
@@ -317,7 +351,12 @@ const PostImagesModal = ({
                   )}
                 </InfiniteScroll>
               </Box>
-              <Box padding={4}>
+              <Box
+                padding={4}
+                position="relative"
+                bottom="0"
+                // width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
+              >
                 <WriteComment
                   focusRef={initialRef}
                   register={register}

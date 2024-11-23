@@ -193,10 +193,45 @@ const HomePage = () => {
             <Sidebar />
           </GridItem>
         </Show>
+
         <Show above="lg">
-          <GridItem area="asideRight" as="aside" position="fixed" right="5">
-            <Contacts />
-          </GridItem>
+          <Box
+            position="relative"
+            _hover={{
+              "& .scrollable": {
+                "&::-webkit-scrollbar-thumb": {
+                  background: "#888",
+                },
+              },
+            }}
+          >
+            <GridItem
+              className="scrollable"
+              area="asideRight"
+              as="aside"
+              position="fixed"
+              right="5px"
+              height="100vh"
+              overflowY="auto"
+              css={{
+                "&::-webkit-scrollbar": {
+                  width: "8px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "transparent",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "transparent",
+                  borderRadius: "8px",
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  background: "#555",
+                },
+              }}
+            >
+              <Contacts />
+            </GridItem>
+          </Box>
         </Show>
       </Grid>
     </>
