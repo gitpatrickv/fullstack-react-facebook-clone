@@ -6,7 +6,6 @@ import {
   Grid,
   GridItem,
   IconButton,
-  Image,
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -16,11 +15,13 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaFacebook } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import pic from "../../assets/profpic.jpeg";
+import StoriesCard from "../../components/user/StoryPage/StoriesCard";
 import StoryListCard from "../../components/user/StoryPage/StoryListCard";
+import { StoryResponse } from "../../entities/Story";
 import useFetchAllStories from "../../hooks/user/useFetchAllStories";
 import { useStoryStore } from "../../store/story-store";
 import { useUserStore } from "../../store/user-store";
@@ -38,6 +39,14 @@ const StoryPage = () => {
 
   const storyByUser = fetchAllStories?.some((id) => id.userId === userId);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
+
+  const [activeUser, setActiveUser] = useState<StoryResponse | null>(null);
+
+  const handleUserClick = (story: StoryResponse) => {
+    setActiveUser(story);
+    console.log("Active User Story", story);
+  };
+
   return (
     <>
       <Modal isOpen={true} onClose={handleNavigateClick} size="full">
@@ -133,6 +142,8 @@ const StoryPage = () => {
                           key={story.userId}
                           story={story}
                           storyByUser={storyByUser}
+                          handleUserClick={() => handleUserClick(story)}
+                          activeUser={activeUser}
                         />
                       ))}
                   </>
@@ -170,7 +181,12 @@ const StoryPage = () => {
                     {fetchAllStories
                       ?.filter((id) => id.userId !== userId)
                       .map((story) => (
-                        <StoryListCard key={story.userId} story={story} />
+                        <StoryListCard
+                          key={story.userId}
+                          story={story}
+                          handleUserClick={() => handleUserClick(story)}
+                          activeUser={activeUser}
+                        />
                       ))}
                   </>
                 )}
@@ -186,34 +202,7 @@ const StoryPage = () => {
               position="relative"
               userSelect="none"
             >
-              <Card
-                bg={
-                  // "#262626"
-                  "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
-                }
-                height="90%"
-                width={{ base: "90%", md: "55%", lg: "55%", xl: "30%" }}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                overflow="hidden"
-              >
-                <Flex
-                  position="relative"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Text
-                    position="absolute"
-                    padding={4}
-                    fontSize={{ base: "md", md: "x-large" }}
-                    color="black"
-                  >
-                    asdfasdfasdf
-                  </Text>
-                  <Image src={pic} />
-                </Flex>
-              </Card>
+              <StoriesCard activeUser={activeUser} />
             </GridItem>
           </Grid>
         </ModalContent>

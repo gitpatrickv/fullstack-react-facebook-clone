@@ -14,21 +14,38 @@ import { useStoryStore } from "../../../store/story-store";
 interface Props {
   story: StoryResponse;
   storyByUser?: boolean;
+  handleUserClick: () => void;
+  activeUser: StoryResponse | null;
 }
 
-const StoryListCard = ({ story, storyByUser }: Props) => {
+const StoryListCard = ({
+  story,
+  storyByUser,
+  handleUserClick,
+  activeUser,
+}: Props) => {
   const { colorMode } = useColorMode();
   const { onOpen } = useStoryStore();
   return (
     <>
       <Flex
         alignItems="center"
+        bg={
+          activeUser?.userId === story.userId
+            ? colorMode === "dark"
+              ? "#303030"
+              : "gray.200"
+            : colorMode === "dark"
+            ? "gray.700"
+            : "white"
+        }
         _hover={{
           bg: colorMode === "dark" ? "#303030" : "gray.100",
         }}
         padding={2}
         cursor="pointer"
         borderRadius="5px"
+        onClick={handleUserClick}
       >
         <Avatar
           src={story.profilePicture || pic}
