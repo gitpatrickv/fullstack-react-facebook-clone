@@ -10,12 +10,12 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Show,
   Skeleton,
   Text,
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaFacebook } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ const StoryPage = () => {
   const storyByUser = fetchAllStories?.some((id) => id.userId === userId);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
 
-  const [activeUser, setActiveUser] = useState<StoryResponse | null>(null);
+  const { setActiveUser } = useStoryStore();
 
   const handleUserClick = (story: StoryResponse) => {
     setActiveUser(story);
@@ -102,95 +102,95 @@ const StoryPage = () => {
               </Card>
 
               <Divider />
-              <Flex
-                mt="60px"
-                flexDirection="column"
-                padding="10px"
-                overflowY="auto"
-                height="auto"
-                maxHeight="93%"
-                css={{
-                  "&::-webkit-scrollbar": {
-                    width: "8px",
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    background: "transparent",
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    background: "gray",
-                    borderRadius: "8px",
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    background: "#555",
-                  },
-                }}
-              >
-                <Text fontSize="x-large" fontWeight="bold" ml="10px">
-                  Stories
-                </Text>
-                <Text mt="20px" fontWeight="semibold" mb="10px" ml="10px">
-                  Your Story
-                </Text>
-                {isLoading ? (
-                  <Skeleton height="70px" mt="10px" />
-                ) : (
-                  <>
-                    {fetchAllStories
-                      ?.filter((id) => id.userId === userId)
-                      .map((story) => (
-                        <StoryListCard
-                          key={story.userId}
-                          story={story}
-                          storyByUser={storyByUser}
-                          handleUserClick={() => handleUserClick(story)}
-                          activeUser={activeUser}
-                        />
-                      ))}
-                  </>
-                )}
-                {!storyByUser && (
-                  <Flex alignItems="center" ml="5px" mt="5px" mb="5px">
-                    <IconButton
-                      aria-label="story"
-                      icon={<FiPlus size="25px" />}
-                      color="#1877F2"
-                      isRound
-                      height="60px"
-                      width="60px"
-                      onClick={onOpen}
-                    />
-                    <Flex flexDirection="column" ml="10px">
-                      <Text fontWeight="semibold">Create a story</Text>
-                      <Text fontSize="xs" color="gray.500">
-                        Share a photo or write something.
-                      </Text>
+              <Show above="lg">
+                <Flex
+                  mt="60px"
+                  flexDirection="column"
+                  padding="10px"
+                  overflowY="auto"
+                  height="auto"
+                  maxHeight="93%"
+                  css={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "gray",
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#555",
+                    },
+                  }}
+                >
+                  <Text fontSize="x-large" fontWeight="bold" ml="10px">
+                    Stories
+                  </Text>
+                  <Text mt="20px" fontWeight="semibold" mb="10px" ml="10px">
+                    Your Story
+                  </Text>
+                  {isLoading ? (
+                    <Skeleton height="70px" mt="10px" />
+                  ) : (
+                    <>
+                      {fetchAllStories
+                        ?.filter((id) => id.userId === userId)
+                        .map((story) => (
+                          <StoryListCard
+                            key={story.userId}
+                            story={story}
+                            storyByUser={storyByUser}
+                            handleUserClick={() => handleUserClick(story)}
+                          />
+                        ))}
+                    </>
+                  )}
+                  {!storyByUser && (
+                    <Flex alignItems="center" ml="5px" mt="5px" mb="5px">
+                      <IconButton
+                        aria-label="story"
+                        icon={<FiPlus size="25px" />}
+                        color="#1877F2"
+                        isRound
+                        height="60px"
+                        width="60px"
+                        onClick={onOpen}
+                      />
+                      <Flex flexDirection="column" ml="10px">
+                        <Text fontWeight="semibold">Create a story</Text>
+                        <Text fontSize="xs" color="gray.500">
+                          Share a photo or write something.
+                        </Text>
+                      </Flex>
                     </Flex>
-                  </Flex>
-                )}
-                <Text mt="10px" fontWeight="semibold" mb="10px" ml="10px">
-                  All stories
-                </Text>
-                {isLoading ? (
-                  <>
-                    {array.map((skeleton) => (
-                      <Skeleton height="70px" mt="10px" key={skeleton} />
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    {fetchAllStories
-                      ?.filter((id) => id.userId !== userId)
-                      .map((story) => (
-                        <StoryListCard
-                          key={story.userId}
-                          story={story}
-                          handleUserClick={() => handleUserClick(story)}
-                          activeUser={activeUser}
-                        />
+                  )}
+                  <Text mt="10px" fontWeight="semibold" mb="10px" ml="10px">
+                    All stories
+                  </Text>
+                  {isLoading ? (
+                    <>
+                      {array.map((skeleton) => (
+                        <Skeleton height="70px" mt="10px" key={skeleton} />
                       ))}
-                  </>
-                )}
-              </Flex>
+                    </>
+                  ) : (
+                    <>
+                      {fetchAllStories
+                        ?.filter((id) => id.userId !== userId)
+                        .map((story) => (
+                          <StoryListCard
+                            key={story.userId}
+                            story={story}
+                            handleUserClick={() => handleUserClick(story)}
+                          />
+                        ))}
+                    </>
+                  )}
+                </Flex>
+              </Show>
             </GridItem>
             <GridItem
               area="section2"
@@ -201,8 +201,9 @@ const StoryPage = () => {
               bg="black"
               position="relative"
               userSelect="none"
+              mt={{ base: "40px", lg: "0" }}
             >
-              <StoriesCard activeUser={activeUser} />
+              <StoriesCard />
             </GridItem>
           </Grid>
         </ModalContent>

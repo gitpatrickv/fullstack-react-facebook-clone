@@ -57,6 +57,7 @@ const Contacts = () => {
             }}
             cursor="pointer"
             userSelect="none"
+            onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
           >
             <IconButton
               aria-label="close"
@@ -67,7 +68,6 @@ const Contacts = () => {
               }}
               isRound
               size="sm"
-              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
             />
             <Text ml="10px" fontWeight="semibold">
               Create group chat

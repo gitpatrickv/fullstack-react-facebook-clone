@@ -1,5 +1,6 @@
 import { Avatar, Box, Card, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryModel, StoryResponse } from "../../../entities/Story";
 import StorySelector from "./StorySelector";
@@ -12,7 +13,7 @@ const StoriesCard = ({ activeUser }: Props) => {
   const [activeStory, setActiveStory] = useState<StoryModel | null>(null);
   const [nextStory, setNextStory] = useState(0);
   const [progress, setProgress] = useState(0);
-
+  const time = activeStory?.timestamp ? new Date(activeStory.timestamp) : null;
   const handleStoryClick = (story: StoryModel) => {
     setActiveStory(story);
     // setNextStory(0);
@@ -90,20 +91,32 @@ const StoriesCard = ({ activeUser }: Props) => {
               height="45px"
               width="45px"
             />
-            <Text ml="10px" textTransform="capitalize">
-              {activeUser?.firstName} {activeUser?.lastName}
-            </Text>
+            <Flex flexDirection="column">
+              <Text ml="10px" textTransform="capitalize" fontWeight="semibold">
+                {activeUser?.firstName} {activeUser?.lastName}
+              </Text>
+              <Text ml="10px" fontSize="sm">
+                {time && <ReactTimeAgo date={time} locale="en-US" />}
+              </Text>
+            </Flex>
           </Flex>
-          <Flex position="relative" justifyContent="center" alignItems="center">
+          <Flex
+            // position="relative"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+          >
             <Text
-              position="absolute"
-              padding={4}
+              // position={activeStory?.storyImage ? "absolute" : "static"}
+              // padding={4}
               fontSize={{ base: "md", md: "x-large" }}
               color="black"
+              textTransform="uppercase"
+              textAlign="center"
             >
               {activeStory?.text}
             </Text>
-            <Image src={activeStory?.storyImage || pic} />
+            <Image src={activeStory?.storyImage} />
           </Flex>
         </Box>
       </Card>

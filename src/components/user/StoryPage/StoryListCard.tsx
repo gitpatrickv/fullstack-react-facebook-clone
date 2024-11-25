@@ -7,6 +7,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
+import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryResponse } from "../../../entities/Story";
 import { useStoryStore } from "../../../store/story-store";
@@ -15,17 +16,13 @@ interface Props {
   story: StoryResponse;
   storyByUser?: boolean;
   handleUserClick: () => void;
-  activeUser: StoryResponse | null;
 }
 
-const StoryListCard = ({
-  story,
-  storyByUser,
-  handleUserClick,
-  activeUser,
-}: Props) => {
+const StoryListCard = ({ story, storyByUser, handleUserClick }: Props) => {
   const { colorMode } = useColorMode();
   const { onOpen } = useStoryStore();
+  const time = new Date(story.storyModels[0].timestamp);
+  const { activeUser } = useStoryStore();
   return (
     <>
       <Flex
@@ -57,7 +54,9 @@ const StoryListCard = ({
           <Text fontWeight="semibold" textTransform="capitalize">
             {story.firstName} {story.lastName}
           </Text>
-          <Text color="gray.500">1h</Text>
+          <Text color="gray.500">
+            <ReactTimeAgo date={time} locale="en-US" />
+          </Text>
         </Flex>
         {storyByUser && (
           <>

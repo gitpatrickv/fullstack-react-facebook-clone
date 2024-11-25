@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryResponse } from "../../../entities/Story";
 import { useNavigate } from "react-router-dom";
+import { useStoryStore } from "../../../store/story-store";
 
 interface Props {
   story: StoryResponse;
@@ -12,6 +13,7 @@ const StoryCard = ({ story }: Props) => {
   const [storyImage, setStoryImage] = useState<string>("");
   const [text, setText] = useState<string>("");
   const navigate = useNavigate();
+  const { setActiveUser } = useStoryStore();
   useEffect(() => {
     if (story.storyModels.length >= 1) {
       setStoryImage(story.storyModels[0].storyImage || "");
@@ -20,6 +22,7 @@ const StoryCard = ({ story }: Props) => {
   }, [story.storyModels]);
 
   const handleNavigateClick = () => {
+    setActiveUser(story);
     navigate(`/stories`);
   };
 

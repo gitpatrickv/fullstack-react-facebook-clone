@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
+import { useStoryStore } from "../../store/story-store";
 
 interface CreateStoryProps {
   text?: string;
@@ -25,7 +26,7 @@ const useCreateStory = (userId: number) => {
   const [loading, setLoading] = useState(false);
   const [isTextStory, setIsTextStory] = useState<boolean>(false);
   const [isPhotoStory, setIsPhotoStory] = useState<boolean>(false);
-
+  const { onClose } = useStoryStore();
   const mutation = useMutation(
     (formData: FormData) =>
       apiClient.post(`/story/create/${userId}`, formData, {
@@ -45,6 +46,7 @@ const useCreateStory = (userId: number) => {
         setImagePreview(null);
         setIsTextStory(false);
         setIsPhotoStory(false);
+        onClose();
       },
       onError: (error: any) => {
         setLoading(false);

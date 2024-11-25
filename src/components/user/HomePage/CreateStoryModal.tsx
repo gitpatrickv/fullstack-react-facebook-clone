@@ -118,6 +118,10 @@ const CreateStoryModal = () => {
     };
   }, [imagePreview]);
 
+  const handleNavigateStoryClick = () => {
+    navigate("/stories");
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={handleModalCloseClick} size="full">
@@ -169,7 +173,12 @@ const CreateStoryModal = () => {
               <Text fontSize="x-large" ml="10px" fontWeight="bold">
                 Your story
               </Text>
-              <Flex alignItems="center" mt="20px">
+              <Flex
+                alignItems="center"
+                mt="20px"
+                cursor="pointer"
+                onClick={handleNavigateStoryClick}
+              >
                 <Avatar src={profilePicture || pic} size="lg" ml="10px" />
                 <Text
                   textTransform="capitalize"
