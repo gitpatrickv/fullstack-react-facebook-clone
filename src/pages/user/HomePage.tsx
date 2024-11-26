@@ -13,15 +13,17 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
 import Contacts from "../../components/user/HomePage/Contacts";
+import CreateStoryCard from "../../components/user/HomePage/CreateStoryCard";
 import Sidebar from "../../components/user/HomePage/Sidebar";
+import StoryCard from "../../components/user/HomePage/StoryCard";
 import CreatePost from "../../components/user/Post/CreatePost";
 import Posts from "../../components/user/Post/Posts";
 import NoAvailablePost from "../../components/user/ProfilePage/NoAvailablePost";
-import CreateStoryCard from "../../components/user/HomePage/CreateStoryCard";
-import StoryCard from "../../components/user/HomePage/StoryCard";
 import useFetchAllPosts from "../../hooks/user/useFetchAllPosts";
 import useFetchAllStories from "../../hooks/user/useFetchAllStories";
+import { useStoryStore } from "../../store/story-store";
 import { useUserStore } from "../../store/user-store";
 
 const HomePage = () => {
@@ -83,6 +85,12 @@ const HomePage = () => {
       onClick={() => handleScroll(direction)}
     />
   );
+  const navigate = useNavigate();
+  const { setCurrentIndex } = useStoryStore();
+  const handleNavigateClick = (index: number) => {
+    navigate(`/stories`);
+    setCurrentIndex(index);
+  };
 
   return (
     <>
@@ -151,13 +159,21 @@ const HomePage = () => {
                 <CreateStoryCard />
                 {fetchAllStories
                   ?.filter((id) => id.userId === userId)
-                  .map((story) => (
-                    <StoryCard key={story.userId} story={story} />
+                  .map((story, index) => (
+                    <StoryCard
+                      key={story.userId}
+                      story={story}
+                      handleNavigateClick={() => handleNavigateClick(index)}
+                    />
                   ))}
                 {fetchAllStories
                   ?.filter((id) => id.userId !== userId)
-                  .map((story) => (
-                    <StoryCard key={story.userId} story={story} />
+                  .map((story, index) => (
+                    <StoryCard
+                      key={story.userId}
+                      story={story}
+                      handleNavigateClick={() => handleNavigateClick(index + 1)}
+                    />
                   ))}
               </>
             )}

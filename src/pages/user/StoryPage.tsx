@@ -1,7 +1,6 @@
 import {
   Box,
   Card,
-  Divider,
   Flex,
   Grid,
   GridItem,
@@ -16,12 +15,13 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { FaFacebook } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import StoriesCard from "../../components/user/StoryPage/StoriesCard";
 import StoryListCard from "../../components/user/StoryPage/StoryListCard";
-import { StoryResponse } from "../../entities/Story";
+import { StoryModel } from "../../entities/Story";
 import useFetchAllStories from "../../hooks/user/useFetchAllStories";
 import { useStoryStore } from "../../store/story-store";
 import { useUserStore } from "../../store/user-store";
@@ -40,12 +40,144 @@ const StoryPage = () => {
   const storyByUser = fetchAllStories?.some((id) => id.userId === userId);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
 
-  const { setActiveUser } = useStoryStore();
+  const {
+    setActiveUser,
+    nextUserIndex,
+    setNextUserIndex,
+    activeUser,
+    currentIndex,
+  } = useStoryStore();
 
-  const handleUserClick = (story: StoryResponse) => {
-    setActiveUser(story);
-    console.log("Active User Story", story);
+  const [activeStory, setActiveStory] = useState<StoryModel | null>(null);
+  const [nextStoryIndex, setNextStoryIndex] = useState(0);
+
+  const [progress, setProgress] = useState(0);
+  const storyLength = activeUser?.storyModels?.length ?? 0;
+  const [scheduledNextUserIndex, setScheduledNextUserIndex] = useState<
+    number | null
+  >(0);
+
+  useEffect(() => {
+    if (currentIndex) {
+      setScheduledNextUserIndex(currentIndex);
+    }
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if (
+      fetchAllStories &&
+      scheduledNextUserIndex !== null &&
+      scheduledNextUserIndex < fetchAllStories.length
+    ) {
+      setNextUserIndex(scheduledNextUserIndex);
+      setActiveUser(fetchAllStories[scheduledNextUserIndex]);
+      setActiveStory(fetchAllStories[scheduledNextUserIndex]?.storyModels[0]);
+      setNextStoryIndex(0);
+    }
+  }, [scheduledNextUserIndex, fetchAllStories]);
+
+  useEffect(() => {
+    if (
+      !activeUser?.storyModels ||
+      activeUser.storyModels.length === 0 ||
+      !fetchAllStories
+    ) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          const nextStory = nextStoryIndex + 1;
+
+          if (nextStoryIndex < storyLength - 1) {
+            setActiveStory(activeUser.storyModels[nextStory]);
+            setNextStoryIndex(nextStory);
+          } else {
+            const nextUser = (nextUserIndex + 1) % fetchAllStories.length;
+
+            if (nextUser < fetchAllStories.length) {
+              setScheduledNextUserIndex(nextUser);
+            }
+          }
+
+          return 0;
+        }
+
+        return prevProgress + 100 / 10;
+      });
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, [activeUser, nextStoryIndex, nextUserIndex, fetchAllStories, storyLength]);
+
+  const handleUserClick = (value: number) => {
+    if (fetchAllStories) {
+      if (nextStoryIndex !== 0) {
+        setNextStoryIndex(0);
+      }
+      setScheduledNextUserIndex(value);
+      setActiveUser(fetchAllStories[value]);
+      setProgress(0);
+    }
   };
+
+  const handleRightClick = () => {
+    if (!activeUser?.storyModels || !fetchAllStories) {
+      return;
+    }
+
+    const nextStory = nextStoryIndex + 1;
+
+    if (nextStoryIndex < storyLength - 1) {
+      setActiveStory(activeUser.storyModels[nextStory]);
+      setNextStoryIndex(nextStory);
+    } else {
+      const nextUser = (nextUserIndex + 1) % fetchAllStories.length;
+
+      if (nextUser < fetchAllStories.length) {
+        setScheduledNextUserIndex(nextUser);
+      }
+    }
+    setProgress(0);
+  };
+
+  const handleLeftClick = () => {
+    if (!activeUser?.storyModels || !fetchAllStories) {
+      return;
+    }
+
+    const nextStory = nextStoryIndex - 1;
+
+    if (nextStoryIndex > 0) {
+      setActiveStory(activeUser.storyModels[nextStory]);
+      setNextStoryIndex(nextStory);
+    } else {
+      if (scheduledNextUserIndex !== null && scheduledNextUserIndex > 0) {
+        const nextUser = scheduledNextUserIndex - 1;
+        setScheduledNextUserIndex(nextUser);
+      }
+    }
+    setProgress(0);
+  };
+
+  const nextButton = (direction: "left" | "right") => (
+    <IconButton
+      isRound={true}
+      aria-label={direction === "left" ? "Left" : "Right"}
+      bg={colorMode === "dark" ? "#303030" : "white"}
+      _hover={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
+      _active={{ bg: colorMode === "dark" ? "#505050" : "gray.300" }}
+      icon={
+        direction === "left" ? (
+          <FaChevronLeft size="20px" />
+        ) : (
+          <FaChevronRight size="20px" />
+        )
+      }
+      size="lg"
+    />
+  );
 
   return (
     <>
@@ -55,54 +187,56 @@ const StoryPage = () => {
           <Grid
             templateColumns={{
               base: "1fr",
-              lg: "0.3fr 0.7fr",
-              xl: "0.2fr 0.8fr",
+              md: "0.2fr 1fr 0.2fr",
+              lg: "0.6fr 0.3fr 0.7fr 0.3fr",
+              xl: "0.3fr 0.4fr 0.4fr 0.4fr",
             }}
             templateAreas={{
               base: `"section1"
             "section2"
             `,
-              lg: `"section1 section2"`,
-              xl: `"section1 section2"`,
+              md: `"left section1 right"
+                  "left section2 right"
+            `,
+              lg: `"section1 left section2 right"`,
+              xl: `"section1 left section2 right"`,
             }}
           >
-            <GridItem
-              area="section1"
-              bg={colorMode === "dark" ? "gray.700" : "white"}
-              height={{ base: "auto", lg: "100vh" }}
+            <Card
+              position="fixed"
+              width="100%"
+              borderRadius="none"
+              zIndex="10"
+              boxShadow="none"
             >
-              <Card
+              <ModalCloseButton
                 position="fixed"
-                width="100%"
-                borderRadius="none"
-                zIndex="10"
-                boxShadow="none"
+                top="10px"
+                left="5px"
+                size="lg"
+                borderRadius="full"
+                bg="gray.800"
+                color="white"
+                _hover={{ bg: "gray.700" }}
+              />
+              <Box
+                position="fixed"
+                top="10px"
+                left="50px"
+                color="#1877F2"
+                onClick={handleNavigateClick}
+                cursor="pointer"
               >
-                <ModalCloseButton
-                  position="fixed"
-                  top="10px"
-                  left="5px"
-                  size="lg"
-                  borderRadius="full"
-                  bg="gray.800"
-                  color="white"
-                  _hover={{ bg: "gray.700" }}
-                />
-                <Box
-                  position="fixed"
-                  top="10px"
-                  left="50px"
-                  color="#1877F2"
-                  onClick={handleNavigateClick}
-                  cursor="pointer"
-                >
-                  <FaFacebook size="40px" />
-                </Box>
-                {isSmallScreen && <Box mt="60px" />}
-              </Card>
-
-              <Divider />
-              <Show above="lg">
+                <FaFacebook size="40px" />
+              </Box>
+              {isSmallScreen && <Box mt="60px" />}
+            </Card>
+            <Show above="lg">
+              <GridItem
+                area="section1"
+                bg={colorMode === "dark" ? "gray.700" : "white"}
+                height={{ base: "auto", lg: "100vh" }}
+              >
                 <Flex
                   mt="60px"
                   flexDirection="column"
@@ -138,12 +272,12 @@ const StoryPage = () => {
                     <>
                       {fetchAllStories
                         ?.filter((id) => id.userId === userId)
-                        .map((story) => (
+                        .map((story, index) => (
                           <StoryListCard
                             key={story.userId}
                             story={story}
                             storyByUser={storyByUser}
-                            handleUserClick={() => handleUserClick(story)}
+                            handleUserClick={() => handleUserClick(index)}
                           />
                         ))}
                     </>
@@ -180,18 +314,18 @@ const StoryPage = () => {
                     <>
                       {fetchAllStories
                         ?.filter((id) => id.userId !== userId)
-                        .map((story) => (
+                        .map((story, index) => (
                           <StoryListCard
                             key={story.userId}
                             story={story}
-                            handleUserClick={() => handleUserClick(story)}
+                            handleUserClick={() => handleUserClick(index + 1)}
                           />
                         ))}
                     </>
                   )}
                 </Flex>
-              </Show>
-            </GridItem>
+              </GridItem>
+            </Show>
             <GridItem
               area="section2"
               height="100vh"
@@ -203,8 +337,38 @@ const StoryPage = () => {
               userSelect="none"
               mt={{ base: "40px", lg: "0" }}
             >
-              <StoriesCard />
+              <StoriesCard
+                fetchAllStories={fetchAllStories || []}
+                activeStory={activeStory}
+                setActiveStory={setActiveStory}
+                nextStoryIndex={nextStoryIndex}
+                setNextStoryIndex={setNextStoryIndex}
+                progress={progress}
+                setProgress={setProgress}
+              />
             </GridItem>
+            <Show above="md">
+              <GridItem
+                area="left"
+                bg="black"
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+              >
+                {(nextUserIndex > 0 || nextStoryIndex > 0) && (
+                  <Box onClick={handleLeftClick}>{nextButton("left")}</Box>
+                )}
+              </GridItem>
+              <GridItem
+                area="right"
+                bg="black"
+                display="flex"
+                justifyContent="start"
+                alignItems="center"
+              >
+                <Box onClick={handleRightClick}>{nextButton("right")}</Box>
+              </GridItem>
+            </Show>
           </Grid>
         </ModalContent>
       </Modal>

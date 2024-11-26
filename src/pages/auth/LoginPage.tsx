@@ -491,20 +491,19 @@ const LoginPage = () => {
                     </FormControl>
                   </Stack>
                 </Box>
+                <ModalFooter justifyContent="center" mb="10px">
+                  <Button
+                    type="submit"
+                    bg="green.500"
+                    _hover={{ bg: "green.600" }}
+                    _active={{ bg: "green.600" }}
+                    width="150px"
+                    isLoading={loadingRegister}
+                  >
+                    Sign Up
+                  </Button>
+                </ModalFooter>
               </ModalBody>
-
-              <ModalFooter justifyContent="center">
-                <Button
-                  type="submit"
-                  bg="green.500"
-                  _hover={{ bg: "green.500" }}
-                  _active={{ bg: "green.600" }}
-                  width="150px"
-                  isLoading={loadingRegister}
-                >
-                  Sign Up
-                </Button>
-              </ModalFooter>
             </ModalContent>
           </form>
         </Modal>

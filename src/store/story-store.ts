@@ -7,6 +7,10 @@ interface StoryStore {
   onClose: () => void;
   activeUser: StoryResponse | null;
   setActiveUser: (userStory: StoryResponse | null) => void;
+  nextUserIndex: number;
+  setNextUserIndex: (value: number) => void;
+  currentIndex: number;
+  setCurrentIndex: (index: number) => void;
 }
 
 export const useStoryStore = create<StoryStore>((set) => ({
@@ -15,4 +19,8 @@ export const useStoryStore = create<StoryStore>((set) => ({
   onClose: () => set({ isOpen: false }),
   activeUser: null,
   setActiveUser: (user) => set({ activeUser: user }),
+  nextUserIndex: 0,
+  setNextUserIndex: (value: number) => set({ nextUserIndex: value }),
+  currentIndex: 0,
+  setCurrentIndex: (index) => set({ currentIndex: index }),
 }));

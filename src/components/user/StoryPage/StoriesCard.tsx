@@ -1,52 +1,41 @@
 import { Avatar, Box, Card, Flex, Image, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryModel, StoryResponse } from "../../../entities/Story";
+import { useStoryStore } from "../../../store/story-store";
 import StorySelector from "./StorySelector";
 
 interface Props {
-  activeUser: StoryResponse | null;
+  fetchAllStories: StoryResponse[] | [];
+  activeStory: StoryModel | null;
+  setActiveStory: (value: StoryModel) => void;
+  nextStoryIndex: number;
+  setNextStoryIndex: (value: number) => void;
+  progress: number;
+  setProgress: (value: number) => void;
 }
 
-const StoriesCard = ({ activeUser }: Props) => {
-  const [activeStory, setActiveStory] = useState<StoryModel | null>(null);
-  const [nextStory, setNextStory] = useState(0);
-  const [progress, setProgress] = useState(0);
+const StoriesCard = ({
+  fetchAllStories,
+  activeStory,
+  setActiveStory,
+  nextStoryIndex,
+  setNextStoryIndex,
+  progress,
+  setProgress,
+}: Props) => {
+  const { activeUser } = useStoryStore();
+
   const time = activeStory?.timestamp ? new Date(activeStory.timestamp) : null;
-  const handleStoryClick = (story: StoryModel) => {
-    setActiveStory(story);
-    // setNextStory(0);
-    setProgress(0);
-    console.log("Selected Story", story);
-  };
-
-  useEffect(() => {
-    if (activeUser?.storyModels) {
-      setActiveStory(activeUser.storyModels[0]);
-      setNextStory(0);
-    }
-  }, [activeUser]);
-
-  useEffect(() => {
-    if (!activeUser?.storyModels || activeUser.storyModels.length === 0) {
+  const handleStoryClick = (index: number) => {
+    if (!activeUser?.storyModels) {
       return;
     }
-
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          const nextIndex = (nextStory + 1) % activeUser.storyModels.length;
-          setActiveStory(activeUser.storyModels[nextIndex]);
-          setNextStory(nextIndex);
-          return 0;
-        }
-        return prevProgress + 100 / 30;
-      });
-    }, 100);
-
-    return () => clearInterval(timer);
-  }, [activeUser, nextStory]);
+    setNextStoryIndex(index);
+    setActiveStory(activeUser?.storyModels[index]);
+    setProgress(0);
+    console.log("Current Index", index);
+  };
 
   return (
     <>
@@ -56,7 +45,7 @@ const StoriesCard = ({ activeUser }: Props) => {
           "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
         }
         height="90%"
-        width={{ base: "90%", md: "55%", lg: "55%", xl: "30%" }}
+        width={{ base: "90%", md: "80%", lg: "90%", xl: "85%" }}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -73,11 +62,11 @@ const StoriesCard = ({ activeUser }: Props) => {
           padding={3}
           gap={1}
         >
-          {activeUser?.storyModels.map((story) => (
+          {activeUser?.storyModels.map((story, index) => (
             <StorySelector
               key={story.storyId}
               story={story}
-              handleStoryClick={() => handleStoryClick(story)}
+              handleStoryClick={() => handleStoryClick(index)}
               activeStory={activeStory}
               progress={activeStory?.storyId === story.storyId ? progress : 0}
             />

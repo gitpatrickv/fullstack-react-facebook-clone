@@ -2,29 +2,22 @@ import { Avatar, Box, Card, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryResponse } from "../../../entities/Story";
-import { useNavigate } from "react-router-dom";
-import { useStoryStore } from "../../../store/story-store";
 
 interface Props {
   story: StoryResponse;
+  handleNavigateClick: () => void;
 }
 
-const StoryCard = ({ story }: Props) => {
+const StoryCard = ({ story, handleNavigateClick }: Props) => {
   const [storyImage, setStoryImage] = useState<string>("");
   const [text, setText] = useState<string>("");
-  const navigate = useNavigate();
-  const { setActiveUser } = useStoryStore();
+
   useEffect(() => {
     if (story.storyModels.length >= 1) {
       setStoryImage(story.storyModels[0].storyImage || "");
       setText(story.storyModels[0].text || "");
     }
   }, [story.storyModels]);
-
-  const handleNavigateClick = () => {
-    setActiveUser(story);
-    navigate(`/stories`);
-  };
 
   return (
     <>
@@ -46,7 +39,7 @@ const StoryCard = ({ story }: Props) => {
             : "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
         }
         overflow="hidden"
-        onClick={handleNavigateClick}
+        onClick={() => handleNavigateClick()}
         userSelect="none"
       >
         <Box position="absolute" top="10px" left="10px">

@@ -120,6 +120,7 @@ const CreateStoryModal = () => {
 
   const handleNavigateStoryClick = () => {
     navigate("/stories");
+    onClose();
   };
 
   return (
