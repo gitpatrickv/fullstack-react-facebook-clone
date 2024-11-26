@@ -15,6 +15,7 @@ import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import { ProfileCardProps } from "./PostUserProfileCard";
 import UserProfileCardButton from "./UserProfileCardButton";
+import { useProfileStore } from "../../../store/profile-store";
 
 const PostShareUserProfileCard = ({
   firstName,
@@ -31,7 +32,7 @@ const PostShareUserProfileCard = ({
     postUserId ?? 0
   );
   const { onOpen } = useStoryStore();
-
+  const { onOpenEditProfile } = useProfileStore();
   return (
     <Card
       padding={5}
@@ -77,7 +78,7 @@ const PostShareUserProfileCard = ({
                   <FaPlus size="15px" />
                   {isSmallScreen ? null : <Text ml="5px">Add to Story</Text>}
                 </Button>
-                <Button mr="7px">
+                <Button mr="7px" onClick={onOpenEditProfile}>
                   <MdModeEdit size="20px" />
                   {isSmallScreen ? null : <Text ml="5px">Edit profile</Text>}
                 </Button>

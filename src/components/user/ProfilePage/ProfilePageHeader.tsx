@@ -17,9 +17,7 @@ import {
   Text,
   useBreakpointValue,
   useColorMode,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaCamera, FaPlus, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FaFacebookMessenger, FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
@@ -40,7 +38,6 @@ import MessageButton from "../Buttons/MessageButton";
 import UnfriendButton from "../Buttons/UnfriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
-import UploadUserImageModal from "./UploadUserImageModal";
 
 interface Props {
   isLoading: boolean;
@@ -61,11 +58,16 @@ const ProfilePageHeader = ({
   const userId = Number(params.userId);
   const { userId: currentUserId } = useUserStore();
   const { colorMode } = useColorMode();
-  const [imageType, setImageType] = useState<string>("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
   const { onOpen: onOpenAddStory } = useStoryStore();
+  const {
+    setIsProfile,
+    onOpenEditProfile,
+    onOpenUploadProfile: onOpen,
+    setImageType,
+  } = useProfileStore();
+
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
     onOpen();
@@ -81,7 +83,6 @@ const ProfilePageHeader = ({
 
   const { data: getFriendListCount } = useGetUserFriendListCount(userId);
 
-  const { setIsProfile } = useProfileStore();
   const navigate = useNavigate();
   const handleNavigateProfileClick = (userId: number) => {
     navigate(`/profile/${userId}`);
@@ -90,11 +91,6 @@ const ProfilePageHeader = ({
 
   return (
     <Card>
-      <UploadUserImageModal
-        isOpen={isOpen}
-        onClose={onClose}
-        imageType={imageType}
-      />
       <Grid
         templateColumns={{ base: "1fr", xl: "0.2fr 1fr 0.2fr" }}
         templateAreas={{
@@ -290,7 +286,7 @@ const ProfilePageHeader = ({
                         <FaPlus size="15px" />
                         <Text ml="5px">Add to Story</Text>
                       </Button>
-                      <Button mr="7px">
+                      <Button mr="7px" onClick={onOpenEditProfile}>
                         <MdModeEdit size="20px" />
                         <Text ml="5px">Edit profile</Text>
                       </Button>

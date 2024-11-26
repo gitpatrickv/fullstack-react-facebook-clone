@@ -3,9 +3,11 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../../components/user/Footer/Footer";
 import Navbar from "../../components/user/Navbar/Navbar";
 
-import { useAuthQueryStore } from "../../store/auth-store";
 import CreateStoryModal from "../../components/user/HomePage/CreateStoryModal";
 import NavbarRight from "../../components/user/Navbar/NavbarRight";
+import EditProfileModal from "../../components/user/ProfilePage/EditProfileModal";
+import UploadUserImageModal from "../../components/user/ProfilePage/UploadUserImageModal";
+import { useAuthQueryStore } from "../../store/auth-store";
 
 const Layout = () => {
   const location = useLocation();
@@ -34,6 +36,8 @@ const Layout = () => {
             {/* <ScrollRestoration /> */}
           </Box>
           <CreateStoryModal />
+          <EditProfileModal />
+          <UploadUserImageModal />
         </GridItem>
       </Grid>
       {location.pathname === "/" ? <Footer /> : ""}

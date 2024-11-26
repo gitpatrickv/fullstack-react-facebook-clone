@@ -14,6 +14,7 @@ import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import UserProfileCardButton from "./UserProfileCardButton";
+import { useProfileStore } from "../../../store/profile-store";
 
 export interface ProfileCardProps {
   firstName: string;
@@ -37,7 +38,7 @@ const PostUserProfileCard = ({
   const { data: friendshipStatus } = useGetFriendshipStatus(postUserId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(postUserId);
   const { onOpen } = useStoryStore();
-
+  const { onOpenEditProfile } = useProfileStore();
   return (
     <Card
       padding={5}
@@ -83,7 +84,7 @@ const PostUserProfileCard = ({
                   <FaPlus size="15px" />
                   {isSmallScreen ? null : <Text ml="5px">Add to Story</Text>}
                 </Button>
-                <Button mr="7px">
+                <Button mr="7px" onClick={onOpenEditProfile}>
                   <MdModeEdit size="20px" />
                   {isSmallScreen ? null : <Text ml="5px">Edit profile</Text>}
                 </Button>
