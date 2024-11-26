@@ -3,17 +3,15 @@ import {
   Flex,
   Grid,
   GridItem,
-  IconButton,
   Show,
   Skeleton,
   Spinner,
   useBreakpointValue,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
+import NextButton from "../../components/user/Buttons/NextButton";
 import Contacts from "../../components/user/HomePage/Contacts";
 import CreateStoryCard from "../../components/user/HomePage/CreateStoryCard";
 import Sidebar from "../../components/user/HomePage/Sidebar";
@@ -39,7 +37,7 @@ const HomePage = () => {
   const [name, setName] = useState<string>("");
   const { data: fetchAllStories, isLoading: isStoriesLoading } =
     useFetchAllStories(userId ?? 0);
-  const { colorMode } = useColorMode();
+
   useEffect(() => {
     if (firstName) {
       setName(firstName);
@@ -68,23 +66,6 @@ const HomePage = () => {
     }
   };
 
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      bg={colorMode === "dark" ? "#303030" : "white"}
-      _hover={{ bg: colorMode === "dark" ? "#383838" : "gray.100" }}
-      _active={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="20px" />
-        ) : (
-          <FaChevronRight size="20px" />
-        )
-      }
-      onClick={() => handleScroll(direction)}
-    />
-  );
   const navigate = useNavigate();
   const { setCurrentIndex } = useStoryStore();
   const handleNavigateClick = (index: number) => {
@@ -123,10 +104,16 @@ const HomePage = () => {
           {showButtons && (
             <>
               <Box position="absolute" top="210px" left="5px" zIndex={5}>
-                {nextButton("left")}
+                <NextButton
+                  direction="left"
+                  nextClick={() => handleScroll("left")}
+                />
               </Box>
               <Box position="absolute" top="210px" right="5px" zIndex={5}>
-                {nextButton("right")}
+                <NextButton
+                  direction="right"
+                  nextClick={() => handleScroll("right")}
+                />
               </Box>
             </>
           )}
@@ -158,23 +145,19 @@ const HomePage = () => {
               <>
                 <CreateStoryCard />
                 {fetchAllStories
-                  ?.filter((id) => id.userId === userId)
-                  .map((story, index) => (
-                    <StoryCard
-                      key={story.userId}
-                      story={story}
-                      handleNavigateClick={() => handleNavigateClick(index)}
-                    />
-                  ))}
-                {fetchAllStories
-                  ?.filter((id) => id.userId !== userId)
-                  .map((story, index) => (
-                    <StoryCard
-                      key={story.userId}
-                      story={story}
-                      handleNavigateClick={() => handleNavigateClick(index + 1)}
-                    />
-                  ))}
+                  ?.sort((a, _) => {
+                    if (a.userId === userId) return -1;
+                    return 0;
+                  })
+                  .map((story, index) => {
+                    return (
+                      <StoryCard
+                        key={story.userId}
+                        story={story}
+                        handleNavigateClick={() => handleNavigateClick(index)}
+                      />
+                    );
+                  })}
               </>
             )}
           </Flex>

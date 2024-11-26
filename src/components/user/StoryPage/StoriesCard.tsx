@@ -1,25 +1,22 @@
 import { Avatar, Box, Card, Flex, Image, Text } from "@chakra-ui/react";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
-import { StoryModel, StoryResponse } from "../../../entities/Story";
+import { StoryModel } from "../../../entities/Story";
 import { useStoryStore } from "../../../store/story-store";
 import StorySelector from "./StorySelector";
 
 interface Props {
-  fetchAllStories: StoryResponse[] | [];
   activeStory: StoryModel | null;
   setActiveStory: (value: StoryModel) => void;
-  nextStoryIndex: number;
   setNextStoryIndex: (value: number) => void;
   progress: number;
   setProgress: (value: number) => void;
 }
 
 const StoriesCard = ({
-  fetchAllStories,
   activeStory,
   setActiveStory,
-  nextStoryIndex,
+
   setNextStoryIndex,
   progress,
   setProgress,

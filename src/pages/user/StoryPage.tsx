@@ -16,9 +16,10 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa6";
+import { FaFacebook } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import NextButton from "../../components/user/Buttons/NextButton";
 import StoriesCard from "../../components/user/StoryPage/StoriesCard";
 import StoryListCard from "../../components/user/StoryPage/StoryListCard";
 import { StoryModel } from "../../entities/Story";
@@ -104,7 +105,7 @@ const StoryPage = () => {
           return 0;
         }
 
-        return prevProgress + 100 / 10;
+        return prevProgress + 100 / 30;
       });
     }, 100);
 
@@ -160,24 +161,6 @@ const StoryPage = () => {
     }
     setProgress(0);
   };
-
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      bg={colorMode === "dark" ? "#303030" : "white"}
-      _hover={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
-      _active={{ bg: colorMode === "dark" ? "#505050" : "gray.300" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="20px" />
-        ) : (
-          <FaChevronRight size="20px" />
-        )
-      }
-      size="lg"
-    />
-  );
 
   return (
     <>
@@ -271,7 +254,11 @@ const StoryPage = () => {
                   ) : (
                     <>
                       {fetchAllStories
-                        ?.filter((id) => id.userId === userId)
+                        ?.sort((a, _) => {
+                          if (a.userId === userId) return -1;
+                          return 0;
+                        })
+                        .filter((id) => id.userId === userId)
                         .map((story, index) => (
                           <StoryListCard
                             key={story.userId}
@@ -304,6 +291,7 @@ const StoryPage = () => {
                   <Text mt="10px" fontWeight="semibold" mb="10px" ml="10px">
                     All stories
                   </Text>
+
                   {isLoading ? (
                     <>
                       {array.map((skeleton) => (
@@ -313,7 +301,11 @@ const StoryPage = () => {
                   ) : (
                     <>
                       {fetchAllStories
-                        ?.filter((id) => id.userId !== userId)
+                        ?.sort((a, _) => {
+                          if (a.userId === userId) return -1;
+                          return 0;
+                        })
+                        .filter((id) => id.userId !== userId)
                         .map((story, index) => (
                           <StoryListCard
                             key={story.userId}
@@ -338,10 +330,8 @@ const StoryPage = () => {
               mt={{ base: "40px", lg: "0" }}
             >
               <StoriesCard
-                fetchAllStories={fetchAllStories || []}
                 activeStory={activeStory}
                 setActiveStory={setActiveStory}
-                nextStoryIndex={nextStoryIndex}
                 setNextStoryIndex={setNextStoryIndex}
                 progress={progress}
                 setProgress={setProgress}
@@ -356,7 +346,7 @@ const StoryPage = () => {
                 alignItems="center"
               >
                 {(nextUserIndex > 0 || nextStoryIndex > 0) && (
-                  <Box onClick={handleLeftClick}>{nextButton("left")}</Box>
+                  <NextButton direction="left" nextClick={handleLeftClick} />
                 )}
               </GridItem>
               <GridItem
@@ -366,7 +356,7 @@ const StoryPage = () => {
                 justifyContent="start"
                 alignItems="center"
               >
-                <Box onClick={handleRightClick}>{nextButton("right")}</Box>
+                <NextButton direction="right" nextClick={handleRightClick} />
               </GridItem>
             </Show>
           </Grid>

@@ -4,7 +4,6 @@ import {
   Divider,
   Grid,
   GridItem,
-  IconButton,
   Image,
   Modal,
   ModalCloseButton,
@@ -15,7 +14,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import { Images } from "../../../entities/PostImage";
@@ -24,6 +23,7 @@ import useGetPostCreatorById from "../../../hooks/user/useGetPostCreatorById";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import { useChatStore } from "../../../store/chat-store";
 import { usePostStore } from "../../../store/post-store";
+import NextButton from "../Buttons/NextButton";
 import Comments from "../Post/Comments";
 import PostContent from "../Post/PostContent";
 import PostImagesButtons from "../Post/PostImagesButtons";
@@ -50,26 +50,6 @@ const ProfileImagesModal = ({
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const { chatArray } = useChatStore();
-
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      size={isSmallScreen ? "md" : "lg"}
-      colorScheme="gray.500"
-      bg="gray.500"
-      _hover={{ bg: "gray.600" }}
-      _active={{ bg: "gray.700" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="25px" />
-        ) : (
-          <FaChevronRight size="25px" />
-        )
-      }
-      onClick={direction === "left" ? nextLeftImage : nextRightImage}
-    />
-  );
 
   const {
     data: fetchAllPostImageComments,
@@ -191,7 +171,7 @@ const ProfileImagesModal = ({
             <GridItem
               area="section1"
               bg="black"
-              height={isLargeScreen ? "100%" : "auto"}
+              height={{ base: "auto", lg: "100vh", xl: "100%" }}
               display={isLargeScreen ? "flex" : "block"}
               justifyContent={isLargeScreen ? "center" : undefined}
               alignItems={isLargeScreen ? "center" : undefined}
@@ -204,7 +184,7 @@ const ProfileImagesModal = ({
                     left={isSmallScreen ? "0px" : undefined}
                     ml={isSmallScreen ? "5px" : "0px"}
                   >
-                    {nextButton("left")}
+                    <NextButton direction="left" nextClick={nextLeftImage} />
                   </Box>
                 )}
 
@@ -224,7 +204,7 @@ const ProfileImagesModal = ({
                     right={isSmallScreen ? "0px" : undefined}
                     mr={isSmallScreen ? "5px" : "0px"}
                   >
-                    {nextButton("right")}
+                    <NextButton direction="right" nextClick={nextRightImage} />
                   </Box>
                 )}
               </Box>
@@ -347,12 +327,12 @@ const ProfileImagesModal = ({
             <Show above="lg">
               <GridItem area="leftButton" bg="black">
                 <Box position="absolute" top="50%" bottom="50%" ml="10px">
-                  {imageList.length > 1 && nextButton("left")}
+                  <NextButton direction="left" nextClick={nextLeftImage} />
                 </Box>
               </GridItem>
               <GridItem area="rightButton" bg="black">
                 <Box position="absolute" top="50%" bottom="50%">
-                  {imageList.length > 1 && nextButton("right")}
+                  <NextButton direction="right" nextClick={nextRightImage} />
                 </Box>
               </GridItem>
             </Show>

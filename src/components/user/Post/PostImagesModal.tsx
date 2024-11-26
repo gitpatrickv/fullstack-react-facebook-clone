@@ -4,7 +4,6 @@ import {
   Divider,
   Grid,
   GridItem,
-  IconButton,
   Image,
   Modal,
   ModalCloseButton,
@@ -13,10 +12,9 @@ import {
   Show,
   Spinner,
   useBreakpointValue,
-  useColorMode,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import Post from "../../../entities/Post";
@@ -25,6 +23,7 @@ import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostIma
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import { useChatStore } from "../../../store/chat-store";
 import { usePostStore } from "../../../store/post-store";
+import NextButton from "../Buttons/NextButton";
 import Comments from "./Comments";
 import PostContent from "./PostContent";
 import PostImagesButtons from "./PostImagesButtons";
@@ -52,25 +51,6 @@ const PostImagesModal = ({
 }: ImageModalProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-  const { colorMode } = useColorMode();
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      size={isSmallScreen ? "md" : "lg"}
-      bg={colorMode === "dark" ? "#303030" : "white"}
-      _hover={{ bg: colorMode === "dark" ? "#383838" : "gray.100" }}
-      _active={{ bg: colorMode === "dark" ? "#404040" : "gray.200" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="25px" />
-        ) : (
-          <FaChevronRight size="25px" />
-        )
-      }
-      onClick={direction === "left" ? nextLeftImage : nextRightImage}
-    />
-  );
 
   const {
     data: fetchAllPostImageComments,
@@ -193,7 +173,7 @@ const PostImagesModal = ({
           <GridItem
             area="section1"
             bg="black"
-            height={isLargeScreen ? "100%" : "auto"}
+            height={{ base: "auto", lg: "100vh", xl: "100%" }}
             display={isLargeScreen ? "flex" : "block"}
             justifyContent={isLargeScreen ? "center" : undefined}
             alignItems={isLargeScreen ? "center" : undefined}
@@ -206,7 +186,7 @@ const PostImagesModal = ({
                   left={isSmallScreen ? "0px" : undefined}
                   ml={isSmallScreen ? "5px" : "0px"}
                 >
-                  {nextButton("left")}
+                  <NextButton direction="left" nextClick={nextLeftImage} />
                 </Box>
               )}
 
@@ -226,7 +206,7 @@ const PostImagesModal = ({
                   right={isSmallScreen ? "0px" : undefined}
                   mr={isSmallScreen ? "5px" : "0px"}
                 >
-                  {nextButton("right")}
+                  <NextButton direction="right" nextClick={nextRightImage} />
                 </Box>
               )}
             </Box>
@@ -380,12 +360,16 @@ const PostImagesModal = ({
           <Show above="lg">
             <GridItem area="leftButton" bg="black">
               <Box position="absolute" top="50%" bottom="50%" ml="10px">
-                {postImages.length > 1 && nextButton("left")}
+                {postImages.length > 1 && (
+                  <NextButton direction="left" nextClick={nextLeftImage} />
+                )}
               </Box>
             </GridItem>
             <GridItem area="rightButton" bg="black">
               <Box position="absolute" top="50%" bottom="50%">
-                {postImages.length > 1 && nextButton("right")}
+                {postImages.length > 1 && (
+                  <NextButton direction="right" nextClick={nextRightImage} />
+                )}
               </Box>
             </GridItem>
           </Show>
