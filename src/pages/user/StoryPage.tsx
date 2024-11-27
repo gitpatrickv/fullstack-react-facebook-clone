@@ -48,7 +48,7 @@ const StoryPage = () => {
     activeUser,
     currentIndex,
   } = useStoryStore();
-
+  const [isPaused, setIsPaused] = useState(false);
   const [activeStory, setActiveStory] = useState<StoryModel | null>(null);
   const [nextStoryIndex, setNextStoryIndex] = useState(0);
 
@@ -87,30 +87,39 @@ const StoryPage = () => {
     }
 
     const timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          const nextStory = nextStoryIndex + 1;
+      if (!isPaused) {
+        setProgress((prevProgress) => {
+          if (prevProgress >= 100) {
+            const nextStory = nextStoryIndex + 1;
 
-          if (nextStoryIndex < storyLength - 1) {
-            setActiveStory(activeUser.storyModels[nextStory]);
-            setNextStoryIndex(nextStory);
-          } else {
-            const nextUser = (nextUserIndex + 1) % fetchAllStories.length;
+            if (nextStoryIndex < storyLength - 1) {
+              setActiveStory(activeUser.storyModels[nextStory]);
+              setNextStoryIndex(nextStory);
+            } else {
+              const nextUser = (nextUserIndex + 1) % fetchAllStories.length;
 
-            if (nextUser < fetchAllStories.length) {
-              setScheduledNextUserIndex(nextUser);
+              if (nextUser < fetchAllStories.length) {
+                setScheduledNextUserIndex(nextUser);
+              }
             }
+
+            return 0;
           }
 
-          return 0;
-        }
-
-        return prevProgress + 100 / 30;
-      });
+          return prevProgress + 100 / 30;
+        });
+      }
     }, 100);
 
     return () => clearInterval(timer);
-  }, [activeUser, nextStoryIndex, nextUserIndex, fetchAllStories, storyLength]);
+  }, [
+    activeUser,
+    nextStoryIndex,
+    nextUserIndex,
+    fetchAllStories,
+    storyLength,
+    isPaused,
+  ]);
 
   const handleUserClick = (value: number) => {
     if (fetchAllStories) {
@@ -120,6 +129,7 @@ const StoryPage = () => {
       setScheduledNextUserIndex(value);
       setActiveUser(fetchAllStories[value]);
       setProgress(0);
+      setIsPaused(false);
     }
   };
 
@@ -141,6 +151,7 @@ const StoryPage = () => {
       }
     }
     setProgress(0);
+    setIsPaused(false);
   };
 
   const handleLeftClick = () => {
@@ -160,6 +171,14 @@ const StoryPage = () => {
       }
     }
     setProgress(0);
+    setIsPaused(false);
+  };
+
+  const handlePauseStoryClick = () => {
+    if (fetchAllStories && scheduledNextUserIndex !== null && activeUser) {
+      setIsPaused(!isPaused);
+      setActiveStory(activeUser.storyModels[nextStoryIndex]);
+    }
   };
 
   return (
@@ -335,6 +354,9 @@ const StoryPage = () => {
                 setNextStoryIndex={setNextStoryIndex}
                 progress={progress}
                 setProgress={setProgress}
+                handlePauseStoryClick={handlePauseStoryClick}
+                isPaused={isPaused}
+                setIsPaused={setIsPaused}
               />
             </GridItem>
             <Show above="md">

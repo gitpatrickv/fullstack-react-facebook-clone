@@ -1,8 +1,25 @@
-import { Avatar, Box, Card, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Card,
+  Flex,
+  IconButton,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
+import { FaPause, FaPlay } from "react-icons/fa6";
+import { HiDotsHorizontal } from "react-icons/hi";
+import { IoTrashOutline } from "react-icons/io5";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { StoryModel } from "../../../entities/Story";
+import useDeleteStory from "../../../hooks/user/useDeleteStory";
 import { useStoryStore } from "../../../store/story-store";
+import { useUserStore } from "../../../store/user-store";
 import StorySelector from "./StorySelector";
 
 interface Props {
@@ -11,19 +28,31 @@ interface Props {
   setNextStoryIndex: (value: number) => void;
   progress: number;
   setProgress: (value: number) => void;
+  handlePauseStoryClick: () => void;
+  isPaused: boolean;
+  setIsPaused: (value: boolean) => void;
 }
 
 const StoriesCard = ({
   activeStory,
   setActiveStory,
-
   setNextStoryIndex,
   progress,
   setProgress,
+  handlePauseStoryClick,
+  isPaused,
+  setIsPaused,
 }: Props) => {
   const { activeUser } = useStoryStore();
-
   const time = activeStory?.timestamp ? new Date(activeStory.timestamp) : null;
+  const { mutate: deleteStory } = useDeleteStory();
+  const { userId } = useUserStore();
+  const handleDeleteStoryClick = () => {
+    if (activeStory) {
+      deleteStory(activeStory?.storyId);
+    }
+  };
+
   const handleStoryClick = (index: number) => {
     if (!activeUser?.storyModels) {
       return;
@@ -31,7 +60,7 @@ const StoriesCard = ({
     setNextStoryIndex(index);
     setActiveStory(activeUser?.storyModels[index]);
     setProgress(0);
-    console.log("Current Index", index);
+    setIsPaused(false);
   };
 
   return (
@@ -86,15 +115,40 @@ const StoriesCard = ({
               </Text>
             </Flex>
           </Flex>
+          <Flex position="absolute" top="8" right="3" alignItems="center">
+            <Box onClick={handlePauseStoryClick} cursor="pointer" mr="5px">
+              {isPaused ? <FaPlay size="20px" /> : <FaPause size="20px" />}
+            </Box>
+            {activeUser?.userId === userId && (
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<HiDotsHorizontal size="24px" />}
+                  variant="none"
+                  ml="5px"
+                />
+                <MenuList>
+                  <MenuItem
+                    paddingBottom={2}
+                    paddingTop={2}
+                    onClick={handleDeleteStoryClick}
+                  >
+                    <IoTrashOutline size="25px" />
+                    <Text ml="10px" fontSize="lg" fontWeight="semibold">
+                      Delete Story
+                    </Text>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Flex>
           <Flex
-            // position="relative"
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
           >
             <Text
-              // position={activeStory?.storyImage ? "absolute" : "static"}
-              // padding={4}
               fontSize={{ base: "md", md: "x-large" }}
               color="black"
               textTransform="uppercase"

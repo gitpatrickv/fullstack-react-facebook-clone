@@ -19,6 +19,7 @@ import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useUserStore } from "../../../store/user-store";
 import PostUserProfileCard from "./PostUserProfileCard";
 import { useProfileStore } from "../../../store/profile-store";
+import { usePostStore } from "../../../store/post-store";
 
 interface PostContentProps {
   firstName: string;
@@ -56,10 +57,11 @@ const PostContent = ({
 
   const { userId } = useUserStore();
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const { isPostImageModalOpen } = usePostStore();
 
   return (
     <>
-      {isHovered && (
+      {!isPostImageModalOpen && isHovered && (
         <PostUserProfileCard
           firstName={firstName}
           lastName={lastName}
@@ -90,11 +92,16 @@ const PostContent = ({
             cursor="pointer"
             onClick={handleNavigateClick}
             onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            // onMouseLeave={() => setIsHovered(false)}
           >
             {firstName} {lastName}
           </Text>
-          <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+          <Text
+            fontSize="xs"
+            color="gray.500"
+            fontWeight="semibold"
+            cursor="pointer"
+          >
             <ReactTimeAgo date={time} locale="en-US" />
           </Text>
         </Box>

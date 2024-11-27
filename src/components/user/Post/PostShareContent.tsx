@@ -5,6 +5,7 @@ import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import PostShareUserProfileCard from "./PostShareUserProfileCard";
 import { useProfileStore } from "../../../store/profile-store";
+import { usePostStore } from "../../../store/post-store";
 
 interface PostContentProps {
   firstName: string;
@@ -32,10 +33,10 @@ const PostShareContent = ({
   };
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
+  const { isPostImageModalOpen } = usePostStore();
   return (
     <>
-      {isHovered && (
+      {!isPostImageModalOpen && isHovered && (
         <PostShareUserProfileCard
           firstName={firstName}
           lastName={lastName}

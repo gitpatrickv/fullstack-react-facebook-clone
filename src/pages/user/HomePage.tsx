@@ -86,7 +86,7 @@ const HomePage = () => {
           lg: `"section asideRight"`,
           xl: `"asideLeft left section right asideRight"`,
         }}
-        mt={{ base: "55px", md: "35px", lg: "55px", xl: "5px" }}
+        mt={{ base: "50px", md: "35px", lg: "55px", xl: "5px" }}
         padding={{ base: 2, md: 7, lg: 2 }}
         as="main"
       >
@@ -188,7 +188,7 @@ const HomePage = () => {
           </InfiniteScroll>
         </GridItem>
         <Show above="xl">
-          <GridItem area="asideLeft" as="aside" position="fixed">
+          <GridItem area="asideLeft" as="aside" position="fixed" zIndex={5}>
             <Sidebar />
           </GridItem>
         </Show>
