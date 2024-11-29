@@ -90,7 +90,7 @@ const Navbar = () => {
                     color={selectedPage === "/home" ? "#1877F2" : "white.500"}
                     {...buttonStyle}
                   >
-                    <FaHome size="35px" />
+                    <FaHome size="30px" />
                   </Button>
                 </Link>
                 <Link to="/friends" style={{ flex: 1 }}>
@@ -100,7 +100,7 @@ const Navbar = () => {
                     }
                     {...buttonStyle}
                   >
-                    <FaUserFriends size="35px" />
+                    <FaUserFriends size="30px" />
                   </Button>
                 </Link>
                 <Link to="/watch" style={{ flex: 1 }}>
@@ -108,7 +108,7 @@ const Navbar = () => {
                     color={selectedPage === "/watch" ? "#1877F2" : "white.500"}
                     {...buttonStyle}
                   >
-                    <MdOndemandVideo size="35px" />
+                    <MdOndemandVideo size="30px" />
                   </Button>
                 </Link>
                 <Link to="/marketplace" style={{ flex: 1 }}>
@@ -118,7 +118,7 @@ const Navbar = () => {
                     }
                     {...buttonStyle}
                   >
-                    <IoStorefrontSharp size="35px" />
+                    <IoStorefrontSharp size="25px" />
                   </Button>
                 </Link>
                 <Box style={{ flex: 1 }}>

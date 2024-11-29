@@ -296,9 +296,9 @@ const CreateStoryModal = () => {
                   >
                     <Card
                       bg={
-                        imageFile
-                          ? "#262626"
-                          : "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
+                        // imageFile
+                        //   ? "#262626"
+                        "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
                       }
                       height="90%"
                       width={{ base: "80%", lg: "60%", xl: "45%" }}
@@ -309,28 +309,32 @@ const CreateStoryModal = () => {
                       justifyContent="center"
                       alignItems="center"
                     >
+                      {text && (
+                        <Box padding={4}>
+                          <Text
+                            fontSize="xl"
+                            fontWeight="semibold"
+                            textAlign="center"
+                          >
+                            {text}
+                          </Text>
+                        </Box>
+                      )}
                       {imageFile && (
                         <Flex
                           position="relative"
                           justifyContent="center"
                           alignItems="center"
                         >
-                          <Text
-                            position="absolute"
+                          {/* <Text
+                            // position="absolute"
                             padding={4}
                             fontSize={{ base: "md", md: "x-large" }}
                           >
                             {text}
-                          </Text>
+                          </Text> */}
                           <Image src={imagePreview || pic} />
                         </Flex>
-                      )}
-                      {text && isTextStory && (
-                        <Box padding={4}>
-                          <Text fontSize="xl" fontWeight="semibold">
-                            {text}
-                          </Text>
-                        </Box>
                       )}
                     </Card>
                   </Card>

@@ -1,17 +1,16 @@
 import {
   Box,
   Flex,
-  IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spinner,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
-import { IoMdNotificationsOff } from "react-icons/io";
-import { IoNotificationsCircle } from "react-icons/io5";
+import { IoMdNotifications, IoMdNotificationsOff } from "react-icons/io";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
@@ -24,7 +23,7 @@ const Notifications = () => {
   const { data: getNotificationCount, refetch: refetchNotificationCount } =
     useGetNotificationCount(userId ?? 0);
   const { setNotificationModels, notificationModels } = useNotificationStore();
-
+  const { colorMode } = useColorMode();
   const {
     data: fetchAllNotifications,
     fetchNextPage,
@@ -65,11 +64,23 @@ const Notifications = () => {
       <Flex justifyContent="center">
         <Menu>
           <MenuButton
-            as={IconButton}
+            as={Box}
             aria-label="Notifications"
-            icon={<IoNotificationsCircle size="40px" />}
-            variant="none"
-          />
+            cursor="pointer"
+            height="36px"
+            width="36px"
+            bg={colorMode === "dark" ? "#303030" : "gray.100"}
+            borderRadius="20px"
+            _hover={{
+              bg: colorMode === "dark" ? "#383838" : "gray.200",
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            <Box display="flex" justifyContent="center">
+              <IoMdNotifications size="24px" />
+            </Box>
+          </MenuButton>
 
           <MenuList border="none">
             <Box ml="10px" mb="5px">
@@ -137,8 +148,8 @@ const Notifications = () => {
             bg="red"
             borderRadius="full"
             position="absolute"
-            top="-3px"
-            right="50px"
+            top="-5px"
+            right="48px"
           >
             <Text
               textAlign="center"

@@ -56,11 +56,23 @@ const Messenger = ({ fetchAllChat, fetchNextPage, hasNextPage }: Props) => {
       <Flex justifyContent="center">
         <Menu>
           <MenuButton
-            as={IconButton}
-            aria-label="chats"
-            icon={<BiLogoMessenger size="43px" />}
-            variant="none"
-          />
+            as={Box}
+            aria-label="chat"
+            cursor="pointer"
+            height="36px"
+            width="36px"
+            bg={colorMode === "dark" ? "#303030" : "gray.100"}
+            borderRadius="20px"
+            _hover={{
+              bg: colorMode === "dark" ? "#383838" : "gray.200",
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            <Box display="flex" justifyContent="center">
+              <BiLogoMessenger size="24px" />
+            </Box>
+          </MenuButton>
           <MenuList border="none">
             <Box ml="10px" mb="5px">
               <Text fontWeight="bold" fontSize="x-large" ml="5px">
