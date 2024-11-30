@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import UserRoute from "../components/ProtectedRoute/UserRoute";
+import CreateProductModal from "../components/user/MarketPage/CreateProductModal";
 import LoginPage from "../pages/auth/LoginPage";
 import ErrorPage from "../pages/user/ErrorPage";
 import FriendRequestPage from "../pages/user/FriendRequestPage";
@@ -103,6 +104,12 @@ const router = createBrowserRouter([
             <MarketPage />
           </UserRoute>
         ),
+        children: [
+          {
+            path: "create",
+            element: <CreateProductModal />,
+          },
+        ],
       },
       {
         path: "/profile/:userId",

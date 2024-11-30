@@ -1,9 +1,8 @@
-import { Grid, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Grid, GridItem, Text } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
 import MarketSidebar from "../../components/user/MarketPage/MarketSidebar";
-import ProductCard from "../../components/user/MarketPage/ProductCard";
 
 const MarketPage = () => {
-  const array = [1, 2, 3, 4, 5, 6];
   return (
     <>
       <Grid
@@ -27,12 +26,12 @@ const MarketPage = () => {
           <Text fontSize="xl" fontWeight="bold">
             Today's Pick
           </Text>
-          <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 6 }} spacing={2}>
+          <Outlet />
+          {/* <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 6 }} spacing={2}>
             {array.map((skeleton) => (
               <ProductCard key={skeleton} />
             ))}
-          </SimpleGrid>
-          <ProductCard />
+          </SimpleGrid> */}
         </GridItem>
       </Grid>
     </>

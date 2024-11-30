@@ -29,10 +29,11 @@ import {
   MdRealEstateAgent,
   MdSell,
 } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const MarketSidebar = () => {
   const { colorMode } = useColorMode();
-
+  const navigate = useNavigate();
   const isSmallScreen = useBreakpointValue(
     { base: true, lg: false },
     { fallback: "lg" }
@@ -67,6 +68,10 @@ const MarketSidebar = () => {
     _hover: {
       bg: colorMode === "dark" ? "#383838" : "gray.200",
     },
+  };
+
+  const handleNavigateClick = () => {
+    navigate("/marketplace/create");
   };
 
   return (
@@ -145,6 +150,7 @@ const MarketSidebar = () => {
             _hover={{
               bg: "#165BB7",
             }}
+            onClick={handleNavigateClick}
           >
             <FiPlus size="20px" /> <Text ml="10px">Create new listing</Text>
           </Button>

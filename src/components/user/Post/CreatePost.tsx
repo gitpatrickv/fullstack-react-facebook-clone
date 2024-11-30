@@ -148,6 +148,7 @@ const CreatePost = ({ firstName }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         size="xl"
+        isCentered
       >
         <ModalOverlay />
         <form onSubmit={handleSubmit(onSubmit)}>
