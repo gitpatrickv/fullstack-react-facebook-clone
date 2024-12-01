@@ -24,7 +24,9 @@ const ProductCard = ({ product }: Props) => {
       <Text fontWeight="semibold" fontSize="lg" mt="5px">
         {formatCurrency(product.price)}
       </Text>
-      <Text textTransform="capitalize">{product.productName}</Text>
+      <Text textTransform="capitalize" isTruncated={true}>
+        {product.productName}
+      </Text>
     </Box>
   );
 };

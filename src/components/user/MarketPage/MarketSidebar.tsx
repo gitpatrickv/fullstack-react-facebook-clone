@@ -29,11 +29,12 @@ import {
   MdRealEstateAgent,
   MdSell,
 } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MarketSidebar = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
+  const location = useLocation();
   const isSmallScreen = useBreakpointValue(
     { base: true, lg: false },
     { fallback: "lg" }
@@ -72,6 +73,14 @@ const MarketSidebar = () => {
 
   const handleNavigateClick = () => {
     navigate("/marketplace/create");
+  };
+
+  const handleNavigateCategoryClick = (category: string) => {
+    navigate(`/marketplace/category/${category}`);
+  };
+
+  const handleNavigateMarketplaceClick = () => {
+    navigate("/marketplace");
   };
 
   return (
@@ -120,7 +129,18 @@ const MarketSidebar = () => {
             alignItems={{ base: "center", lg: "initial" }}
             justifyContent={{ base: "space-between", lg: "initial" }}
           >
-            <Box {...boxStyles} mt="10px">
+            <Box
+              {...boxStyles}
+              mt="10px"
+              bg={
+                location.pathname === "/marketplace"
+                  ? colorMode === "dark"
+                    ? "#303030"
+                    : "gray.100"
+                  : undefined
+              }
+              onClick={handleNavigateMarketplaceClick}
+            >
               <IconButton
                 aria-label="all"
                 icon={<IoStorefrontSharp size="20px" />}
@@ -161,55 +181,79 @@ const MarketSidebar = () => {
                   <Text ml="5px">Categories</Text>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("vehicles")}
+                  >
                     <Card {...cardStyles}>
                       <FaCar size="20px" />
                     </Card>
                     <Text>Vehicles</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("electronics")}
+                  >
                     <Card {...cardStyles}>
                       <ImMobile2 size="20px" />
                     </Card>
                     <Text>Electronics</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("apparel")}
+                  >
                     <Card {...cardStyles}>
                       <IoShirtSharp size="20px" />
                     </Card>
                     <Text>Apparel</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      handleNavigateCategoryClick("toys_and_games")
+                    }
+                  >
                     <Card {...cardStyles}>
                       <IoGameController size="20px" />
                     </Card>
                     <Text>Toys & Games</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("home_sales")}
+                  >
                     <Card {...cardStyles}>
                       <MdRealEstateAgent size="20px" />
                     </Card>
                     <Text>Home Sales</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("entertainment")}
+                  >
                     <Card {...cardStyles}>
                       <ImVideoCamera size="20px" />
                     </Card>
                     <Text>Entertainment</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => handleNavigateCategoryClick("sports")}
+                  >
                     <Card {...cardStyles}>
                       <MdOutlineSportsSoccer size="20px" />
                     </Card>
                     <Text>Sports</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      handleNavigateCategoryClick("office_supplies")
+                    }
+                  >
                     <Card {...cardStyles}>
                       <FiPaperclip size="20px" />
                     </Card>
                     <Text>Office Supplies</Text>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      handleNavigateCategoryClick("musical_instruments")
+                    }
+                  >
                     <Card {...cardStyles}>
                       <FaGuitar size="20px" />
                     </Card>
@@ -229,7 +273,17 @@ const MarketSidebar = () => {
               >
                 Categories
               </Text>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("vehicles")}
+                bg={
+                  location.pathname === `/marketplace/category/vehicles`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="vehicles"
                   icon={<FaCar size="20px" />}
@@ -238,7 +292,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Vehicles</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("electronics")}
+                bg={
+                  location.pathname === `/marketplace/category/electronics`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="electronics"
                   icon={<ImMobile2 size="20px" />}
@@ -247,7 +311,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Electronics</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("apparel")}
+                bg={
+                  location.pathname === `/marketplace/category/apparel`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="apparel"
                   icon={<IoShirtSharp size="20px" />}
@@ -256,7 +330,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Apparel</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("toys_and_games")}
+                bg={
+                  location.pathname === `/marketplace/category/toys_and_games`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="games"
                   icon={<IoGameController size="20px" />}
@@ -265,7 +349,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Toys & Games</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("home_sales")}
+                bg={
+                  location.pathname === `/marketplace/category/home_sales`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="home"
                   icon={<MdRealEstateAgent size="20px" />}
@@ -274,7 +368,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Home Sales</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("entertainment")}
+                bg={
+                  location.pathname === `/marketplace/category/entertainment`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="entertainment"
                   icon={<ImVideoCamera size="20px" />}
@@ -283,7 +387,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Entertainment</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("sports")}
+                bg={
+                  location.pathname === `/marketplace/category/sports`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="sports"
                   icon={<MdOutlineSportsSoccer size="20px" />}
@@ -292,7 +406,17 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Sports</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() => handleNavigateCategoryClick("office_supplies")}
+                bg={
+                  location.pathname === `/marketplace/category/office_supplies`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="supply"
                   icon={<FiPaperclip size="20px" />}
@@ -301,7 +425,20 @@ const MarketSidebar = () => {
                 />
                 <Text {...textStyles}>Office Supplies</Text>
               </Box>
-              <Box {...boxStyles}>
+              <Box
+                {...boxStyles}
+                onClick={() =>
+                  handleNavigateCategoryClick("musical_instruments")
+                }
+                bg={
+                  location.pathname ===
+                  `/marketplace/category/musical_instruments`
+                    ? colorMode === "dark"
+                      ? "#303030"
+                      : "gray.100"
+                    : undefined
+                }
+              >
                 <IconButton
                   aria-label="instruments"
                   icon={<FaGuitar size="20px" />}

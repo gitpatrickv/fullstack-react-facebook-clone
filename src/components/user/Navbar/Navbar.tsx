@@ -9,7 +9,6 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
@@ -24,13 +23,6 @@ const Navbar = () => {
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
   const { onOpen } = useGameStore();
-  const [selectedPage, setSelectedPage] = useState<string | null>(
-    location.pathname
-  );
-
-  useEffect(() => {
-    setSelectedPage(location.pathname);
-  }, [location.pathname]);
 
   const buttonStyle = {
     bg: "transparent",
@@ -87,7 +79,9 @@ const Navbar = () => {
               <Flex justifyContent="space-around" alignItems="center">
                 <Link to="/home" style={{ flex: 1 }}>
                   <Button
-                    color={selectedPage === "/home" ? "#1877F2" : "white.500"}
+                    color={
+                      location.pathname === "/home" ? "#1877F2" : "white.500"
+                    }
                     {...buttonStyle}
                   >
                     <FaHome size="30px" />
@@ -96,7 +90,9 @@ const Navbar = () => {
                 <Link to="/friends" style={{ flex: 1 }}>
                   <Button
                     color={
-                      selectedPage === "/friends" ? "#1877F2" : "white.500"
+                      location.pathname.startsWith("/friends")
+                        ? "#1877F2"
+                        : "white.500"
                     }
                     {...buttonStyle}
                   >
@@ -105,7 +101,9 @@ const Navbar = () => {
                 </Link>
                 <Link to="/watch" style={{ flex: 1 }}>
                   <Button
-                    color={selectedPage === "/watch" ? "#1877F2" : "white.500"}
+                    color={
+                      location.pathname === "/watch" ? "#1877F2" : "white.500"
+                    }
                     {...buttonStyle}
                   >
                     <MdOndemandVideo size="30px" />
@@ -114,7 +112,9 @@ const Navbar = () => {
                 <Link to="/marketplace" style={{ flex: 1 }}>
                   <Button
                     color={
-                      selectedPage === "/marketplace" ? "#1877F2" : "white.500"
+                      location.pathname.startsWith("/marketplace")
+                        ? "#1877F2"
+                        : "white.500"
                     }
                     {...buttonStyle}
                   >
@@ -122,11 +122,7 @@ const Navbar = () => {
                   </Button>
                 </Link>
                 <Box style={{ flex: 1 }}>
-                  <Button
-                    color={selectedPage === "/games" ? "#1877F2" : "white.500"}
-                    {...buttonStyle}
-                    onClick={onOpen}
-                  >
+                  <Button {...buttonStyle} onClick={onOpen}>
                     <IoLogoGameControllerA size="35px" />
                   </Button>
                 </Box>

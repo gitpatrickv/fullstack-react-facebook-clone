@@ -11,6 +11,7 @@ import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
 import PostPage from "../pages/user/PostPage";
+import ProductCategoryPage from "../pages/user/ProductCategoryPage";
 import ProfileAboutPage from "../pages/user/ProfileAboutPage";
 import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
@@ -80,12 +81,6 @@ const router = createBrowserRouter([
           {
             path: "list",
             element: <FriendsListPage />,
-            // children: [
-            //   {
-            //     path: "profile/:userId",
-            //     element: <ProfilePage />,
-            //   },
-            // ],
           },
         ],
       },
@@ -108,6 +103,10 @@ const router = createBrowserRouter([
           {
             path: "create",
             element: <CreateProductModal />,
+          },
+          {
+            path: "category/:category",
+            element: <ProductCategoryPage />,
           },
         ],
       },
