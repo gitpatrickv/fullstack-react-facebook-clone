@@ -234,6 +234,7 @@ const CreateProductModal = () => {
                 },
               }}
             >
+              {isSmallScreen && <Box mt="70px" />}
               {!isSmallScreen && (
                 <Box mb="60px">
                   <ModalCloseButton
@@ -258,6 +259,7 @@ const CreateProductModal = () => {
                   </Box>
                 </Box>
               )}
+              {!isSmallScreen && <Divider mb="5px" />}
 
               <Text fontSize="x-large" ml="10px" fontWeight="bold">
                 Marketplace

@@ -6,6 +6,7 @@ import {
   Divider,
   Flex,
   FormControl,
+  IconButton,
   Image,
   Input,
   Modal,
@@ -15,9 +16,11 @@ import {
   ModalOverlay,
   Text,
   Textarea,
+  useColorMode,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { IoMdCloseCircle, IoMdPhotos } from "react-icons/io";
+import { IoMdCloseCircle } from "react-icons/io";
+import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import pic from "../../../assets/profpic.jpeg";
 import useCreatePost from "../../../hooks/user/useCreatePost";
@@ -60,6 +63,7 @@ const CreatePost = ({ firstName }: Props) => {
   } = useCreatePost(getUserId);
   const initialRef = useRef(null);
   const finalRef = useRef(null);
+  const { colorMode } = useColorMode();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handlePostInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -68,16 +72,28 @@ const CreatePost = ({ firstName }: Props) => {
     setValue("content", e.target.value);
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
+  const handleFileInput = (files: FileList | null) => {
+    if (files && files.length > 0) {
       setImageFile(files);
       setValue("file", files);
-      const imageUrl = Array.from(files).map((file) =>
+      const imageUrls = Array.from(files).map((file) =>
         URL.createObjectURL(file)
       );
-      setImagePreview(imageUrl);
+      setImagePreview(imageUrls);
     }
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleFileInput(e.target.files);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    handleFileInput(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   const { setIsProfile } = useProfileStore();
@@ -138,7 +154,7 @@ const CreatePost = ({ firstName }: Props) => {
           onClick={onOpen}
           cursor="pointer"
         >
-          <IoMdPhotos size="30px" color="green" />
+          <MdOutlineAddPhotoAlternate size="30px" color="green" />
           <Text ml="5px">Photo</Text>
         </Box>
       </Card>
@@ -256,19 +272,47 @@ const CreatePost = ({ firstName }: Props) => {
                   ))}
                 </Box>
               )}
+              {!imageFile && (
+                <Flex
+                  height="180px"
+                  border="1px solid"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="10px"
+                  mb="10px"
+                  onClick={handleInputClick}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  cursor="pointer"
+                  borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
+                >
+                  <Box textAlign="center" width="100%">
+                    <IconButton
+                      aria-label="image"
+                      icon={<MdOutlineAddPhotoAlternate size="25px" />}
+                      isRound
+                      height="42px"
+                      width="42px"
+                    />
+                    <Text fontWeight="semibold" mt="5px">
+                      Add Photos
+                    </Text>
+                    <Text color="gray.500">or drag and drop</Text>
+                  </Box>
+                </Flex>
+              )}
 
               <Flex
                 border="1px solid"
                 justifyContent="space-between"
                 alignItems="center"
-                borderColor="gray.500"
                 borderRadius="10px"
                 padding={3}
+                borderColor={colorMode === "dark" ? "#383838" : "gray.200"}
               >
                 <Text ml="10px" userSelect="none">
                   Add to your post
                 </Text>
-
                 <Box
                   mr="10px"
                   cursor="pointer"
@@ -288,7 +332,7 @@ const CreatePost = ({ firstName }: Props) => {
                       <Text fontSize="xs">Photo</Text>
                     </Card>
                   )}
-                  <IoMdPhotos size="30px" color="green" />
+                  <MdOutlineAddPhotoAlternate size="30px" color="green" />
                 </Box>
                 <input
                   type="file"

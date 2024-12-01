@@ -1,8 +1,12 @@
-import { Grid, GridItem, Text } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
+import { Grid, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Outlet, useLocation } from "react-router-dom";
 import MarketSidebar from "../../components/user/MarketPage/MarketSidebar";
+import ProductCard from "../../components/user/MarketPage/ProductCard";
+import useFetchAllProducts from "../../hooks/user/useFetchAllProducts";
 
 const MarketPage = () => {
+  const { data: fetchAllProducts } = useFetchAllProducts({ pageSize: 20 });
+  const location = useLocation();
   return (
     <>
       <Grid
@@ -26,12 +30,17 @@ const MarketPage = () => {
           <Text fontSize="xl" fontWeight="bold">
             Today's Pick
           </Text>
-          <Outlet />
-          {/* <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 6 }} spacing={2}>
-            {array.map((skeleton) => (
-              <ProductCard key={skeleton} />
-            ))}
-          </SimpleGrid> */}
+          {location.pathname === "/marketplace" ? (
+            <SimpleGrid columns={{ base: 1, md: 4, lg: 5, xl: 6 }} spacing={2}>
+              {fetchAllProducts?.pages.map((page) =>
+                page.productModels.map((item) => (
+                  <ProductCard key={item.productId} product={item} />
+                ))
+              )}
+            </SimpleGrid>
+          ) : (
+            <Outlet />
+          )}
         </GridItem>
       </Grid>
     </>
