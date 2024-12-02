@@ -14,7 +14,7 @@ const useFetchAllProducts = ({ pageSize }: PaginateProps) => {
   const jwtToken = authStore.jwtToken;
 
   return useInfiniteQuery<ProductResponse, Error>({
-    queryKey: ["allProducts"],
+    queryKey: ["allProducts", pageSize],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<ProductResponse>(`/product`, {
         headers: {

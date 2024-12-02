@@ -6,22 +6,19 @@ import { useAuthQueryStore } from "../../store/auth-store";
 const apiClient = axiosInstance;
 
 interface PaginateProps {
-  category: string;
+  userId: number;
   pageSize: number;
 }
 
-const useFetchAllProductsByCategory = ({
-  category,
-  pageSize,
-}: PaginateProps) => {
+const useFetchAllUserListedProducts = ({ userId, pageSize }: PaginateProps) => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
 
   return useInfiniteQuery<ProductResponse, Error>({
-    queryKey: ["categoryProduct", category],
+    queryKey: ["listedUserProducts"],
     queryFn: async ({ pageParam = 0 }) => {
       const { data } = await apiClient.get<ProductResponse>(
-        `/product/${category}`,
+        `/product/user/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -40,8 +37,8 @@ const useFetchAllProductsByCategory = ({
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken && !!category,
+    enabled: !!jwtToken && !!userId,
   });
 };
 
-export default useFetchAllProductsByCategory;
+export default useFetchAllUserListedProducts;

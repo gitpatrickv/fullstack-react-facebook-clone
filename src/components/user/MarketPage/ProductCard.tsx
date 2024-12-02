@@ -1,14 +1,25 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import { ProductModel } from "../../../entities/Product";
 import { formatCurrency } from "../../../utilities/formatCurrency";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   product: ProductModel;
 }
 
 const ProductCard = ({ product }: Props) => {
+  const navigate = useNavigate();
+  const handleNavigateClick = () => {
+    navigate(`/marketplace/item/${product.productId}`);
+  };
+
   return (
-    <Box overflow="hidden" mt="20px" cursor="pointer">
+    <Box
+      overflow="hidden"
+      mt="20px"
+      cursor="pointer"
+      onClick={handleNavigateClick}
+    >
       <Image
         src={
           product.productImages?.[0].productImage ||

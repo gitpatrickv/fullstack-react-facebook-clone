@@ -83,6 +83,10 @@ const MarketSidebar = () => {
     navigate("/marketplace");
   };
 
+  const handleNavigateMyProductsClick = () => {
+    navigate("/marketplace/user/item");
+  };
+
   return (
     <>
       <Card
@@ -153,7 +157,18 @@ const MarketSidebar = () => {
               />
               <Text {...textStyles}>Browse all</Text>
             </Box>
-            <Box {...boxStyles} mt={{ base: "10px", lg: "0" }}>
+            <Box
+              {...boxStyles}
+              mt={{ base: "10px", lg: "0" }}
+              bg={
+                location.pathname === "/marketplace/user/item"
+                  ? colorMode === "dark"
+                    ? "#303030"
+                    : "gray.100"
+                  : undefined
+              }
+              onClick={handleNavigateMyProductsClick}
+            >
               <IconButton
                 aria-label="all"
                 icon={<MdSell size="20px" />}

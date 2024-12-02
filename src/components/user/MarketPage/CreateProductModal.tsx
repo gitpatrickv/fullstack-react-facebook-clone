@@ -338,7 +338,7 @@ const CreateProductModal = () => {
                     {!imagePreview && (
                       <Box textAlign="center" width="100%">
                         <IconButton
-                          aria-label="all"
+                          aria-label="photo"
                           icon={<MdOutlineAddPhotoAlternate size="25px" />}
                           isRound
                           height="42px"
@@ -440,6 +440,9 @@ const CreateProductModal = () => {
                     _hover={{ bg: "#165BB7" }}
                     type="submit"
                     isLoading={loading}
+                    isDisabled={
+                      imageFile && productName && price ? false : true
+                    }
                   >
                     Publish
                   </Button>

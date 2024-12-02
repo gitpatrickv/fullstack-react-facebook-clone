@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import UserRoute from "../components/ProtectedRoute/UserRoute";
 import CreateProductModal from "../components/user/MarketPage/CreateProductModal";
+import ProductModal from "../components/user/MarketPage/ProductModal";
 import LoginPage from "../pages/auth/LoginPage";
 import ErrorPage from "../pages/user/ErrorPage";
 import FriendRequestPage from "../pages/user/FriendRequestPage";
@@ -10,6 +11,7 @@ import FriendsPage from "../pages/user/FriendsPage";
 import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
+import MyListedProductPage from "../pages/user/MyListedProductPage";
 import PostPage from "../pages/user/PostPage";
 import ProductCategoryPage from "../pages/user/ProductCategoryPage";
 import ProfileAboutPage from "../pages/user/ProfileAboutPage";
@@ -107,6 +109,14 @@ const router = createBrowserRouter([
           {
             path: "category/:category",
             element: <ProductCategoryPage />,
+          },
+          {
+            path: "item/:productId",
+            element: <ProductModal />,
+          },
+          {
+            path: "user/item",
+            element: <MyListedProductPage />,
           },
         ],
       },

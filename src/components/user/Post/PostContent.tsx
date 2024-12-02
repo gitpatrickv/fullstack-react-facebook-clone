@@ -62,14 +62,22 @@ const PostContent = ({
   return (
     <>
       {!isPostImageModalOpen && isHovered && (
-        <PostUserProfileCard
-          firstName={firstName}
-          lastName={lastName}
-          postUserId={postUserId}
-          profilePicture={profilePicture}
-          setIsHovered={setIsHovered}
-          handleNavigateClick={handleNavigateClick}
-        />
+        <Box
+          position="absolute"
+          zIndex={100}
+          left="10px"
+          top="45px"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <PostUserProfileCard
+            firstName={firstName}
+            lastName={lastName}
+            postUserId={postUserId}
+            profilePicture={profilePicture}
+            handleNavigateClick={handleNavigateClick}
+          />
+        </Box>
       )}
       <Box display="flex" alignItems="center">
         <Box

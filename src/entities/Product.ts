@@ -15,6 +15,7 @@ export interface ProductModel {
   price: number;
   brand: string;
   description: string;
+  timestamp: string;
   productImages: ProductImageModel[];
   user: UserData;
 }
