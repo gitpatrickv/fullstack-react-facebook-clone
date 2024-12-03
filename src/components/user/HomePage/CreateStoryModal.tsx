@@ -125,7 +125,12 @@ const CreateStoryModal = () => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleModalCloseClick} size="full">
+      <Modal
+        isOpen={isOpen}
+        onClose={handleModalCloseClick}
+        size="full"
+        trapFocus={false}
+      >
         <ModalOverlay />
         <ModalContent>
           <Grid

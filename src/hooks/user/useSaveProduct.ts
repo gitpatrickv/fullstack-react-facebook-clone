@@ -46,6 +46,7 @@ const useSaveProduct = (userId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["allProducts", 20]);
+        queryClient.invalidateQueries(["listedUserProducts"]);
         setLoading(false);
         reset();
         setImageFile(null);

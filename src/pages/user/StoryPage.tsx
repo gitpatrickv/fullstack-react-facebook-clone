@@ -183,7 +183,12 @@ const StoryPage = () => {
 
   return (
     <>
-      <Modal isOpen={true} onClose={handleNavigateClick} size="full">
+      <Modal
+        isOpen={true}
+        onClose={handleNavigateClick}
+        size="full"
+        trapFocus={false}
+      >
         <ModalOverlay />
         <ModalContent>
           <Grid

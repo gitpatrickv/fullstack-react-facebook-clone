@@ -135,6 +135,7 @@ const PostImagesModal = ({
       size="full"
       initialFocusRef={initialRef}
       finalFocusRef={finalRef}
+      trapFocus={chatArray.length >= 1 ? false : true}
     >
       <ModalOverlay />
       <ModalContent>

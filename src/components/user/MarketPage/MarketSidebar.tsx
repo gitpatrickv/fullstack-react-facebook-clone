@@ -15,6 +15,7 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { FaCar, FaGuitar, FaList } from "react-icons/fa6";
 import { FiPaperclip, FiPlus } from "react-icons/fi";
@@ -87,6 +88,20 @@ const MarketSidebar = () => {
     navigate("/marketplace/user/item");
   };
 
+  const [keyword, setKeyword] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const text = event.target.value;
+    setKeyword(text);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (keyword) {
+      navigate(`/marketplace/search?keyword=${encodeURIComponent(keyword)}`);
+    }
+  };
+
   return (
     <>
       <Card
@@ -104,30 +119,33 @@ const MarketSidebar = () => {
           >
             Marketplace
           </Text>
-          <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
-            <Input
-              borderRadius={20}
-              placeholder="Search Marketplace"
-              variant="filled"
-              fontSize={{ base: "sm", md: "md" }}
-              border="none"
-              _hover={{ border: "none" }}
-              _focus={{
-                boxShadow: "none",
-                border: "none",
-                bg: colorMode === "dark" ? "#303030" : "gray.100",
-              }}
-            />
-            <InputLeftElement>
-              <IconButton
-                aria-label="Search"
-                icon={<BsSearch />}
-                type="submit"
-                bg="transparent"
-                _hover={{ bg: "transparent" }}
+          <form onSubmit={handleSubmit}>
+            <InputGroup justifyContent={{ base: "center", md: "flex-start" }}>
+              <Input
+                borderRadius={20}
+                placeholder="Search Marketplace"
+                variant="filled"
+                fontSize={{ base: "sm", md: "md" }}
+                border="none"
+                _hover={{ border: "none" }}
+                _focus={{
+                  boxShadow: "none",
+                  border: "none",
+                  bg: colorMode === "dark" ? "#303030" : "gray.100",
+                }}
+                onChange={handleInputChange}
               />
-            </InputLeftElement>
-          </InputGroup>
+              <InputLeftElement>
+                <IconButton
+                  aria-label="Search"
+                  icon={<BsSearch />}
+                  type="submit"
+                  bg="transparent"
+                  _hover={{ bg: "transparent" }}
+                />
+              </InputLeftElement>
+            </InputGroup>
+          </form>
           <Flex
             flexDirection={{ base: "row", lg: "column" }}
             alignItems={{ base: "center", lg: "initial" }}

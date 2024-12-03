@@ -1,10 +1,11 @@
 import { Grid, GridItem, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import MarketSidebar from "../../components/user/MarketPage/MarketSidebar";
 import ProductCard from "../../components/user/MarketPage/ProductCard";
 import ProductSkeleton from "../../components/user/MarketPage/ProductSkeleton";
 import useFetchAllProducts from "../../hooks/user/useFetchAllProducts";
+import { useUserStore } from "../../store/user-store";
 
 const MarketPage = () => {
   const {
@@ -14,7 +15,7 @@ const MarketPage = () => {
     isLoading,
   } = useFetchAllProducts({ pageSize: 20 });
   const location = useLocation();
-
+  const { firstName } = useUserStore();
   const fetchProductData =
     fetchAllProducts?.pages.reduce(
       (total, page) => total + page.productModels.length,
@@ -43,8 +44,12 @@ const MarketPage = () => {
           <MarketSidebar />
         </GridItem>
         <GridItem area="section2" padding={6}>
-          <Text fontSize="xl" fontWeight="bold">
-            Today's Pick
+          <Text fontSize="xl" fontWeight="bold" textTransform="capitalize">
+            {location.pathname === "/marketplace" ||
+            location.pathname.startsWith(`/marketplace/category`) ||
+            location.pathname.startsWith(`/marketplace/search`)
+              ? "Today's Picks"
+              : `${firstName}'s Listed Items`}
           </Text>
           {location.pathname === "/marketplace" ? (
             <>
@@ -79,6 +84,7 @@ const MarketPage = () => {
           ) : (
             <Outlet />
           )}
+          <ScrollRestoration />
         </GridItem>
       </Grid>
     </>

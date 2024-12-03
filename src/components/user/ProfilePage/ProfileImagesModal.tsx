@@ -133,6 +133,7 @@ const ProfileImagesModal = ({
         size="full"
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
+        trapFocus={chatArray.length >= 1 ? false : true}
       >
         <ModalOverlay />
         <ModalContent>
@@ -300,9 +301,9 @@ const ProfileImagesModal = ({
                   padding={3}
                   position="relative"
                   bottom="0"
-                  width={
-                    chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"
-                  }
+                  // width={
+                  //   chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"
+                  // }
                 >
                   <WriteComment
                     focusRef={initialRef}

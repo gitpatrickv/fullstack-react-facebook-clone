@@ -18,6 +18,7 @@ import ProfileAboutPage from "../pages/user/ProfileAboutPage";
 import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
 import ProfilePhotosPage from "../pages/user/ProfilePhotosPage";
+import SearchMarketPage from "../pages/user/SearchMarketPage";
 import SearchPage from "../pages/user/SearchPage";
 import StoryPage from "../pages/user/StoryPage";
 import WatchPage from "../pages/user/WatchPage";
@@ -117,6 +118,10 @@ const router = createBrowserRouter([
           {
             path: "user/item",
             element: <MyListedProductPage />,
+          },
+          {
+            path: "search",
+            element: <SearchMarketPage />,
           },
         ],
       },

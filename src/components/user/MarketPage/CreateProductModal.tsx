@@ -169,6 +169,7 @@ const CreateProductModal = () => {
         onClose={handleNavigateMarketClick}
         size="full"
         preserveScrollBarGap={true}
+        trapFocus={false}
       >
         <ModalOverlay />
         <ModalContent>

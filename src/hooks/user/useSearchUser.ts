@@ -3,7 +3,7 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { UserListResponseProps } from "./useGetPostLikeUserList";
 
-interface SearchProps {
+export interface SearchProps {
   keyword: string;
   pageSize: number;
 }

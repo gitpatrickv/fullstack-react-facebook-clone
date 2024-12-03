@@ -80,7 +80,12 @@ const ProductModal = () => {
 
   return (
     <>
-      <Modal isOpen={true} onClose={handleNavigateClick} size="full">
+      <Modal
+        isOpen={true}
+        onClose={handleNavigateClick}
+        size="full"
+        trapFocus={false}
+      >
         <ModalOverlay />
         <ModalContent>
           <Card position="fixed" width="100%" borderRadius="none" zIndex="10">
@@ -282,6 +287,7 @@ const ProductModal = () => {
                     fontSize="lg"
                     fontWeight="semibold"
                     ml="10px"
+                    onMouseEnter={() => setIsHovered(true)}
                   >
                     {getProductById?.user.firstName}{" "}
                     {getProductById?.user.lastName}
