@@ -211,7 +211,7 @@ const ProfileImagesModal = ({
               </Box>
               {isSmallScreen && <Box padding={5} />}
             </GridItem>
-            <GridItem area="section2" height="100%">
+            <GridItem area="section2" height="100%" position="relative">
               {isLargeScreen && (
                 <Card
                   position="fixed"
@@ -260,7 +260,7 @@ const ProfileImagesModal = ({
                 <Box
                   padding={3}
                   height="auto"
-                  maxHeight={{ base: "400px", lg: "590px" }}
+                  maxHeight={{ base: "400px", lg: "610px" }}
                   overflowY="auto"
                   id="scrollable-body"
                   css={{
@@ -299,11 +299,11 @@ const ProfileImagesModal = ({
 
                 <Box
                   padding={3}
-                  position="relative"
+                  position={{ base: "static", xl: "absolute" }}
                   bottom="0"
-                  // width={
-                  //   chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"
-                  // }
+                  width={
+                    chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"
+                  }
                 >
                   <WriteComment
                     focusRef={initialRef}

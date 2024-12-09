@@ -230,7 +230,7 @@ const Posts = ({ posts }: PostProps) => {
         finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
-        preserveScrollBarGap={true}
+        // preserveScrollBarGap={true}
       >
         <ModalOverlay />
         <ModalContent maxWidth={{ base: "90%", lg: "70%", xl: "40%" }}>

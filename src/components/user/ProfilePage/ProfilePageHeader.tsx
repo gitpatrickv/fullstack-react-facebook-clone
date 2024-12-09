@@ -119,7 +119,7 @@ const ProfilePageHeader = ({
                   src={coverPhoto}
                   width="100%"
                   height="450px"
-                  objectFit="cover"
+                  // objectFit="cover"
                   borderBottomLeftRadius="10px"
                   borderBottomRightRadius="10px"
                 />

@@ -16,7 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { BiLike, BiSolidLike } from "react-icons/bi";
+import { BiSolidLike } from "react-icons/bi";
 import { FaComment } from "react-icons/fa";
 import { IoIosShareAlt } from "react-icons/io";
 import { PiShareFatLight } from "react-icons/pi";
@@ -222,7 +222,7 @@ const LikeCommentShareButton = ({
           onClick={handleLikePostClick}
           color={postLike?.liked ? "#1877F2" : "white.500"}
         >
-          {postLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
+          <BiSolidLike size="20px" />
           <Text ml="5px" fontWeight="semibold">
             Like
           </Text>

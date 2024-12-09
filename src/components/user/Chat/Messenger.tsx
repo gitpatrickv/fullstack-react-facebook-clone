@@ -9,7 +9,6 @@ import {
   MenuList,
   Spinner,
   Text,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { InfiniteData } from "@tanstack/react-query";
@@ -40,7 +39,6 @@ const Messenger = ({ fetchAllChat, fetchNextPage, hasNextPage }: Props) => {
   const [isHover, setIsHover] = useState<boolean>(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
   const { isPostImageModalOpen } = usePostStore();
-  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   const fetchChatData =
     fetchAllChat?.pages.reduce(
@@ -161,39 +159,34 @@ const Messenger = ({ fetchAllChat, fetchNextPage, hasNextPage }: Props) => {
       </Flex>
 
       <Box position="fixed" bottom="0" zIndex={100}>
-        {isLargeScreen && (
-          <>
-            {chatArray.map((chat) => (
-              <ChatCard
-                key={chat.chatId}
-                chatId={chat.chatId}
-                index={chat.index}
-                userId={userId ?? 0}
-                isMaximized={chat.isMaximized}
-              />
-            ))}
-          </>
-        )}
+        {chatArray.map((chat) => (
+          <ChatCard
+            key={chat.chatId}
+            chatId={chat.chatId}
+            index={chat.index}
+            userId={userId ?? 0}
+            isMaximized={chat.isMaximized}
+          />
+        ))}
       </Box>
       {(!isPostImageModalOpen ||
-        (isPostImageModalOpen && chatArray.length >= 1)) &&
-        isLargeScreen && (
-          <Box position="fixed" bottom="15px" right="20px">
-            <IconButton
-              aria-label="message"
-              icon={<AiOutlineEdit size="25px" />}
-              bg={colorMode === "dark" ? "#303030" : "gray.200"}
-              _hover={{
-                bg: colorMode === "dark" ? "#484848" : "gray.300",
-              }}
-              isRound
-              size="lg"
-              onMouseEnter={() => setIsHover(true)}
-              onMouseLeave={() => setIsHover(false)}
-              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
-            />
-          </Box>
-        )}
+        (isPostImageModalOpen && chatArray.length >= 1)) && (
+        <Box position="fixed" bottom="15px" right="20px">
+          <IconButton
+            aria-label="message"
+            icon={<AiOutlineEdit size="25px" />}
+            bg={colorMode === "dark" ? "#303030" : "gray.200"}
+            _hover={{
+              bg: colorMode === "dark" ? "#484848" : "gray.300",
+            }}
+            isRound
+            size="lg"
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
+            onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
+          />
+        </Box>
+      )}
 
       {isHover && (
         <Card

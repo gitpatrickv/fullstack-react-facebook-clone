@@ -600,7 +600,7 @@ const CreateProductModal = () => {
                       {brand && (
                         <Flex justifyContent="space-between">
                           <Text fontWeight="semibold">Brand</Text>
-                          <Text>{brand}</Text>
+                          <Text textTransform="capitalize">{brand}</Text>
                         </Flex>
                       )}
                       <Text mt="5px">

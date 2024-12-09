@@ -334,7 +334,9 @@ const StoryPage = () => {
                           <StoryListCard
                             key={story.userId}
                             story={story}
-                            handleUserClick={() => handleUserClick(index + 1)}
+                            handleUserClick={() =>
+                              handleUserClick(storyByUser ? index + 1 : index)
+                            }
                           />
                         ))}
                     </>

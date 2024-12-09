@@ -257,7 +257,9 @@ const ProductModal = () => {
                 {getProductById?.brand && (
                   <Flex justifyContent="space-between" mt="5px">
                     <Text fontWeight="semibold">Brand</Text>
-                    <Text>{getProductById?.brand}</Text>
+                    <Text textTransform="capitalize">
+                      {getProductById?.brand}
+                    </Text>
                   </Flex>
                 )}
                 {getProductById?.description && (

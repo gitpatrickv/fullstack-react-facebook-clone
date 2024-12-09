@@ -21,6 +21,7 @@ import useDeleteStory from "../../../hooks/user/useDeleteStory";
 import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import StorySelector from "./StorySelector";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   activeStory: StoryModel | null;
@@ -61,6 +62,12 @@ const StoriesCard = ({
     setActiveStory(activeUser?.storyModels[index]);
     setProgress(0);
     setIsPaused(false);
+  };
+
+  const navigate = useNavigate();
+
+  const handleNavigateClick = () => {
+    navigate(`/profile/${activeUser?.userId}`);
   };
 
   return (
@@ -105,9 +112,16 @@ const StoriesCard = ({
               cursor="pointer"
               height="45px"
               width="45px"
+              onClick={handleNavigateClick}
             />
             <Flex flexDirection="column">
-              <Text ml="10px" textTransform="capitalize" fontWeight="semibold">
+              <Text
+                ml="10px"
+                textTransform="capitalize"
+                fontWeight="semibold"
+                onClick={handleNavigateClick}
+                cursor="pointer"
+              >
                 {activeUser?.firstName} {activeUser?.lastName}
               </Text>
               <Text ml="10px" fontSize="sm">

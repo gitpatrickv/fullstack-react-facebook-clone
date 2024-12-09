@@ -40,7 +40,7 @@ const MarketPage = () => {
           xl: `"section1  section2 "`,
         }}
       >
-        <GridItem area="section1">
+        <GridItem area="section1" zIndex="5">
           <MarketSidebar />
         </GridItem>
         <GridItem area="section2" padding={6}>
