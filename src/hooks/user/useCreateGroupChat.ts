@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 
@@ -13,7 +13,7 @@ const apiClient = axiosInstance;
 const useCreateGroupChat = () => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
-
+  const queryClient = useQueryClient();
   return useMutation(
     async ({ userId, friendId, text }: CreateGroupChatProps) => {
       const response = await apiClient.post(
@@ -26,6 +26,11 @@ const useCreateGroupChat = () => {
         }
       );
       return response.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["userChatList"]);
+      },
     }
   );
 };

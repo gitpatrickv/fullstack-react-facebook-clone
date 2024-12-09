@@ -74,7 +74,7 @@ const Search = () => {
           border="1px solid"
           borderRadius="20px"
           size="sm"
-          onClick={() => setShowInput(true)}
+          onClick={() => setShowInput(!showInput)}
         />
       ) : (
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
@@ -110,7 +110,7 @@ const Search = () => {
         <Card
           position="absolute"
           // top="60px"
-          top="0"
+          top={{ base: "55px", md: "0" }}
           left="0"
           right="0"
           borderRadius="none"

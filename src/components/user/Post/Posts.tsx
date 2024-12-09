@@ -230,6 +230,7 @@ const Posts = ({ posts }: PostProps) => {
         finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
+        // preserveScrollBarGap={true}
       >
         <ModalOverlay />
         <ModalContent maxWidth={{ base: "90%", lg: "70%", xl: "40%" }}>
@@ -249,7 +250,26 @@ const Posts = ({ posts }: PostProps) => {
             's Post
             <ModalCloseButton />
           </ModalHeader>
-          <ModalBody maxHeight="700px" overflowY="auto" id="scrollable-body">
+          <ModalBody
+            maxHeight="650px"
+            overflowY="auto"
+            id="scrollable-body"
+            css={{
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "gray",
+                borderRadius: "8px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                background: "#555",
+              },
+            }}
+          >
             {posts.guestPoster && posts.guestPoster ? (
               <PostContent
                 firstName={posts.guestPoster.firstName}
@@ -325,6 +345,7 @@ const Posts = ({ posts }: PostProps) => {
               )}
             </InfiniteScroll>
           </ModalBody>
+
           <Divider />
           <Box position="sticky" bottom="0" zIndex={10}>
             <Box padding={3} ml="12px">

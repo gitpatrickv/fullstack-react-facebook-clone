@@ -18,20 +18,17 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef } from "react";
 import { GoPlus } from "react-icons/go";
-import useUploadUserImage from "../../../hooks/user/useUploadUserImage";
-import { useUserStore } from "../../../store/user-store";
 import pic from "../../../assets/profpic.jpeg";
-interface UploadPhotoProps {
-  isOpen: boolean;
-  onClose: () => void;
-  imageType: string;
-}
+import useUploadUserImage from "../../../hooks/user/useUploadUserImage";
+import { useProfileStore } from "../../../store/profile-store";
+import { useUserStore } from "../../../store/user-store";
 
-const UploadUserImageModal = ({
-  isOpen,
-  onClose,
-  imageType,
-}: UploadPhotoProps) => {
+const UploadUserImageModal = () => {
+  const {
+    isOpenUploadProfile: isOpen,
+    onCloseUploadProfile: onClose,
+    imageType,
+  } = useProfileStore();
   const initialRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { profilePicture, coverPhoto } = useUserStore();
@@ -100,6 +97,7 @@ const UploadUserImageModal = ({
         onClose={handleRemoveImagePreviewClick}
         size="xl"
         isCentered
+        preserveScrollBarGap={true}
       >
         <ModalOverlay />
         <form onSubmit={handleSubmit(onSubmit)}>

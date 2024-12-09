@@ -2,13 +2,18 @@ import {
   Box,
   Button,
   Card,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spacer,
   Text,
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { FaChevronRight, FaUserFriends, FaUserPlus } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa6";
+import { FaList, FaUsers } from "react-icons/fa6";
 import { RiUserSearchFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { useFriendStore } from "../../../store/friend-store";
@@ -18,11 +23,6 @@ const FriendsPageSideBar = () => {
 
   const isSmallScreen = useBreakpointValue(
     { base: true, lg: false },
-    { fallback: "lg" }
-  );
-
-  const isMediumScreen = useBreakpointValue(
-    { base: false, md: true, lg: false },
     { fallback: "lg" }
   );
 
@@ -58,6 +58,21 @@ const FriendsPageSideBar = () => {
     _hover: {
       bg: colorMode === "dark" ? "#303030" : "gray.100",
     },
+    cursor: "pointer",
+  };
+
+  const cardStyles = {
+    height: "40px",
+    width: "40px",
+    bg: colorMode === "dark" ? "#303030" : "gray.100",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "20px",
+    mr: "10px",
+    _hover: {
+      bg: colorMode === "dark" ? "#383838" : "gray.200",
+    },
   };
 
   return (
@@ -75,35 +90,54 @@ const FriendsPageSideBar = () => {
         >
           Friends
         </Text>
+
         {isSmallScreen ? (
           <>
-            <Link to="/friends">
-              <Button mr="5px">
-                {isMediumScreen && <FaUserFriends size="30px" />}
-                <Text ml={{ base: "0", md: "10px", lg: "0" }}>Home</Text>
-              </Button>
-            </Link>
-
-            <Button mr="5px" onClick={handleNavigateFriendRequestClick}>
-              <FaUserPlus size="30px" />
-              {isMediumScreen && <Text ml="10px">Friend Request</Text>}
-            </Button>
-
-            <Button mr="5px" onClick={handleNavigateSuggestionsClick}>
-              <RiUserSearchFill size="30px" />
-              {isMediumScreen && <Text ml="10px">Suggestions</Text>}
-            </Button>
-
-            <Button onClick={handleNavigateAllFriendsClick}>
-              <FaUsers size="30px" />
-              {isMediumScreen && <Text ml="10px"> All friends</Text>}
-            </Button>
+            <Box mt="10px" zIndex={3000}>
+              <Menu>
+                <MenuButton as={Button} borderRadius="20" leftIcon={<FaList />}>
+                  <Text ml="5px">Categories</Text>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={handleNavigateFriendRequestClick}>
+                    <Card {...cardStyles}>
+                      <FaUserPlus size="20px" />
+                    </Card>
+                    <Text ml="10px">Friend Request</Text>
+                  </MenuItem>
+                  <MenuItem onClick={handleNavigateSuggestionsClick}>
+                    <Card {...cardStyles}>
+                      <RiUserSearchFill size="20px" />
+                    </Card>
+                    <Text ml="10px">Suggestions</Text>
+                  </MenuItem>
+                  <MenuItem onClick={handleNavigateAllFriendsClick}>
+                    <Card {...cardStyles}>
+                      <FaUsers size="20px" />
+                    </Card>
+                    <Text ml="10px"> All friends</Text>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
           </>
         ) : (
           <>
             <Link to="/friends">
-              <Box {...boxStyles} cursor="pointer" color="#1877F2">
-                <FaUserFriends size="30px" />
+              <Box
+                {...boxStyles}
+                bg={colorMode === "dark" ? "#303030" : "gray.100"}
+              >
+                <IconButton
+                  aria-label="all"
+                  icon={<FaUserFriends size="20px" />}
+                  bg={"#1877F2"}
+                  _hover={{
+                    bg: "#165BB7",
+                  }}
+                  isRound
+                  size="md"
+                />
                 <Text
                   ml="10px"
                   fontSize="xl"
@@ -114,13 +148,13 @@ const FriendsPageSideBar = () => {
                 </Text>
               </Box>
             </Link>
-
-            <Box
-              {...boxStyles}
-              cursor="pointer"
-              onClick={handleNavigateFriendRequestClick}
-            >
-              <FaUserPlus size="30px" />
+            <Box {...boxStyles} onClick={handleNavigateFriendRequestClick}>
+              <IconButton
+                aria-label="request"
+                icon={<FaUserPlus size="20px" />}
+                isRound
+                size="md"
+              />
               <Text
                 ml="10px"
                 fontSize="xl"
@@ -134,12 +168,13 @@ const FriendsPageSideBar = () => {
               <FaChevronRight size="20px" />
             </Box>
 
-            <Box
-              {...boxStyles}
-              cursor="pointer"
-              onClick={handleNavigateSuggestionsClick}
-            >
-              <RiUserSearchFill size="30px" />
+            <Box {...boxStyles} onClick={handleNavigateSuggestionsClick}>
+              <IconButton
+                aria-label="suggestion"
+                icon={<RiUserSearchFill size="20px" />}
+                isRound
+                size="md"
+              />
               <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
                 Suggestions
               </Text>
@@ -147,12 +182,13 @@ const FriendsPageSideBar = () => {
               <FaChevronRight size="20px" />
             </Box>
 
-            <Box
-              {...boxStyles}
-              cursor="pointer"
-              onClick={handleNavigateAllFriendsClick}
-            >
-              <FaUsers size="30px" />
+            <Box {...boxStyles} onClick={handleNavigateAllFriendsClick}>
+              <IconButton
+                aria-label="friends"
+                icon={<FaUsers size="20px" />}
+                isRound
+                size="md"
+              />
               <Text ml="10px" fontSize="xl" fontWeight="semibold" mr="10px">
                 All friends
               </Text>

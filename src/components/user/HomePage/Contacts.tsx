@@ -19,7 +19,7 @@ const Contacts = () => {
   const { colorMode } = useColorMode();
   const { data: fetchAllChat, isLoading } = useFetchAllUserChats({
     userId: userId,
-    pageSize: 20,
+    pageSize: 15,
   });
   const array = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -57,6 +57,7 @@ const Contacts = () => {
             }}
             cursor="pointer"
             userSelect="none"
+            onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
           >
             <IconButton
               aria-label="close"
@@ -67,7 +68,6 @@ const Contacts = () => {
               }}
               isRound
               size="sm"
-              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
             />
             <Text ml="10px" fontWeight="semibold">
               Create group chat

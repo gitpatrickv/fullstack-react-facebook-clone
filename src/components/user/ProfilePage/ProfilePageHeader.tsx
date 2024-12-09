@@ -17,9 +17,7 @@ import {
   Text,
   useBreakpointValue,
   useColorMode,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaCamera, FaPlus, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FaFacebookMessenger, FaUserXmark } from "react-icons/fa6";
 import { IoTrashOutline } from "react-icons/io5";
@@ -30,8 +28,8 @@ import useFetchAllUserFriends from "../../../hooks/user/useFetchAllUserFriends";
 import useGetFriendRequestStatus from "../../../hooks/user/useGetFriendRequestStatus";
 import useGetFriendshipStatus from "../../../hooks/user/useGetFriendshipStatus";
 import useGetUserFriendListCount from "../../../hooks/user/useGetUserFriendListCount";
-import useGetUserProfileInfo from "../../../hooks/user/useGetUserProfileInfo";
 import { useProfileStore } from "../../../store/profile-store";
+import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 import AcceptFriendRequestButton from "../Buttons/AcceptFriendRequestButton";
 import AddFriendButton from "../Buttons/AddFriendButton";
@@ -40,18 +38,35 @@ import MessageButton from "../Buttons/MessageButton";
 import UnfriendButton from "../Buttons/UnfriendButton";
 import ProfilePageHeaderSkeleton from "./ProfilePageHeaderSkeleton";
 import ProfileTabList from "./ProfileTabList";
-import UploadUserImageModal from "./UploadUserImageModal";
 
-const ProfilePageHeader = () => {
+interface Props {
+  isLoading: boolean;
+  coverPhoto?: string;
+  profilePicture?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+const ProfilePageHeader = ({
+  isLoading,
+  coverPhoto,
+  profilePicture,
+  firstName,
+  lastName,
+}: Props) => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
   const { userId: currentUserId } = useUserStore();
-  const { data: getUserProfile, isLoading } = useGetUserProfileInfo(userId);
   const { colorMode } = useColorMode();
-  const [imageType, setImageType] = useState<string>("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: friendshipStatus } = useGetFriendshipStatus(userId);
   const { data: friendRequestStatus } = useGetFriendRequestStatus(userId);
+  const { onOpen: onOpenAddStory } = useStoryStore();
+  const {
+    setIsProfile,
+    onOpenEditProfile,
+    onOpenUploadProfile: onOpen,
+    setImageType,
+  } = useProfileStore();
 
   const handleOpenModalClick = (image: string) => {
     setImageType(image);
@@ -68,7 +83,6 @@ const ProfilePageHeader = () => {
 
   const { data: getFriendListCount } = useGetUserFriendListCount(userId);
 
-  const { setIsProfile } = useProfileStore();
   const navigate = useNavigate();
   const handleNavigateProfileClick = (userId: number) => {
     navigate(`/profile/${userId}`);
@@ -77,11 +91,6 @@ const ProfilePageHeader = () => {
 
   return (
     <Card>
-      <UploadUserImageModal
-        isOpen={isOpen}
-        onClose={onClose}
-        imageType={imageType}
-      />
       <Grid
         templateColumns={{ base: "1fr", xl: "0.2fr 1fr 0.2fr" }}
         templateAreas={{
@@ -105,12 +114,12 @@ const ProfilePageHeader = () => {
               justifyContent="flex-end"
               position="relative"
             >
-              {getUserProfile?.coverPhoto && (
+              {coverPhoto && (
                 <Image
-                  src={getUserProfile.coverPhoto}
+                  src={coverPhoto}
                   width="100%"
                   height="450px"
-                  objectFit="cover"
+                  // objectFit="cover"
                   borderBottomLeftRadius="10px"
                   borderBottomRightRadius="10px"
                 />
@@ -135,9 +144,7 @@ const ProfilePageHeader = () => {
                       ""
                     ) : (
                       <Text ml="5px">
-                        {getUserProfile?.coverPhoto
-                          ? "Edit Cover Photo"
-                          : "Add Cover Photo"}
+                        {coverPhoto ? "Edit Cover Photo" : "Add Cover Photo"}
                       </Text>
                     )}
                   </Button>
@@ -167,7 +174,7 @@ const ProfilePageHeader = () => {
                   />
                 ) : (
                   <Avatar
-                    src={getUserProfile?.profilePicture || pic}
+                    src={profilePicture || pic}
                     borderWidth="6px"
                     borderColor={colorMode === "dark" ? "gray.700" : "white"}
                     width="180px"
@@ -218,7 +225,7 @@ const ProfilePageHeader = () => {
                   fontWeight="bold"
                   textTransform="capitalize"
                 >
-                  {getUserProfile?.firstName} {getUserProfile?.lastName}
+                  {firstName} {lastName}
                 </Text>
               )}
 
@@ -274,11 +281,12 @@ const ProfilePageHeader = () => {
                         bg="#1877F2"
                         _hover={{ bg: "#165BB7" }}
                         ml={{ base: "10px", md: "0px" }}
+                        onClick={onOpenAddStory}
                       >
                         <FaPlus size="15px" />
                         <Text ml="5px">Add to Story</Text>
                       </Button>
-                      <Button mr="7px">
+                      <Button mr="7px" onClick={onOpenEditProfile}>
                         <MdModeEdit size="20px" />
                         <Text ml="5px">Edit profile</Text>
                       </Button>
@@ -353,7 +361,7 @@ const ProfilePageHeader = () => {
                   textTransform="capitalize"
                   mr="5px"
                 >
-                  {getUserProfile?.firstName}
+                  {firstName}
                 </Text>
                 <Text fontSize={{ base: "xs", md: "lg" }} whiteSpace="nowrap">
                   sent you a friend request

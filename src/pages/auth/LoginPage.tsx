@@ -26,35 +26,71 @@ import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { IoIosEye } from "react-icons/io";
 import { RiEyeCloseLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 import { User } from "../../entities/User";
 import useLogin from "../../hooks/user/useLogin";
 import useRegister from "../../hooks/user/useRegister";
 import { useAuthQueryStore } from "../../store/auth-store";
-import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  // const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) =>
-    (i + 1).toString().padStart(2, "0")
-  );
-  const years = Array.from(
-    { length: 2024 - 1905 + 1 },
-    (_, i) => i + 1905
+  const currentYear = new Date().getFullYear();
+
+  const years = Array.from({ length: currentYear - 1905 + 1 }, (_, i) =>
+    (i + 1905).toString()
   ).reverse();
+
   const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    { name: "Jan", value: "01" },
+    { name: "Feb", value: "02" },
+    { name: "Mar", value: "03" },
+    { name: "Apr", value: "04" },
+    { name: "May", value: "05" },
+    { name: "Jun", value: "06" },
+    { name: "Jul", value: "07" },
+    { name: "Aug", value: "08" },
+    { name: "Sep", value: "09" },
+    { name: "Oct", value: "10" },
+    { name: "Nov", value: "11" },
+    { name: "Dec", value: "12" },
   ];
+
+  const [year, setYear] = useState<string>(currentYear.toString());
+  const [month, setMonth] = useState<string>("");
+  const [day, setDay] = useState<string>("");
+  const [days, setDays] = useState<string[]>([]);
+
+  const daysInMonth = (month: string, year: string): number => {
+    return new Date(parseInt(year), parseInt(month), 0).getDate();
+  };
+
+  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setYear(event.target.value);
+  };
+
+  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setMonth(event.target.value);
+  };
+
+  const handleDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDay(event.target.value);
+  };
+
+  useEffect(() => {
+    if (month && year) {
+      const numberOfDays = daysInMonth(month, year);
+      const newDays = Array.from({ length: numberOfDays }, (_, i) =>
+        (i + 1).toString().padStart(2, "0")
+      );
+      setDays(newDays);
+    }
+  }, [month, year]);
+
+  const onSubmitRegisterHandler = (data: User) => {
+    if (month && day && year) {
+      data.dateOfBirth = `${year}-${month}-${day}`;
+    }
+    onSubmitRegister(data);
+  };
 
   const {
     register,
@@ -89,33 +125,9 @@ const LoginPage = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const [month, setMonth] = useState<string>("");
-  const [day, setDay] = useState<string>("");
-  const [year, setYear] = useState<string>("");
   const [selectedGender, setSelectedGender] = useState<string>("");
-
-  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMonth(event.target.value);
-  };
-
-  const handleDayChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDay(event.target.value);
-  };
-
-  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setYear(event.target.value);
-  };
-
   const handleSelectedGenderClick = (value: string) => {
     setSelectedGender(value);
-    console.log(value);
-  };
-
-  const onSubmitRegisterHandler = (data: User) => {
-    if (month && day && year) {
-      data.dateOfBirth = `${year}-${month}-${day}`;
-    }
-    onSubmitRegister(data);
   };
 
   const { authStore } = useAuthQueryStore();
@@ -146,7 +158,7 @@ const LoginPage = () => {
         >
           <Text
             fontSize={{ base: "xx-large", md: "xxx-large" }}
-            color="blue.500"
+            color="#1877F2"
             fontWeight="bold"
           >
             facebook
@@ -216,9 +228,8 @@ const LoginPage = () => {
                     isLoading={loading}
                     type="submit"
                     width="100%"
-                    bg="blue.500"
-                    _hover={{ bg: "blue.500" }}
-                    _active={{ bg: "blue.600" }}
+                    bg="#1877F2"
+                    _hover={{ bg: "#165BB7" }}
                   >
                     Log In
                   </Button>
@@ -226,7 +237,7 @@ const LoginPage = () => {
                 <Text
                   textAlign="center"
                   mt="20px"
-                  color="blue.500"
+                  color="#1877F2"
                   cursor="pointer"
                 >
                   Forget Password?
@@ -397,8 +408,8 @@ const LoginPage = () => {
                           onChange={handleYearChange}
                           value={year}
                         >
-                          {years.map((value, index) => (
-                            <option key={index} value={value}>
+                          {years.map((value) => (
+                            <option key={value} value={value}>
                               {value}
                             </option>
                           ))}
@@ -409,9 +420,12 @@ const LoginPage = () => {
                           onChange={handleMonthChange}
                           value={month}
                         >
-                          {months.map((value, index) => (
-                            <option key={index} value={value}>
-                              {value}
+                          <option value="" disabled hidden>
+                            Month
+                          </option>
+                          {months.map((value) => (
+                            <option key={value.value} value={value.value}>
+                              {value.name}
                             </option>
                           ))}
                         </Select>
@@ -420,9 +434,13 @@ const LoginPage = () => {
                           mr="5px"
                           onChange={handleDayChange}
                           value={day}
+                          isDisabled={month === ""}
                         >
-                          {days.map((value, index) => (
-                            <option key={index} value={value}>
+                          <option value="" disabled hidden>
+                            Day
+                          </option>
+                          {days.map((value) => (
+                            <option key={value} value={value}>
                               {value}
                             </option>
                           ))}
@@ -434,22 +452,6 @@ const LoginPage = () => {
                         </Text>
                       )}
                     </FormControl>
-                    {/* <FormControl>
-                      <Text fontSize="xs" mb="2px">
-                        Gender
-                      </Text>
-                      <Select
-                        {...registerUser("gender", { required: true })}
-                        id="gender"
-                        disabled={loading}
-                      >
-                        <option value="MALE">Male</option>
-                        <option value="FEMALE">Female</option>
-                      </Select>
-                      {registerErrors.gender && (
-                        <Text color="red">{registerErrors.gender.message}</Text>
-                      )}
-                    </FormControl> */}
                     <FormControl>
                       <Text fontSize="xs" mb="2px">
                         Gender
@@ -489,20 +491,19 @@ const LoginPage = () => {
                     </FormControl>
                   </Stack>
                 </Box>
+                <ModalFooter justifyContent="center" mb="10px">
+                  <Button
+                    type="submit"
+                    bg="green.500"
+                    _hover={{ bg: "green.600" }}
+                    _active={{ bg: "green.600" }}
+                    width="150px"
+                    isLoading={loadingRegister}
+                  >
+                    Sign Up
+                  </Button>
+                </ModalFooter>
               </ModalBody>
-
-              <ModalFooter justifyContent="center">
-                <Button
-                  type="submit"
-                  bg="green.500"
-                  _hover={{ bg: "green.500" }}
-                  _active={{ bg: "green.600" }}
-                  width="150px"
-                  isLoading={loadingRegister}
-                >
-                  Sign Up
-                </Button>
-              </ModalFooter>
             </ModalContent>
           </form>
         </Modal>

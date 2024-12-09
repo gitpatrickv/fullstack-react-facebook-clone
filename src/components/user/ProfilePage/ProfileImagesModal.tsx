@@ -1,9 +1,9 @@
 import {
   Box,
+  Card,
   Divider,
   Grid,
   GridItem,
-  IconButton,
   Image,
   Modal,
   ModalCloseButton,
@@ -14,14 +14,16 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import { Images } from "../../../entities/PostImage";
 import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostImageComments";
 import useGetPostCreatorById from "../../../hooks/user/useGetPostCreatorById";
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
-import NavbarRight from "../Navbar/NavbarRight";
+import { useChatStore } from "../../../store/chat-store";
+import { usePostStore } from "../../../store/post-store";
+import NextButton from "../Buttons/NextButton";
 import Comments from "../Post/Comments";
 import PostContent from "../Post/PostContent";
 import PostImagesButtons from "../Post/PostImagesButtons";
@@ -47,26 +49,7 @@ const ProfileImagesModal = ({
   const { data: getPost } = useGetPostCreatorById(activeImage?.postId ?? 0);
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      size={isSmallScreen ? "md" : "lg"}
-      colorScheme="gray.500"
-      bg="gray.500"
-      _hover={{ bg: "gray.600" }}
-      _active={{ bg: "gray.700" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="25px" />
-        ) : (
-          <FaChevronRight size="25px" />
-        )
-      }
-      onClick={direction === "left" ? nextLeftImage : nextRightImage}
-    />
-  );
+  const { chatArray } = useChatStore();
 
   const {
     data: fetchAllPostImageComments,
@@ -131,48 +114,52 @@ const ProfileImagesModal = ({
       URL.revokeObjectURL(imagePreview);
     };
   }, [imagePreview]);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [_isClicked, setIsClicked] = useState<boolean>(false);
   const handleFocusInputClick = () => {
     initialRef.current?.focus();
     setIsClicked(true);
+  };
+  const { setIsPostImageModalOpen } = usePostStore();
+  const handleCloseModalClick = () => {
+    onClose();
+    setIsPostImageModalOpen(false);
   };
 
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleCloseModalClick}
         size="full"
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
+        trapFocus={chatArray.length >= 1 ? false : true}
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton
-            position="absolute"
-            left="5px"
-            size="lg"
-            borderRadius="full"
-            bg="gray.800"
-            color="white"
-            _hover={{ bg: "gray.700" }}
-          />
-          <Link to="/home">
-            <Box position="absolute" top="2" left="50px" color="#1877F2">
-              <FaFacebook size="40px" />
-            </Box>
-          </Link>
-          {isSmallScreen && (
-            <Box padding={2}>
-              <NavbarRight />
-            </Box>
-          )}
+          <Card position="fixed" width="100%" borderRadius="none" zIndex="10">
+            <ModalCloseButton
+              position="fixed"
+              left="5px"
+              size="lg"
+              borderRadius="full"
+              bg="gray.800"
+              color="white"
+              _hover={{ bg: "gray.700" }}
+            />
+            <Link to="/home">
+              <Box position="fixed" top="2" left="50px" color="#1877F2">
+                <FaFacebook size="40px" />
+              </Box>
+            </Link>
+            {isSmallScreen && <Box mt="60px" />}
+          </Card>
 
           <Grid
             templateColumns={{
               base: "1fr",
-              lg: "60px 0.7fr 60px 0.3fr",
-              xl: "60px 0.8fr 60px 0.25fr",
+              lg: "60px 0.7fr 60px 0.5fr",
+              xl: "60px 0.8fr 60px 0.3fr",
             }}
             templateAreas={{
               base: `"section1"
@@ -185,12 +172,12 @@ const ProfileImagesModal = ({
             <GridItem
               area="section1"
               bg="black"
-              height={isLargeScreen ? "100vh" : "auto"}
+              height={{ base: "auto", lg: "100vh", xl: "100%" }}
               display={isLargeScreen ? "flex" : "block"}
               justifyContent={isLargeScreen ? "center" : undefined}
               alignItems={isLargeScreen ? "center" : undefined}
             >
-              {isSmallScreen && <Box padding={5} />}
+              {isSmallScreen && <Box padding={5} mt="60px" />}
               <Box display="flex" alignItems="center" justifyContent="center">
                 {imageList.length > 1 && isSmallScreen && (
                   <Box
@@ -198,7 +185,7 @@ const ProfileImagesModal = ({
                     left={isSmallScreen ? "0px" : undefined}
                     ml={isSmallScreen ? "5px" : "0px"}
                   >
-                    {nextButton("left")}
+                    <NextButton direction="left" nextClick={nextLeftImage} />
                   </Box>
                 )}
 
@@ -218,94 +205,135 @@ const ProfileImagesModal = ({
                     right={isSmallScreen ? "0px" : undefined}
                     mr={isSmallScreen ? "5px" : "0px"}
                   >
-                    {nextButton("right")}
+                    <NextButton direction="right" nextClick={nextRightImage} />
                   </Box>
                 )}
               </Box>
               {isSmallScreen && <Box padding={5} />}
             </GridItem>
-            <GridItem area="section2">
-              <Show above="lg">
-                <Box padding={2}>
-                  <NavbarRight />
-                </Box>
-              </Show>
-              <Divider />
-              <Box>
-                {getPost && (
-                  <Box padding={3}>
-                    <PostContent
-                      firstName={getPost?.firstName}
-                      lastName={getPost?.lastName}
-                      postUserId={getPost?.userId}
-                      profilePicture={getPost?.profilePicture}
-                      timestamp={getPost?.postTimestamp}
-                      postId={getPost?.postId}
-                      content={getPost?.content}
-                    />
-                  </Box>
-                )}
-
-                <PostImagesButtons
-                  activeImage={activeImage}
-                  focusInputClick={handleFocusInputClick}
-                  postId={getPost?.postId ?? 0}
+            <GridItem area="section2" height="100%" position="relative">
+              {isLargeScreen && (
+                <Card
+                  position="fixed"
+                  width="100%"
+                  borderRadius="none"
+                  zIndex="10"
+                  height="60px"
+                  boxShadow="none"
+                  borderBottom="1px solid"
+                  borderBottomColor="gray.500"
                 />
-              </Box>
-              <Divider mt="5px" color="gray.500" />
+              )}
+
               <Box
-                padding={3}
-                maxHeight="600px"
-                overflowY="auto"
-                id="scrollable-body"
+                width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
+                borderRight={
+                  isLargeScreen && chatArray.length >= 1 ? "1px solid" : "none"
+                }
+                borderColor="gray.500"
+                height={isLargeScreen ? "93.4%" : undefined}
+                mt={{ base: "0", lg: "60px" }}
               >
-                <InfiniteScroll
-                  dataLength={fetchedCommentData}
-                  next={fetchNextPage}
-                  hasMore={!!hasNextPage}
-                  loader={<Spinner />}
-                  scrollableTarget="scrollable-body"
-                >
-                  {fetchAllPostImageComments?.pages.map((page) =>
-                    page.postCommentList.map((comments) => (
-                      <Comments
-                        key={comments.postCommentId}
-                        comments={comments}
+                <Box>
+                  {getPost && (
+                    <Box padding={3}>
+                      <PostContent
+                        firstName={getPost?.firstName}
+                        lastName={getPost?.lastName}
+                        postUserId={getPost?.userId}
+                        profilePicture={getPost?.profilePicture}
+                        timestamp={getPost?.postTimestamp}
+                        postId={getPost?.postId}
+                        content={getPost?.content}
                       />
-                    ))
+                    </Box>
                   )}
-                </InfiniteScroll>
-              </Box>
 
-              <Box position="relative" padding={3}>
-                <WriteComment
-                  focusRef={initialRef}
-                  register={register}
-                  handleSubmit={handleSubmit}
-                  onSubmit={onSubmit}
-                  loading={loading}
-                  comment={comment}
-                  imageFile={imageFile}
-                  handleInputClick={handleInputClick}
-                  handleCommentChange={handleCommentChange}
-                  fileInputRef={fileInputRef}
-                  handleFileChange={handleFileChange}
-                  imagePreview={imagePreview}
-                  removeImageClick={handleRemoveImagePreviewClick}
-                  isClicked={isClicked}
-                  setIsClicked={setIsClicked}
-                />
+                  <PostImagesButtons
+                    activeImage={activeImage}
+                    focusInputClick={handleFocusInputClick}
+                    postId={getPost?.postId ?? 0}
+                  />
+                </Box>
+                <Divider mt="5px" borderColor="gray.500" />
+
+                <Box
+                  padding={3}
+                  height="auto"
+                  maxHeight={{ base: "400px", lg: "610px" }}
+                  overflowY="auto"
+                  id="scrollable-body"
+                  css={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "gray",
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#555",
+                    },
+                  }}
+                >
+                  <InfiniteScroll
+                    dataLength={fetchedCommentData}
+                    next={fetchNextPage}
+                    hasMore={!!hasNextPage}
+                    loader={<Spinner />}
+                    scrollableTarget="scrollable-body"
+                  >
+                    {fetchAllPostImageComments?.pages.map((page) =>
+                      page.postCommentList.map((comments) => (
+                        <Comments
+                          key={comments.postCommentId}
+                          comments={comments}
+                        />
+                      ))
+                    )}
+                  </InfiniteScroll>
+                </Box>
+
+                <Box
+                  padding={3}
+                  position={{ base: "static", xl: "absolute" }}
+                  bottom="0"
+                  width={
+                    chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"
+                  }
+                >
+                  <WriteComment
+                    focusRef={initialRef}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    loading={loading}
+                    comment={comment}
+                    imageFile={imageFile}
+                    handleInputClick={handleInputClick}
+                    handleCommentChange={handleCommentChange}
+                    fileInputRef={fileInputRef}
+                    handleFileChange={handleFileChange}
+                    imagePreview={imagePreview}
+                    removeImageClick={handleRemoveImagePreviewClick}
+                    isClicked={true}
+                    setIsClicked={setIsClicked}
+                  />
+                </Box>
               </Box>
             </GridItem>
             <Show above="lg">
               <GridItem area="leftButton" bg="black">
                 <Box position="absolute" top="50%" bottom="50%" ml="10px">
-                  {imageList.length > 1 && nextButton("left")}
+                  <NextButton direction="left" nextClick={nextLeftImage} />
                 </Box>
               </GridItem>
               <GridItem area="rightButton" bg="black">
                 <Box position="absolute" top="50%" bottom="50%">
-                  {imageList.length > 1 && nextButton("right")}
+                  <NextButton direction="right" nextClick={nextRightImage} />
                 </Box>
               </GridItem>
             </Show>

@@ -1,44 +1,29 @@
 import {
   Box,
   Flex,
-  IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spinner,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { IoMdNotificationsOff } from "react-icons/io";
-import { IoNotificationsCircle } from "react-icons/io5";
+import { useEffect, useRef } from "react";
+import { IoMdNotifications, IoMdNotificationsOff } from "react-icons/io";
 import InfiniteScroll from "react-infinite-scroll-component";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
 import useFetchAllNotifications from "../../../hooks/user/useFetchAllNotifications";
 import useGetNotificationCount from "../../../hooks/user/useGetNotificationCount";
 import { useNotificationStore } from "../../../store/notification-store";
+import { useUserStore } from "../../../store/user-store";
 import NotificationCard from "./NotificationCard";
-import { useMessageStore } from "../../../store/message-store";
 
-interface Props {
-  userId: number;
-  email: string;
-}
-
-const Notifications = ({ userId, email }: Props) => {
+const Notifications = () => {
+  const { userId } = useUserStore();
   const { data: getNotificationCount, refetch: refetchNotificationCount } =
-    useGetNotificationCount(userId);
-  const {
-    addNotification,
-    stompClientRef,
-    setNotificationModels,
-    notificationModels,
-    setIsConnected,
-  } = useNotificationStore();
-
-  const { addMessage } = useMessageStore();
-
+    useGetNotificationCount(userId ?? 0);
+  const { setNotificationModels, notificationModels } = useNotificationStore();
+  const { colorMode } = useColorMode();
   const {
     data: fetchAllNotifications,
     fetchNextPage,
@@ -64,50 +49,14 @@ const Notifications = ({ userId, email }: Props) => {
     }
   }, [fetchAllNotifications, setNotificationModels]);
 
+  const prevNotificationModels = useRef(notificationModels.length);
+
   useEffect(() => {
-    if (email && stompClientRef.current === null) {
-      const socket = new SockJS("http://localhost:8080/ws");
-      const client = Stomp.over(socket);
-
-      client.connect(
-        {},
-        () => {
-          stompClientRef.current = client;
-          setIsConnected(true);
-          console.log(`Connected to WebSocket for user email: ${email}`);
-
-          stompClientRef.current.subscribe(
-            `/user/${email}/notifications`,
-            (message) => {
-              const notification = JSON.parse(message.body);
-              addNotification(notification);
-            }
-          );
-
-          stompClientRef.current.subscribe(`/user/${email}/chat`, (message) => {
-            const text = JSON.parse(message.body);
-            addMessage(text.chatId, text);
-          });
-        },
-        (error) => {
-          console.error("WebSocket connection error:", error);
-        }
-      );
-      return () => {
-        if (stompClientRef.current) {
-          stompClientRef.current.disconnect(() => {
-            console.log("Disconnected from WebSocket");
-            stompClientRef.current = null;
-            setIsConnected(false);
-          });
-        }
-      };
+    if (prevNotificationModels.current !== notificationModels.length) {
+      refetchNotificationCount();
+      refetchNotifications();
+      prevNotificationModels.current = notificationModels.length;
     }
-  }, [email]);
-
-  useEffect(() => {
-    refetchNotificationCount();
-    refetchNotifications();
   }, [notificationModels]);
 
   return (
@@ -115,11 +64,23 @@ const Notifications = ({ userId, email }: Props) => {
       <Flex justifyContent="center">
         <Menu>
           <MenuButton
-            as={IconButton}
+            as={Box}
             aria-label="Notifications"
-            icon={<IoNotificationsCircle size="40px" />}
-            variant="none"
-          />
+            cursor="pointer"
+            height="36px"
+            width="36px"
+            bg={colorMode === "dark" ? "#303030" : "gray.100"}
+            borderRadius="20px"
+            _hover={{
+              bg: colorMode === "dark" ? "#383838" : "gray.200",
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            <Box display="flex" justifyContent="center">
+              <IoMdNotifications size="24px" />
+            </Box>
+          </MenuButton>
 
           <MenuList border="none">
             <Box ml="10px" mb="5px">
@@ -147,6 +108,21 @@ const Notifications = ({ userId, email }: Props) => {
                 maxHeight="400px"
                 overflowY="auto"
                 id="scrollable-notification"
+                css={{
+                  "&::-webkit-scrollbar": {
+                    width: "8px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "gray",
+                    borderRadius: "8px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#555",
+                  },
+                }}
               >
                 <InfiniteScroll
                   dataLength={fetchNotificationsData}
@@ -172,8 +148,8 @@ const Notifications = ({ userId, email }: Props) => {
             bg="red"
             borderRadius="full"
             position="absolute"
-            top="7px"
-            right="57px"
+            top="-5px"
+            right="48px"
           >
             <Text
               textAlign="center"

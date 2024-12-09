@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
-import PostShareUserProfileCard from "./PostShareUserProfileCard";
+import { usePostStore } from "../../../store/post-store";
 import { useProfileStore } from "../../../store/profile-store";
+import PostUserProfileCard from "./PostUserProfileCard";
 
 interface PostContentProps {
   firstName: string;
@@ -32,18 +33,26 @@ const PostShareContent = ({
   };
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
+  const { isPostImageModalOpen } = usePostStore();
   return (
     <>
-      {isHovered && (
-        <PostShareUserProfileCard
-          firstName={firstName}
-          lastName={lastName}
-          postUserId={postUserId}
-          profilePicture={profilePicture}
-          setIsHovered={setIsHovered}
-          handleNavigateClick={handleNavigateClick}
-        />
+      {!isPostImageModalOpen && isHovered && (
+        <Box
+          position="absolute"
+          zIndex={100}
+          left="10px"
+          bottom="-90px"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <PostUserProfileCard
+            firstName={firstName}
+            lastName={lastName}
+            postUserId={postUserId}
+            profilePicture={profilePicture}
+            handleNavigateClick={handleNavigateClick}
+          />
+        </Box>
       )}
       <Box padding={3}>
         <Box display="flex" alignItems="center">
@@ -67,7 +76,7 @@ const PostShareContent = ({
               cursor="pointer"
               onClick={handleNavigateClick}
               onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+              // onMouseLeave={() => setIsHovered(false)}
             >
               {firstName} {lastName}
             </Text>

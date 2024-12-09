@@ -9,26 +9,20 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { FaFacebook, FaHome, FaUserFriends } from "react-icons/fa";
 import { IoLogoGameControllerA } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { MdOndemandVideo } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
-import NavbarRight from "./NavbarRight";
+import { useGameStore } from "../../../store/game-store";
+import GameModal from "./GameModal";
 import Search from "./Search";
+
 const Navbar = () => {
   const location = useLocation();
   const { colorMode } = useColorMode();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
-
-  const [selectedPage, setSelectedPage] = useState<string | null>(
-    location.pathname
-  );
-
-  useEffect(() => {
-    setSelectedPage(location.pathname);
-  }, [location.pathname]);
+  const { onOpen } = useGameStore();
 
   const buttonStyle = {
     bg: "transparent",
@@ -85,54 +79,58 @@ const Navbar = () => {
               <Flex justifyContent="space-around" alignItems="center">
                 <Link to="/home" style={{ flex: 1 }}>
                   <Button
-                    color={selectedPage === "/home" ? "#1877F2" : "white.500"}
+                    color={
+                      location.pathname === "/home" ? "#1877F2" : "white.500"
+                    }
                     {...buttonStyle}
                   >
-                    <FaHome size="35px" />
+                    <FaHome size="30px" />
                   </Button>
                 </Link>
                 <Link to="/friends" style={{ flex: 1 }}>
                   <Button
                     color={
-                      selectedPage === "/friends" ? "#1877F2" : "white.500"
+                      location.pathname.startsWith("/friends")
+                        ? "#1877F2"
+                        : "white.500"
                     }
                     {...buttonStyle}
                   >
-                    <FaUserFriends size="35px" />
+                    <FaUserFriends size="30px" />
                   </Button>
                 </Link>
                 <Link to="/watch" style={{ flex: 1 }}>
                   <Button
-                    color={selectedPage === "/watch" ? "#1877F2" : "white.500"}
+                    color={
+                      location.pathname === "/watch" ? "#1877F2" : "white.500"
+                    }
                     {...buttonStyle}
                   >
-                    <MdOndemandVideo size="35px" />
+                    <MdOndemandVideo size="30px" />
                   </Button>
                 </Link>
                 <Link to="/marketplace" style={{ flex: 1 }}>
                   <Button
                     color={
-                      selectedPage === "/marketplace" ? "#1877F2" : "white.500"
+                      location.pathname.startsWith("/marketplace")
+                        ? "#1877F2"
+                        : "white.500"
                     }
                     {...buttonStyle}
                   >
-                    <IoStorefrontSharp size="35px" />
+                    <IoStorefrontSharp size="25px" />
                   </Button>
                 </Link>
-                <Link to="/games" style={{ flex: 1 }}>
-                  <Button
-                    color={selectedPage === "/games" ? "#1877F2" : "white.500"}
-                    {...buttonStyle}
-                  >
+                <Box style={{ flex: 1 }}>
+                  <Button {...buttonStyle} onClick={onOpen}>
                     <IoLogoGameControllerA size="35px" />
                   </Button>
-                </Link>
+                </Box>
               </Flex>
+              <GameModal />
             </GridItem>
           </Show>
-          <GridItem area="asideRight">
-            <NavbarRight />
-          </GridItem>
+          <GridItem area="asideRight" />
         </Grid>
       </Card>
     </>

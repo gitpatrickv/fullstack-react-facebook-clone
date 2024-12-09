@@ -9,39 +9,36 @@ import {
   MenuList,
   Spinner,
   Text,
-  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
+import { InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BiLogoMessenger } from "react-icons/bi";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useFetchAllUserChats from "../../../hooks/user/useFetchAllUserChats";
+import ChatResponse from "../../../entities/Chat";
 import useHandleAddToChatArray from "../../../hooks/user/useHandleAddToChatArray";
 import { useChatStore } from "../../../store/chat-store";
+import { usePostStore } from "../../../store/post-store";
+import { useUserStore } from "../../../store/user-store";
 import ChatCard from "./ChatCard";
 import MessengerChatList from "./MessengerChatList";
 import NewMessage from "./NewMessage";
-import { usePostStore } from "../../../store/post-store";
 
 interface Props {
-  userId: number;
+  fetchAllChat?: InfiniteData<ChatResponse>;
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
 }
 
-const Messenger = ({ userId }: Props) => {
+const Messenger = ({ fetchAllChat, fetchNextPage, hasNextPage }: Props) => {
+  const { userId } = useUserStore();
   const { colorMode } = useColorMode();
   const { chatArray, isNewMessageMaximized, setIsNewMessageMaximized } =
     useChatStore();
   const [isHover, setIsHover] = useState<boolean>(false);
   const { handleAddToChatArray } = useHandleAddToChatArray();
-  const {
-    data: fetchAllChat,
-    fetchNextPage,
-    hasNextPage,
-  } = useFetchAllUserChats({
-    userId: userId,
-    pageSize: 10,
-  });
+  const { isPostImageModalOpen } = usePostStore();
 
   const fetchChatData =
     fetchAllChat?.pages.reduce(
@@ -52,18 +49,28 @@ const Messenger = ({ userId }: Props) => {
   const fetchAllChatLength =
     fetchAllChat?.pages.flatMap((page) => page.chatModels).length || 0;
 
-  const { isPostImageModalOpen } = usePostStore();
-  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   return (
     <>
       <Flex justifyContent="center">
         <Menu>
           <MenuButton
-            as={IconButton}
-            aria-label="chats"
-            icon={<BiLogoMessenger size="43px" />}
-            variant="none"
-          />
+            as={Box}
+            aria-label="chat"
+            cursor="pointer"
+            height="36px"
+            width="36px"
+            bg={colorMode === "dark" ? "#303030" : "gray.100"}
+            borderRadius="20px"
+            _hover={{
+              bg: colorMode === "dark" ? "#383838" : "gray.200",
+            }}
+            display="flex"
+            alignItems="center"
+          >
+            <Box display="flex" justifyContent="center">
+              <BiLogoMessenger size="24px" />
+            </Box>
+          </MenuButton>
           <MenuList border="none">
             <Box ml="10px" mb="5px">
               <Text fontWeight="bold" fontSize="x-large" ml="5px">
@@ -88,7 +95,26 @@ const Messenger = ({ userId }: Props) => {
               </>
             ) : (
               <>
-                <Box maxHeight="400px" overflowY="auto" id="scrollable-chat">
+                <Box
+                  maxHeight="400px"
+                  overflowY="auto"
+                  id="scrollable-chat"
+                  css={{
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "gray",
+                      borderRadius: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#555",
+                    },
+                  }}
+                >
                   <InfiniteScroll
                     dataLength={fetchChatData}
                     next={fetchNextPage}
@@ -133,39 +159,34 @@ const Messenger = ({ userId }: Props) => {
       </Flex>
 
       <Box position="fixed" bottom="0" zIndex={100}>
-        {isLargeScreen && (
-          <>
-            {chatArray.map((chat) => (
-              <ChatCard
-                key={chat.chatId}
-                chatId={chat.chatId}
-                index={chat.index}
-                userId={userId}
-                isMaximized={chat.isMaximized}
-              />
-            ))}
-          </>
-        )}
+        {chatArray.map((chat) => (
+          <ChatCard
+            key={chat.chatId}
+            chatId={chat.chatId}
+            index={chat.index}
+            userId={userId ?? 0}
+            isMaximized={chat.isMaximized}
+          />
+        ))}
       </Box>
       {(!isPostImageModalOpen ||
-        (isPostImageModalOpen && chatArray.length >= 1)) &&
-        isLargeScreen && (
-          <Box position="fixed" bottom="15px" right="17px">
-            <IconButton
-              aria-label="message"
-              icon={<AiOutlineEdit size="25px" />}
-              bg={colorMode === "dark" ? "#303030" : "gray.200"}
-              _hover={{
-                bg: colorMode === "dark" ? "#484848" : "gray.300",
-              }}
-              isRound
-              size="lg"
-              onMouseEnter={() => setIsHover(true)}
-              onMouseLeave={() => setIsHover(false)}
-              onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
-            />
-          </Box>
-        )}
+        (isPostImageModalOpen && chatArray.length >= 1)) && (
+        <Box position="fixed" bottom="15px" right="20px">
+          <IconButton
+            aria-label="message"
+            icon={<AiOutlineEdit size="25px" />}
+            bg={colorMode === "dark" ? "#303030" : "gray.200"}
+            _hover={{
+              bg: colorMode === "dark" ? "#484848" : "gray.300",
+            }}
+            isRound
+            size="lg"
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
+            onClick={() => setIsNewMessageMaximized(!isNewMessageMaximized)}
+          />
+        </Box>
+      )}
 
       {isHover && (
         <Card

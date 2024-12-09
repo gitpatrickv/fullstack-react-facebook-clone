@@ -24,7 +24,7 @@ const FriendsPage = () => {
           `,
         }}
       >
-        <GridItem area="section1">
+        <GridItem area="section1" zIndex="1">
           {location.pathname === "/friends" && <FriendsPageSideBar />}
           {location.pathname === "/friends/list" && <AllFriends />}
           {location.pathname === "/friends/suggestions" && (

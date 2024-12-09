@@ -18,6 +18,7 @@ const useDeletePost = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["userPostList"]);
+        queryClient.invalidateQueries(["allPostList"]);
       },
     }
   );

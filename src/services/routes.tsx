@@ -1,21 +1,26 @@
 import { createBrowserRouter } from "react-router-dom";
 import UserRoute from "../components/ProtectedRoute/UserRoute";
+import CreateProductModal from "../components/user/MarketPage/CreateProductModal";
+import ProductModal from "../components/user/MarketPage/ProductModal";
 import LoginPage from "../pages/auth/LoginPage";
 import ErrorPage from "../pages/user/ErrorPage";
 import FriendRequestPage from "../pages/user/FriendRequestPage";
 import FriendSuggestionPage from "../pages/user/FriendSuggestionPage";
 import FriendsListPage from "../pages/user/FriendsListPage";
 import FriendsPage from "../pages/user/FriendsPage";
-import GamesPage from "../pages/user/GamesPage";
 import HomePage from "../pages/user/HomePage";
 import Layout from "../pages/user/Layout";
 import MarketPage from "../pages/user/MarketPage";
+import MyListedProductPage from "../pages/user/MyListedProductPage";
 import PostPage from "../pages/user/PostPage";
+import ProductCategoryPage from "../pages/user/ProductCategoryPage";
 import ProfileAboutPage from "../pages/user/ProfileAboutPage";
 import ProfileFriendListPage from "../pages/user/ProfileFriendListPage";
 import ProfilePage from "../pages/user/ProfilePage";
 import ProfilePhotosPage from "../pages/user/ProfilePhotosPage";
+import SearchMarketPage from "../pages/user/SearchMarketPage";
 import SearchPage from "../pages/user/SearchPage";
+import StoryPage from "../pages/user/StoryPage";
 import WatchPage from "../pages/user/WatchPage";
 
 const router = createBrowserRouter([
@@ -41,6 +46,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <SearchPage />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "/stories",
+        element: (
+          <UserRoute>
+            <StoryPage />
           </UserRoute>
         ),
       },
@@ -71,12 +84,6 @@ const router = createBrowserRouter([
           {
             path: "list",
             element: <FriendsListPage />,
-            // children: [
-            //   {
-            //     path: "profile/:userId",
-            //     element: <ProfilePage />,
-            //   },
-            // ],
           },
         ],
       },
@@ -95,14 +102,28 @@ const router = createBrowserRouter([
             <MarketPage />
           </UserRoute>
         ),
-      },
-      {
-        path: "/games",
-        element: (
-          <UserRoute>
-            <GamesPage />
-          </UserRoute>
-        ),
+        children: [
+          {
+            path: "create",
+            element: <CreateProductModal />,
+          },
+          {
+            path: "category/:category",
+            element: <ProductCategoryPage />,
+          },
+          {
+            path: "item/:productId",
+            element: <ProductModal />,
+          },
+          {
+            path: "user/item",
+            element: <MyListedProductPage />,
+          },
+          {
+            path: "search",
+            element: <SearchMarketPage />,
+          },
+        ],
       },
       {
         path: "/profile/:userId",

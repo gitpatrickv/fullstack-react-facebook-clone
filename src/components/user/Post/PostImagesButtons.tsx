@@ -15,15 +15,15 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { BiLike, BiSolidLike } from "react-icons/bi";
+import { BiSolidLike } from "react-icons/bi";
 import { FaComment } from "react-icons/fa";
 import { IoIosShareAlt } from "react-icons/io";
+import InfiniteScroll from "react-infinite-scroll-component";
 import PostImage from "../../../entities/PostImage";
 import useGetPostImageCommentCount from "../../../hooks/user/useGetPostImageCommentCount";
 import useGetPostImageLike from "../../../hooks/user/useGetPostImageLike";
 import useGetPostImageLikeCount from "../../../hooks/user/useGetPostImageLikeCount";
 import useGetPostImageLikeUserList from "../../../hooks/user/useGetPostImageLikeUserList";
-import InfiniteScroll from "react-infinite-scroll-component";
 import useGetPostImageShareCount from "../../../hooks/user/useGetPostImageShareCount";
 import useLikePostImage from "../../../hooks/user/useLikePostImage";
 import useSharePostImage from "../../../hooks/user/useSharePostImage";
@@ -107,7 +107,7 @@ const PostImagesButtons = ({
 
   return (
     <>
-      <Box display="flex" alignItems="center" ml="12px" mr="12px">
+      <Box display="flex" alignItems="center" ml="12px" mr="12px" height="30px">
         {postImageLikeCount && postImageLikeCount.postLikeCount >= 1 && (
           <Box
             display="flex"
@@ -192,13 +192,13 @@ const PostImagesButtons = ({
         )}
       </Box>
       <Divider mt="5px" mb="5px" borderColor="gray.500" />
-      <Box display="flex" justifyContent="space-around">
+      <Box display="flex" justifyContent="space-around" height="30px">
         <Box
           {...boxStyles}
           onClick={handleLikePostImageClick}
           color={postImageLike?.liked ? "#1877F2" : "white.500"}
         >
-          {postImageLike ? <BiSolidLike size="20px" /> : <BiLike size="20px" />}
+          <BiSolidLike size="20px" />
           <Text ml="5px" fontWeight="semibold">
             Like
           </Text>

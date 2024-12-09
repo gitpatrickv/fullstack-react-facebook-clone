@@ -1,15 +1,11 @@
-import { Avatar, Box, Card, Flex, Text, useColorMode } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { FaCheck } from "react-icons/fa6";
-import { GoTrash } from "react-icons/go";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import ReactTimeAgo from "react-time-ago";
 import pic from "../../../assets/profpic.jpeg";
 import { ChatModel } from "../../../entities/Chat";
-import useGetLastMessage from "../../../hooks/user/useGetLastMessage";
 import { useMessageStore } from "../../../store/message-store";
-import { useNotificationStore } from "../../../store/notification-store";
 import { useUserStore } from "../../../store/user-store";
+import useGetLastMessage from "../../../hooks/user/useGetLastMessage";
+import { useEffect } from "react";
 
 interface ChatProps {
   chat: ChatModel;
@@ -17,39 +13,21 @@ interface ChatProps {
 
 const MessengerChatList = ({ chat }: ChatProps) => {
   const { userId } = useUserStore();
-  const { colorMode } = useColorMode();
-  const [isClick, setIsClick] = useState<boolean>(false);
+  // const { colorMode } = useColorMode();
+  // const [isClick, setIsClick] = useState<boolean>(false);
+  // const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  //   event.stopPropagation();
+  //   setIsClick(!isClick);
+  // };
   const { data: getLastMessage, refetch: refetchLastMessage } =
     useGetLastMessage(chat.chatId);
-  const time = new Date(getLastMessage?.timestamp ?? "");
   const { messagesByChatId } = useMessageStore();
-  const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    setIsClick(!isClick);
-  };
+  // const getLastMessage = messagesByChatId[chat.chatId]?.at(-1);
+  const time = new Date(getLastMessage?.timestamp ?? "");
 
   useEffect(() => {
     refetchLastMessage();
   }, [messagesByChatId[chat.chatId]]);
-
-  const { stompClientRef, isConnected } = useNotificationStore();
-  const { addMessage } = useMessageStore();
-
-  useEffect(() => {
-    if (
-      chat.chatType === "GROUP_CHAT" &&
-      stompClientRef.current &&
-      isConnected
-    ) {
-      stompClientRef.current.subscribe(
-        `/topic/chat/${chat.chatId}`,
-        (message) => {
-          const text = JSON.parse(message.body);
-          addMessage(text.chatId, text);
-        }
-      );
-    }
-  }, [stompClientRef, isConnected]);
 
   return (
     <Box position="relative" mb="5px" mt="5px">

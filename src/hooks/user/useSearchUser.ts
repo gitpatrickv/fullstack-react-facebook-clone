@@ -3,7 +3,7 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 import { UserListResponseProps } from "./useGetPostLikeUserList";
 
-interface SearchProps {
+export interface SearchProps {
   keyword: string;
   pageSize: number;
 }
@@ -38,7 +38,7 @@ const useSearchUser = ({ keyword, pageSize }: SearchProps) => {
       return pageNo + 1 < totalPages ? pageNo + 1 : undefined;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken,
+    enabled: !!jwtToken && !!keyword,
   });
 };
 

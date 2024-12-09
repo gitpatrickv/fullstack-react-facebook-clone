@@ -1,9 +1,9 @@
 import {
   Box,
+  Card,
   Divider,
   Grid,
   GridItem,
-  IconButton,
   Image,
   Modal,
   ModalCloseButton,
@@ -14,7 +14,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaFacebook } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import Post from "../../../entities/Post";
@@ -23,7 +23,7 @@ import useFetchAllPostImageComments from "../../../hooks/user/useFetchAllPostIma
 import useWritePostImageComment from "../../../hooks/user/useWritePostImageComment";
 import { useChatStore } from "../../../store/chat-store";
 import { usePostStore } from "../../../store/post-store";
-import NavbarRight from "../Navbar/NavbarRight";
+import NextButton from "../Buttons/NextButton";
 import Comments from "./Comments";
 import PostContent from "./PostContent";
 import PostImagesButtons from "./PostImagesButtons";
@@ -51,26 +51,6 @@ const PostImagesModal = ({
 }: ImageModalProps) => {
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-
-  const nextButton = (direction: "left" | "right") => (
-    <IconButton
-      isRound={true}
-      aria-label={direction === "left" ? "Left" : "Right"}
-      size={isSmallScreen ? "md" : "lg"}
-      colorScheme="gray.500"
-      bg="gray.500"
-      _hover={{ bg: "gray.600" }}
-      _active={{ bg: "gray.700" }}
-      icon={
-        direction === "left" ? (
-          <FaChevronLeft size="25px" />
-        ) : (
-          <FaChevronRight size="25px" />
-        )
-      }
-      onClick={direction === "left" ? nextLeftImage : nextRightImage}
-    />
-  );
 
   const {
     data: fetchAllPostImageComments,
@@ -155,28 +135,27 @@ const PostImagesModal = ({
       size="full"
       initialFocusRef={initialRef}
       finalFocusRef={finalRef}
+      trapFocus={chatArray.length >= 1 ? false : true}
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalCloseButton
-          position="absolute"
-          left="5px"
-          size="lg"
-          borderRadius="full"
-          bg="gray.800"
-          color="white"
-          _hover={{ bg: "gray.700" }}
-        />
-        <Link to="/home">
-          <Box position="absolute" top="2" left="50px" color="#1877F2">
-            <FaFacebook size="40px" />
-          </Box>
-        </Link>
-        {isSmallScreen && (
-          <Box padding={2}>
-            <NavbarRight />
-          </Box>
-        )}
+        <Card position="fixed" width="100%" borderRadius="none" zIndex="10">
+          <ModalCloseButton
+            position="fixed"
+            left="5px"
+            size="lg"
+            borderRadius="full"
+            bg="gray.800"
+            color="white"
+            _hover={{ bg: "gray.700" }}
+          />
+          <Link to="/home">
+            <Box position="fixed" top="2" left="50px" color="#1877F2">
+              <FaFacebook size="40px" />
+            </Box>
+          </Link>
+          {isSmallScreen && <Box mt="60px" />}
+        </Card>
 
         <Grid
           templateColumns={{
@@ -195,12 +174,12 @@ const PostImagesModal = ({
           <GridItem
             area="section1"
             bg="black"
-            height={isLargeScreen ? "100vh" : "auto"}
+            height={{ base: "auto", lg: "100vh", xl: "100%" }}
             display={isLargeScreen ? "flex" : "block"}
             justifyContent={isLargeScreen ? "center" : undefined}
             alignItems={isLargeScreen ? "center" : undefined}
           >
-            {isSmallScreen && <Box padding={5} />}
+            {isSmallScreen && <Box padding={5} mt="60px" />}
             <Box display="flex" alignItems="center" justifyContent="center">
               {postImages.length > 1 && isSmallScreen && (
                 <Box
@@ -208,7 +187,7 @@ const PostImagesModal = ({
                   left={isSmallScreen ? "0px" : undefined}
                   ml={isSmallScreen ? "5px" : "0px"}
                 >
-                  {nextButton("left")}
+                  <NextButton direction="left" nextClick={nextLeftImage} />
                 </Box>
               )}
 
@@ -228,19 +207,27 @@ const PostImagesModal = ({
                   right={isSmallScreen ? "0px" : undefined}
                   mr={isSmallScreen ? "5px" : "0px"}
                 >
-                  {nextButton("right")}
+                  <NextButton direction="right" nextClick={nextRightImage} />
                 </Box>
               )}
             </Box>
             {isSmallScreen && <Box padding={5} />}
           </GridItem>
-          <GridItem area="section2">
-            <Show above="lg">
-              <Box padding={2}>
-                <NavbarRight />
-              </Box>
-            </Show>
-            <Divider borderColor="gray.500" />
+          <GridItem area="section2" height="100%" position="relative">
+            {isLargeScreen && (
+              <>
+                <Card
+                  position="fixed"
+                  width="100%"
+                  borderRadius="none"
+                  zIndex="10"
+                  height="60px"
+                  boxShadow="none"
+                  borderBottom="1px solid"
+                  borderBottomColor="gray.500"
+                />
+              </>
+            )}
 
             <Box
               width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
@@ -248,7 +235,8 @@ const PostImagesModal = ({
                 isLargeScreen && chatArray.length >= 1 ? "1px solid" : "none"
               }
               borderColor="gray.500"
-              height={isLargeScreen ? "93.7%" : undefined}
+              height={isLargeScreen ? "93.4%" : undefined}
+              mt={{ base: "0", lg: "60px" }}
             >
               <Box>
                 {posts.sharedPost ? (
@@ -307,9 +295,25 @@ const PostImagesModal = ({
               <Divider mt="5px" borderColor="gray.500" />
               <Box
                 padding={3}
-                maxHeight={{ base: "310px", lg: "600px" }}
+                height="auto"
+                maxHeight={{ base: "400px", lg: "610px" }}
                 overflowY="auto"
                 id="scrollable-body"
+                css={{
+                  "&::-webkit-scrollbar": {
+                    width: "8px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "gray",
+                    borderRadius: "8px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#555",
+                  },
+                }}
               >
                 <InfiniteScroll
                   dataLength={fetchedCommentData}
@@ -328,7 +332,12 @@ const PostImagesModal = ({
                   )}
                 </InfiniteScroll>
               </Box>
-              <Box padding={4}>
+              <Box
+                padding={4}
+                position={{ base: "static", xl: "absolute" }}
+                bottom="0"
+                width={chatArray.length >= 1 && isLargeScreen ? "80%" : "100%"}
+              >
                 <WriteComment
                   focusRef={initialRef}
                   register={register}
@@ -352,12 +361,16 @@ const PostImagesModal = ({
           <Show above="lg">
             <GridItem area="leftButton" bg="black">
               <Box position="absolute" top="50%" bottom="50%" ml="10px">
-                {postImages.length > 1 && nextButton("left")}
+                {postImages.length > 1 && (
+                  <NextButton direction="left" nextClick={nextLeftImage} />
+                )}
               </Box>
             </GridItem>
             <GridItem area="rightButton" bg="black">
               <Box position="absolute" top="50%" bottom="50%">
-                {postImages.length > 1 && nextButton("right")}
+                {postImages.length > 1 && (
+                  <NextButton direction="right" nextClick={nextRightImage} />
+                )}
               </Box>
             </GridItem>
           </Show>

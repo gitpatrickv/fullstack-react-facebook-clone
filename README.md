@@ -16,6 +16,37 @@ A fully-featured Facebook clone that replicates the core functions of Facebook's
 - **Authentication:** Spring Security, JWT
 - **DevOps:** Docker, Github Actions
 
+## Getting Started
+
+1. Clone the Repository:
+
+- **For the frontend:**
+    ```bash
+    git@github.com:gitpatrickv/responsive-fullstack-react-facebook-clone.git
+    ```
+- **For the backend:**
+    ```bash
+    git@github.com:gitpatrickv/fullstack-springboot-facebook-clone.git
+    ```
+2. Install Frontend Dependencies in the terminal:
+   ```bash
+   npm install
+   ```
+
+3. Run the Application:
+    - **Start the frontend:**
+    ```bash
+    npm run dev
+    ```
+
+    - **Start the backend:**
+    ```bash
+    docker compose up
+    ```
+
+4. Open your browser and visit `http://localhost:5173` to access the application.
+
+
 ## Entity Relationship Diagram
 
 ![ERD FB_CLONE](https://github.com/user-attachments/assets/67cbede8-868b-4f4f-aafa-e9f74893af28)
@@ -30,11 +61,11 @@ A fully-featured Facebook clone that replicates the core functions of Facebook's
 
 
 - **Friends Page**
-![FriendsPage](https://github.com/user-attachments/assets/60f2bc56-3b44-40fc-80c8-59fb8116160b)
+![FriendsPage](https://github.com/user-attachments/assets/ea51bb74-7a85-4512-8175-6df5a01a4c6d)
 
 
 - **Post Images Modal**
-![PostImages](https://github.com/user-attachments/assets/7b812463-926f-4e47-b9ed-3a36dabd58d6)
+![PostImages](https://github.com/user-attachments/assets/8422f71e-87c3-4ad6-861d-d83b719bcdbe)
 
 
 - **Login Page**

@@ -19,6 +19,7 @@ import useDeletePost from "../../../hooks/user/useDeletePost";
 import { useUserStore } from "../../../store/user-store";
 import PostUserProfileCard from "./PostUserProfileCard";
 import { useProfileStore } from "../../../store/profile-store";
+import { usePostStore } from "../../../store/post-store";
 
 interface PostContentProps {
   firstName: string;
@@ -56,18 +57,27 @@ const PostContent = ({
 
   const { userId } = useUserStore();
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const { isPostImageModalOpen } = usePostStore();
 
   return (
     <>
-      {isHovered && (
-        <PostUserProfileCard
-          firstName={firstName}
-          lastName={lastName}
-          postUserId={postUserId}
-          profilePicture={profilePicture}
-          setIsHovered={setIsHovered}
-          handleNavigateClick={handleNavigateClick}
-        />
+      {!isPostImageModalOpen && isHovered && (
+        <Box
+          position="absolute"
+          zIndex={100}
+          left="10px"
+          top="45px"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <PostUserProfileCard
+            firstName={firstName}
+            lastName={lastName}
+            postUserId={postUserId}
+            profilePicture={profilePicture}
+            handleNavigateClick={handleNavigateClick}
+          />
+        </Box>
       )}
       <Box display="flex" alignItems="center">
         <Box
@@ -90,11 +100,16 @@ const PostContent = ({
             cursor="pointer"
             onClick={handleNavigateClick}
             onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            // onMouseLeave={() => setIsHovered(false)}
           >
             {firstName} {lastName}
           </Text>
-          <Text fontSize="xs" color="gray.500" fontWeight="semibold">
+          <Text
+            fontSize="xs"
+            color="gray.500"
+            fontWeight="semibold"
+            cursor="pointer"
+          >
             <ReactTimeAgo date={time} locale="en-US" />
           </Text>
         </Box>

@@ -38,7 +38,8 @@ import ProfilePageHeader from "./ProfilePageHeader";
 const UserProfile = () => {
   const params = useParams<{ userId: string }>();
   const userId = Number(params.userId);
-  const { isLoading: isUserInfoLoading } = useGetUserProfileInfo(userId);
+  const { data: getUserProfile, isLoading: isUserInfoLoading } =
+    useGetUserProfileInfo(userId);
   if (
     typeof userId !== "number" ||
     isNaN(userId) ||
@@ -89,7 +90,13 @@ const UserProfile = () => {
 
   return (
     <>
-      <ProfilePageHeader />
+      <ProfilePageHeader
+        isLoading={isUserInfoLoading}
+        coverPhoto={getUserProfile?.coverPhoto}
+        profilePicture={getUserProfile?.profilePicture}
+        firstName={getUserProfile?.firstName}
+        lastName={getUserProfile?.lastName}
+      />
       {location.pathname === `/profile/${userId}` ? (
         <>
           <Grid
@@ -133,7 +140,7 @@ const UserProfile = () => {
             >
               {/* <Box position="sticky" top="-100px"> */}
               {isPhotosLoading ? (
-                <Skeleton height="300px" />
+                <Skeleton height="300px" mb="10px" />
               ) : (
                 <Card
                   padding={{ base: 2, xl: 4 }}
@@ -160,7 +167,10 @@ const UserProfile = () => {
                             ? page.postImageModels
                                 .slice(0, sliceLength)
                                 .map((image) => (
-                                  <Box key={image.postImageId}>
+                                  <Box
+                                    key={image.postImageId}
+                                    _hover={{ filter: "brightness(1.1)" }}
+                                  >
                                     <ImageCard
                                       images={image}
                                       imageList={page.postImageModels}
@@ -211,7 +221,10 @@ const UserProfile = () => {
                             ? page.userList
                                 .slice(0, sliceLength)
                                 .map((list) => (
-                                  <Box key={list.uniqueId}>
+                                  <Box
+                                    key={list.uniqueId}
+                                    _hover={{ filter: "brightness(1.1)" }}
+                                  >
                                     <Image
                                       src={list.profilePicture || pic}
                                       height="130px"
@@ -248,7 +261,11 @@ const UserProfile = () => {
               {/* </Box> */}
             </GridItem>
             <GridItem area="section2" as="section">
-              {isUserInfoLoading ? <Skeleton height="100px" /> : <CreatePost />}
+              {isUserInfoLoading ? (
+                <Skeleton height="100px" />
+              ) : (
+                <CreatePost firstName={getUserProfile?.firstName || null} />
+              )}
 
               <InfiniteScroll
                 dataLength={fetchedPostData}
