@@ -18,7 +18,7 @@ export interface SaveProductProps {
   file: FileList;
 }
 
-const useSaveProduct = (userId: number) => {
+const useSaveProduct = () => {
   const toast = useToast();
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
@@ -36,7 +36,7 @@ const useSaveProduct = (userId: number) => {
 
   const mutation = useMutation(
     (formData: FormData) =>
-      apiClient.post(`/product/save/${userId}`, formData, {
+      apiClient.post(`/product/save`, formData, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "multipart/form-data",

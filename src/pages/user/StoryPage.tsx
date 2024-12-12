@@ -35,7 +35,7 @@ const StoryPage = () => {
     navigate("/home");
   };
   const { userId } = useUserStore();
-  const { data: fetchAllStories, isLoading } = useFetchAllStories(userId ?? 0);
+  const { data: fetchAllStories, isLoading } = useFetchAllStories();
   const array = [1, 2, 3, 4, 5];
 
   const storyByUser = fetchAllStories?.some((id) => id.userId === userId);

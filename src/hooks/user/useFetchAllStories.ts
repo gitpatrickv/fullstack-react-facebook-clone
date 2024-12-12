@@ -5,24 +5,21 @@ import { useAuthQueryStore } from "../../store/auth-store";
 
 const apiClient = axiosInstance;
 
-const useFetchAllStories = (userId: number) => {
+const useFetchAllStories = () => {
   const { authStore } = useAuthQueryStore();
   const jwtToken = authStore.jwtToken;
   return useQuery({
     queryKey: ["stories"],
     queryFn: async () => {
-      const { data } = await apiClient.get<StoryResponse[]>(
-        `/story/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const { data } = await apiClient.get<StoryResponse[]>(`/story`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       return data;
     },
     keepPreviousData: true,
-    enabled: !!jwtToken && !!userId,
+    enabled: !!jwtToken,
   });
 };
 

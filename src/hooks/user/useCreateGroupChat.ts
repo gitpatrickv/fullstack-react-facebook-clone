@@ -3,7 +3,6 @@ import { axiosInstance } from "../../services/api-client";
 import { useAuthQueryStore } from "../../store/auth-store";
 
 export interface CreateGroupChatProps {
-  userId: number;
   friendId: number[];
   text: string;
 }
@@ -15,9 +14,9 @@ const useCreateGroupChat = () => {
   const jwtToken = authStore.jwtToken;
   const queryClient = useQueryClient();
   return useMutation(
-    async ({ userId, friendId, text }: CreateGroupChatProps) => {
+    async ({ friendId, text }: CreateGroupChatProps) => {
       const response = await apiClient.post(
-        `/chat/group/create/${userId}`,
+        `/chat/group/create`,
         { friendId, text },
         {
           headers: {

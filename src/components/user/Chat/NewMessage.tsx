@@ -69,28 +69,26 @@ const NewMessage = () => {
   const userIds = selectedUser.map((id) => id.userId);
 
   const onSubmit = (data: CreateGroupChatProps) => {
-    if (currentUserId) {
-      setIsLoading(true);
-      createGroupChat(
-        { userId: currentUserId, friendId: userIds, text: data.text },
-        {
-          onSuccess: (data) => {
-            const newChatId = data.chatId;
-            reset();
-            setIsLoading(false);
-            setMessage("");
-            setKeyword("");
-            setSelectedUser([]);
-            setShowSuggestions(false);
-            handleAddToChatArray(newChatId);
-            setIsNewMessageMaximized(false);
-          },
-          onError: () => {
-            setIsLoading(false);
-          },
-        }
-      );
-    }
+    setIsLoading(true);
+    createGroupChat(
+      { friendId: userIds, text: data.text },
+      {
+        onSuccess: (data) => {
+          const newChatId = data.chatId;
+          reset();
+          setIsLoading(false);
+          setMessage("");
+          setKeyword("");
+          setSelectedUser([]);
+          setShowSuggestions(false);
+          handleAddToChatArray(newChatId);
+          setIsNewMessageMaximized(false);
+        },
+        onError: () => {
+          setIsLoading(false);
+        },
+      }
+    );
   };
 
   const removeSelectedUser = (index: number) => {
