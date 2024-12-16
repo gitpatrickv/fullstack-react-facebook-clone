@@ -28,7 +28,7 @@ import { useStoryStore } from "../../../store/story-store";
 import { useUserStore } from "../../../store/user-store";
 
 const CreateStoryModal = () => {
-  const { profilePicture, firstName, lastName, userId } = useUserStore();
+  const { profilePicture, firstName, lastName } = useUserStore();
   const { isOpen, onClose } = useStoryStore();
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const CreateStoryModal = () => {
     setIsTextStory,
     isPhotoStory,
     setIsPhotoStory,
-  } = useCreateStory(userId ?? 0);
+  } = useCreateStory();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const inputTextPhotoRef = useRef<HTMLTextAreaElement | null>(null);

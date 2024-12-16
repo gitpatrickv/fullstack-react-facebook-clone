@@ -13,7 +13,7 @@ interface CreateStoryProps {
 
 const apiClient = axiosInstance;
 
-const useCreateStory = (userId: number) => {
+const useCreateStory = () => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { authStore } = useAuthQueryStore();
@@ -29,7 +29,7 @@ const useCreateStory = (userId: number) => {
   const { onClose } = useStoryStore();
   const mutation = useMutation(
     (formData: FormData) =>
-      apiClient.post(`/story/create/${userId}`, formData, {
+      apiClient.post(`/story/create`, formData, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "multipart/form-data",

@@ -34,7 +34,7 @@ import NextButton from "../Buttons/NextButton";
 const CreateProductModal = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
-  const { userId, profilePicture, firstName, lastName } = useUserStore();
+  const { profilePicture, firstName, lastName } = useUserStore();
   const isSmallScreen = useBreakpointValue({ base: true, lg: false });
   const handleNavigateClick = () => {
     navigate("/home");
@@ -64,7 +64,7 @@ const CreateProductModal = () => {
     setDescription,
     price,
     setPrice,
-  } = useSaveProduct(userId ?? 0);
+  } = useSaveProduct();
 
   const categories = [
     { name: "Vehicles", value: "VEHICLES" },

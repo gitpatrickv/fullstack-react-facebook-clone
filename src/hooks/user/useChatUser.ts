@@ -5,7 +5,6 @@ import { useAuthQueryStore } from "../../store/auth-store";
 const apiClient = axiosInstance;
 
 interface Props {
-  userId: number;
   friendId: number;
 }
 
@@ -15,9 +14,9 @@ const useChatUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async ({ userId, friendId }: Props) => {
+    async ({ friendId }: Props) => {
       const response = await apiClient.post(
-        `/chat/${userId}/${friendId}`,
+        `/chat/${friendId}`,
         {},
         {
           headers: {

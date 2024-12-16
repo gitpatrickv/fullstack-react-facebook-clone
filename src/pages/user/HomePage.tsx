@@ -36,7 +36,7 @@ const HomePage = () => {
   const { firstName, userId } = useUserStore();
   const [name, setName] = useState<string>("");
   const { data: fetchAllStories, isLoading: isStoriesLoading } =
-    useFetchAllStories(userId ?? 0);
+    useFetchAllStories();
 
   useEffect(() => {
     if (firstName) {
