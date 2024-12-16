@@ -33,7 +33,7 @@ const WatchPage = () => {
           />
         </AspectRatio>
 
-        <Box mt="20px">
+        <Box mt="20px" mb="50px">
           <Text fontWeight="semibold">Fullstack Responsive Facebook Clone</Text>
           <AspectRatio ratio={16 / 9}>
             <iframe
