@@ -39,7 +39,7 @@ const Contacts = () => {
               .filter((chat) => chat.chatType === "PRIVATE_CHAT")
               .map((chat) => <ChatList key={chat.chatId} chat={chat} />)
           )}
-          <Divider mt="10px" mb="10px" ml="10px" />
+          <Divider mt="10px" mb="10px" />
           <Text fontWeight="semibold" ml="10px" fontSize="lg" color="gray.500">
             Group chats
           </Text>
