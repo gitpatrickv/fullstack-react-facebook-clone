@@ -210,7 +210,7 @@ const HomePage = () => {
               as="aside"
               position="fixed"
               right="5px"
-              height="100vh"
+              height="91vh"
               overflowY="auto"
               css={{
                 "&::-webkit-scrollbar": {
