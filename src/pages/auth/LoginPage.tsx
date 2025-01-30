@@ -6,10 +6,7 @@ import {
   Center,
   Divider,
   FormControl,
-  IconButton,
   Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,15 +21,26 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
-import { IoIosEye } from "react-icons/io";
-import { RiEyeCloseLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "../../components/user/Input/PasswordInput";
+import TextInput from "../../components/user/Input/TextInput";
+import Login from "../../components/user/LoginPage/Login";
 import { User } from "../../entities/User";
-import useLogin from "../../hooks/user/useLogin";
 import useRegister from "../../hooks/user/useRegister";
 import { useAuthQueryStore } from "../../store/auth-store";
 
 const LoginPage = () => {
+  const {
+    register: registerUser,
+    handleSubmit: handleRegisterSubmit,
+    loading,
+    onSubmit: onSubmitRegister,
+    errors: registerErrors,
+    isOpen,
+    onOpen,
+    onClose,
+    control,
+  } = useRegister();
   const currentYear = new Date().getFullYear();
 
   const years = Array.from({ length: currentYear - 1905 + 1 }, (_, i) =>
@@ -92,39 +100,6 @@ const LoginPage = () => {
     onSubmitRegister(data);
   };
 
-  const {
-    register,
-    handleSubmit,
-    loading,
-    onSubmit: onSubmitLogin,
-    errors,
-  } = useLogin();
-  const {
-    register: registerUser,
-    handleSubmit: handleRegisterSubmit,
-    loading: loadingRegister,
-    onSubmit: onSubmitRegister,
-    errors: registerErrors,
-    isOpen,
-    onOpen,
-    onClose,
-    control,
-  } = useRegister();
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [modalShowPassword, setModalShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
-
-  const handleShowPasswordClick = () => {
-    setShowPassword(!showPassword);
-  };
-  const handleModalShowPasswordClick = () => {
-    setModalShowPassword(!modalShowPassword);
-  };
-  const handleShowConfirmPasswordClick = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   const [selectedGender, setSelectedGender] = useState<string>("");
   const handleSelectedGenderClick = (value: string) => {
     setSelectedGender(value);
@@ -174,66 +149,7 @@ const LoginPage = () => {
           <Card w={{ base: "250px", md: "400px", lg: "350px", xl: "400px" }}>
             <Box p={{ base: 1, md: 2 }} borderWidth={1} borderRadius="md">
               <CardBody>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    handleSubmit(onSubmitLogin)(event);
-                  }}
-                >
-                  <FormControl mb={4} isRequired>
-                    <Input
-                      disabled={loading}
-                      {...register("email", { required: "Email is required" })}
-                      type="text"
-                      placeholder="Email"
-                      borderColor="gray"
-                    />
-                  </FormControl>
-                  <FormControl mb={4} isRequired>
-                    <InputGroup>
-                      <Input
-                        disabled={loading}
-                        {...register("password", {
-                          required: "Password is required",
-                        })}
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        borderColor="gray"
-                      />
-                      <InputRightElement>
-                        <IconButton
-                          aria-label="show"
-                          icon={
-                            showPassword ? (
-                              <IoIosEye size="25px" />
-                            ) : (
-                              <RiEyeCloseLine size="25px" />
-                            )
-                          }
-                          onClick={handleShowPasswordClick}
-                          bg="transparent"
-                          _hover={{ bg: "transparent" }}
-                          mr="15px"
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                    {errors.password && (
-                      <Text color="red">{errors.password.message} </Text>
-                    )}
-                    {errors.email && (
-                      <Text color="red">{errors.email.message} </Text>
-                    )}
-                  </FormControl>
-                  <Button
-                    isLoading={loading}
-                    type="submit"
-                    width="100%"
-                    bg="#1877F2"
-                    _hover={{ bg: "#165BB7" }}
-                  >
-                    Log In
-                  </Button>
-                </form>
+                <Login />
                 <Text
                   textAlign="center"
                   mt="20px"
@@ -245,9 +161,9 @@ const LoginPage = () => {
                 <Divider mt="20px" mb="20px" />
                 <Center>
                   <Button
-                    bg="green.500"
-                    _hover={{ bg: "green.500" }}
-                    _active={{ bg: "green.600" }}
+                    bg="#2db300"
+                    _hover={{ bg: "#269900" }}
+                    _active={{ bg: "#269900" }}
                     onClick={onOpen}
                   >
                     Create New Account
@@ -289,111 +205,45 @@ const LoginPage = () => {
                   <Divider mb="15px" mt="15px" />
                   <Stack spacing={3}>
                     <Box display="flex">
-                      <FormControl mr="5px">
-                        <Input
-                          {...registerUser("firstName", { required: true })}
-                          type="text"
-                          placeholder="First Name"
-                          disabled={loadingRegister}
-                        />
-                        {registerErrors.firstName && (
-                          <Text color="red">
-                            {registerErrors.firstName.message}
-                          </Text>
-                        )}
-                      </FormControl>
-                      <FormControl ml="5px">
-                        <Input
-                          {...registerUser("lastName", { required: true })}
-                          type="text"
-                          placeholder="Last Name"
-                          disabled={loadingRegister}
-                        />
-                        {registerErrors.lastName && (
-                          <Text color="red">
-                            {registerErrors.lastName.message}
-                          </Text>
-                        )}
-                      </FormControl>
-                    </Box>
-                    <FormControl>
-                      <Input
-                        {...registerUser("email", { required: true })}
-                        type="text"
-                        placeholder="Email"
-                        disabled={loadingRegister}
+                      <TextInput
+                        control={control}
+                        name="firstName"
+                        loading={loading}
+                        placeholder="First Name"
+                        label="First Name"
+                        mr="5px"
                       />
-                      {registerErrors.email && (
-                        <Text color="red">{registerErrors.email.message}</Text>
-                      )}
-                    </FormControl>
-
-                    <FormControl>
-                      <InputGroup>
-                        <Input
-                          {...registerUser("password", { required: true })}
-                          type={modalShowPassword ? "text" : "password"}
-                          placeholder="Password"
-                          disabled={loadingRegister}
-                        />
-                        <InputRightElement>
-                          <IconButton
-                            aria-label="show"
-                            icon={
-                              modalShowPassword ? (
-                                <IoIosEye size="25px" />
-                              ) : (
-                                <RiEyeCloseLine size="25px" />
-                              )
-                            }
-                            onClick={handleModalShowPasswordClick}
-                            bg="transparent"
-                            _hover={{ bg: "transparent" }}
-                            mr="15px"
-                          />
-                        </InputRightElement>
-                      </InputGroup>
-                      {registerErrors.password && (
-                        <Text color="red">
-                          {registerErrors.password.message}
-                        </Text>
-                      )}
-                    </FormControl>
-
-                    <FormControl>
-                      <InputGroup>
-                        <Input
-                          {...registerUser("confirmPassword", {
-                            required: true,
-                          })}
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Confirm Password"
-                          disabled={loadingRegister}
-                        />
-                        <InputRightElement>
-                          <IconButton
-                            aria-label="show"
-                            icon={
-                              showConfirmPassword ? (
-                                <IoIosEye size="25px" />
-                              ) : (
-                                <RiEyeCloseLine size="25px" />
-                              )
-                            }
-                            onClick={handleShowConfirmPasswordClick}
-                            bg="transparent"
-                            _hover={{ bg: "transparent" }}
-                            mr="15px"
-                          />
-                        </InputRightElement>
-                      </InputGroup>
-                      {registerErrors.confirmPassword && (
-                        <Text color="red">
-                          {registerErrors.confirmPassword.message}
-                        </Text>
-                      )}
-                    </FormControl>
-                    <FormControl>
+                      <TextInput
+                        control={control}
+                        name="lastName"
+                        loading={loading}
+                        placeholder="Last Name"
+                        label="Last Name"
+                        ml="5px"
+                      />
+                    </Box>
+                    <TextInput
+                      control={control}
+                      name="email"
+                      loading={loading}
+                      placeholder="Email"
+                      label="email"
+                    />
+                    <PasswordInput
+                      control={control}
+                      name="password"
+                      loading={loading}
+                      placeholder="Password"
+                      label="Password"
+                    />
+                    <PasswordInput
+                      control={control}
+                      name="confirmPassword"
+                      loading={loading}
+                      placeholder="Confirm Password"
+                      label="Confirm Password"
+                    />
+                    <FormControl isRequired>
                       <Text fontSize="xs" mb="2px">
                         Birthday
                       </Text>
@@ -452,7 +302,7 @@ const LoginPage = () => {
                         </Text>
                       )}
                     </FormControl>
-                    <FormControl>
+                    <FormControl isRequired>
                       <Text fontSize="xs" mb="2px">
                         Gender
                       </Text>
@@ -494,11 +344,11 @@ const LoginPage = () => {
                 <ModalFooter justifyContent="center" mb="10px">
                   <Button
                     type="submit"
-                    bg="green.500"
-                    _hover={{ bg: "green.600" }}
-                    _active={{ bg: "green.600" }}
+                    bg="#2db300"
+                    _hover={{ bg: "#269900" }}
+                    _active={{ bg: "#269900" }}
                     width="150px"
-                    isLoading={loadingRegister}
+                    isLoading={loading}
                   >
                     Sign Up
                   </Button>
