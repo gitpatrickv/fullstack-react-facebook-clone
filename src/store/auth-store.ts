@@ -19,7 +19,6 @@ export const useAuthQueryStore = create<AuthQueryStore>()(
       authStore: {
         jwtToken: localStorage.getItem("jwtToken") || "",
         role: localStorage.getItem("role") || "",
-        authUser: localStorage.getItem("authUser") || "",
       },
       setJwtToken: (jwtToken) => {
         localStorage.setItem("jwtToken", jwtToken);

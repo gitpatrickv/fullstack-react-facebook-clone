@@ -15,12 +15,7 @@ const apiClient = axiosInstance;
 
 const useLogin = () => {
   const queryClient = useQueryClient();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<FormData>();
+  const { handleSubmit, setError, control } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setJwtToken, setRole } = useAuthQueryStore();
@@ -50,7 +45,7 @@ const useLogin = () => {
       setLoading(false);
 
       if (error.response?.data.errorMessage) {
-        setError("email", {
+        setError("password", {
           type: "server",
           message: error.response.data.errorMessage,
         });
@@ -64,11 +59,10 @@ const useLogin = () => {
   };
 
   return {
-    register,
     handleSubmit,
     loading,
     onSubmit,
-    errors,
+    control,
   };
 };
 
